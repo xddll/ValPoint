@@ -560,13 +560,6 @@ function App() {
       />
 
       <div className="flex-1 relative bg-[#0f1923] z-0 border-l border-r border-white/10">
-        <div className="absolute top-6 left-6 z-[400] pointer-events-none">
-          <div className="glass px-6 py-3 rounded-r-xl border-l-4 border-[#ff4655] shadow-2xl backdrop-blur-md bg-black/50">
-            <div className="text-xs uppercase tracking-[0.2em] text-gray-300 font-bold">Map</div>
-            <div className="text-lg font-bold text-white">{selectedMap ? getMapDisplayName(selectedMap.displayName) : '加载中...'}</div>
-            <div className="text-xs text-gray-500">侧栏可切换攻防 & 特工</div>
-          </div>
-        </div>
         <LeafletMap
           mapIcon={getMapUrl()}
           activeTab={activeTab}
