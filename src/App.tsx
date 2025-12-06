@@ -16,6 +16,7 @@ import { supabase } from './supabaseClient';
 
 const LOCAL_USER_KEY = 'valpoint_user_id';
 const TABLE = 'valorant_lineups';
+const SHARE_TABLE = 'valorant_shared';
 const ID_LENGTH = 8;
 const ID_REGEX = /^[A-Za-z0-9]{8}$/;
 
@@ -35,6 +36,13 @@ const ensureUserId = () => {
     localStorage.setItem(LOCAL_USER_KEY, id);
   }
   return id;
+};
+
+const toShortShareId = (uuid) => {
+  if (!uuid) return '';
+  const parts = uuid.split('-');
+  if (parts.length === 5) return `${parts[3]}-${parts[4]}`;
+  return uuid;
 };
 
 const toDbPayload = (data, userId) => ({
@@ -126,6 +134,7 @@ function App() {
   });
   const [placingType, setPlacingType] = useState(null);
   const [customUserIdInput, setCustomUserIdInput] = useState('');
+  const [isSharing, setIsSharing] = useState(false);
 
   const getMapDisplayName = (apiMapName) => MAP_TRANSLATIONS[apiMapName] || apiMapName;
   const getMapEnglishName = (displayName) =>
@@ -247,21 +256,41 @@ function App() {
     setAlertMessage(null);
   };
 
+  const fetchSharedById = useCallback(
+    async (shareId) => {
+      if (!shareId) return null;
+      // 先查公共分享表
+      const { data: sharedData, error: sharedError } = await supabase.from(SHARE_TABLE).select('*').eq('share_id', shareId).single();
+      if (!sharedError && sharedData) {
+        const normalized = normalizeLineup(sharedData, mapNameZhToEn);
+        return { ...normalized, id: sharedData.source_id || sharedData.id || shareId, shareId: sharedData.share_id || shareId };
+      }
+      // 兼容旧链接：按原表 id 查询
+      const { data: legacyData, error: legacyError } = await supabase.from(TABLE).select('*').eq('id', shareId).single();
+      if (!legacyError && legacyData) {
+        const normalized = normalizeLineup(legacyData, mapNameZhToEn);
+        return { ...normalized, id: legacyData.id, shareId: shareId };
+      }
+      return null;
+    },
+    [mapNameZhToEn],
+  );
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const shareId = params.get('id');
     if (!shareId) return;
     const load = async () => {
-      const { data, error } = await supabase.from(TABLE).select('*').eq('id', shareId).single();
-      if (error || !data) {
+      const lineup = await fetchSharedById(shareId);
+      if (!lineup) {
         setAlertMessage('未找到该点位分享，可能已被删除。');
         setActiveTab('view');
         return;
       }
-      setSharedLineup(normalizeLineup(data, mapNameZhToEn));
+      setSharedLineup(lineup);
     };
     load();
-  }, [mapNameZhToEn]);
+  }, [fetchSharedById]);
 
   const handlePreviewSubmit = async () => {
     if (!previewInput.trim()) return;
@@ -271,12 +300,9 @@ function App() {
       const idParam = url.searchParams.get('id');
       if (idParam) idToLoad = idParam;
     } catch (e) {}
-    const { data, error } = await supabase.from(TABLE).select('*').eq('id', idToLoad).single();
-    if (error || !data) {
-      setAlertMessage('未找到该 ID 对应的点位。');
-      return;
-    }
-    setSharedLineup(normalizeLineup(data, mapNameZhToEn));
+    const lineup = await fetchSharedById(idToLoad);
+    if (!lineup) return setAlertMessage('未找到该 ID 对应的点位。');
+    setSharedLineup(lineup);
     setActiveTab('shared');
     setIsPreviewModalOpen(false);
     setPreviewInput('');
@@ -405,24 +431,45 @@ function App() {
     fetchLineups();
   };
 
-  const handleShare = (id, e) => {
+  const handleShare = async (id, e) => {
     e.stopPropagation();
-    // 仅复制点位 ID，避免暴露域名或 IP
-    const url = id;
-    const textArea = document.createElement('textarea');
-    textArea.value = url;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-9999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand('copy');
-      setAlertMessage('点位 ID 已复制到剪贴板，可直接发送给好友');
-    } catch (err) {
-      setAlertMessage('复制失败，请手动复制 ID：\\n' + url);
+    const lineup = lineups.find((l) => l.id === id);
+    if (!lineup) {
+      setAlertMessage('未找到要分享的点位');
+      return;
     }
-    document.body.removeChild(textArea);
+    const shareId = toShortShareId(id);
+    const payload = {
+      share_id: shareId,
+      source_id: id,
+      ...toDbPayload({ ...lineup, mapName: getMapEnglishName(lineup.mapName) }, userId),
+      created_at: lineup.createdAt || new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    try {
+      setIsSharing(true);
+      const { error } = await supabase.from(SHARE_TABLE).upsert(payload, { onConflict: 'share_id' });
+      if (error) throw error;
+      const textArea = document.createElement('textarea');
+      textArea.value = shareId;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setAlertMessage('分享 ID 已复制，好友可直接预览');
+      } catch (err) {
+        setAlertMessage('复制失败，请手动复制 ID：\\n' + shareId);
+      }
+      document.body.removeChild(textArea);
+    } catch (err) {
+      console.error(err);
+      setAlertMessage('分享失败，请重试');
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   const togglePlacingType = (type) => setPlacingType((prev) => (prev === type ? null : type));

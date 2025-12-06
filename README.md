@@ -119,6 +119,45 @@ npm run preview  # 预览打包产物
   - `VITE_SUPABASE_ANON_KEY`
 - 确保 Supabase 表已创建，并设置合适的 RLS 规则。
 
+## 分享中转表（公共库）
+- 新增表：`valorant_shared`（字段同 `valorant_lineups`，额外 `share_id text primary key`、`source_id uuid`）。
+- 分享时会把点位数据写入此表，生成短分享 ID（取原 UUID 的后两段，如 `a52f-44b07ff542fb`），访问分享页/预览都从该表读取；仍可点击“保存到我的点位”写入个人表。
+- SQL 示例（在 Supabase SQL Editor 执行）：
+```
+create extension if not exists "uuid-ossp";
+create table if not exists public.valorant_shared (
+  share_id text primary key,
+  source_id uuid,
+  id uuid default uuid_generate_v4(),
+  user_id text,
+  title text,
+  map_name text,
+  agent_name text,
+  agent_icon text,
+  skill_icon text,
+  side text,
+  ability_index int,
+  agent_pos jsonb,
+  skill_pos jsonb,
+  stand_img text, stand_desc text,
+  aim_img text, aim_desc text,
+  aim2_img text, aim2_desc text,
+  land_img text, land_desc text,
+  cloned_from text,
+  created_at timestamptz default now(),
+  updated_at timestamptz
+);
+alter table public.valorant_shared enable row level security;
+drop policy if exists "anon select shared" on public.valorant_shared;
+create policy "anon select shared" on public.valorant_shared for select using (auth.role() = 'anon');
+drop policy if exists "anon insert shared" on public.valorant_shared;
+create policy "anon insert shared" on public.valorant_shared for insert with check (auth.role() = 'anon');
+drop policy if exists "anon update shared" on public.valorant_shared;
+create policy "anon update shared" on public.valorant_shared for update using (auth.role() = 'anon');
+drop policy if exists "anon delete shared" on public.valorant_shared;
+create policy "anon delete shared" on public.valorant_shared for delete using (auth.role() = 'anon');
+```
+
 ## 代码结构
 - `src/main.tsx`：入口
 - `src/App.tsx`：核心页面与业务逻辑（地图、特工、过滤、CRUD、分享）
