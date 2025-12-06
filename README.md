@@ -52,6 +52,42 @@ on valorant_lineups for delete using (auth.role() = 'anon');
 ```
 （如需更严格控制，可在表中记录 user_id，并在 policy 中校验 `user_id = current_setting('request.jwt.claim.sub', true)`，并改用 Supabase Auth 登录。当前前端默认用 localStorage 生成匿名 userId。）
 
+### 一键建表与权限（可直接点击复制）
+在 GitHub/IDE 中对下方代码块点击复制按钮，粘贴到 Supabase 控制台 → SQL Editor 运行，即可完成建表 + RLS + 匿名策略：
+
+```sql
+create extension if not exists "uuid-ossp";
+create table if not exists public.valorant_lineups (
+  id uuid primary key default uuid_generate_v4(),
+  user_id text,
+  title text,
+  map_name text,
+  agent_name text,
+  agent_icon text,
+  skill_icon text,
+  side text,
+  ability_index int,
+  agent_pos jsonb,
+  skill_pos jsonb,
+  stand_img text, stand_desc text,
+  aim_img text, aim_desc text,
+  aim2_img text, aim2_desc text,
+  land_img text, land_desc text,
+  cloned_from text,
+  created_at timestamptz default now(),
+  updated_at timestamptz
+);
+alter table public.valorant_lineups enable row level security;
+drop policy if exists "anon select" on public.valorant_lineups;
+create policy "anon select" on public.valorant_lineups for select using (auth.role() = 'anon');
+drop policy if exists "anon insert" on public.valorant_lineups;
+create policy "anon insert" on public.valorant_lineups for insert with check (auth.role() = 'anon');
+drop policy if exists "anon update" on public.valorant_lineups;
+create policy "anon update" on public.valorant_lineups for update using (auth.role() = 'anon');
+drop policy if exists "anon delete" on public.valorant_lineups;
+create policy "anon delete" on public.valorant_lineups for delete using (auth.role() = 'anon');
+```
+
 ## 环境准备
 - Node.js 18+（推荐 LTS）
 - npm（或 pnpm/yarn，脚本以 npm 为例）
