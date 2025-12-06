@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import LeafletMap from './components/LeafletMap';
 import { CUSTOM_MAP_URLS, MAP_TRANSLATIONS } from './constants/maps';
@@ -187,7 +187,7 @@ function App() {
       .then((data) => {
         const sorted = data.data.sort((a, b) => a.displayName.localeCompare(b.displayName));
         setAgents(sorted);
-        const sova = sorted.find((a) => a.displayName === '索瓦' || a.displayName === 'Sova');
+        const sova = sorted.find((a) => a.displayName === '绱㈢摝' || a.displayName === 'Sova');
         if (sova) setSelectedAgent(sova);
         else if (sorted.length > 0) setSelectedAgent(sorted[0]);
       });
@@ -263,7 +263,7 @@ function App() {
       });
       if (selectedSide === 'all') setSelectedSide('attack');
     } else if (tab === 'view') {
-      // 返回查看时重置筛选并主动刷新，避免旧数据被筛掉；默认选中首个特工
+      // 杩斿洖鏌ョ湅鏃堕噸缃瓫閫夊苟涓诲姩鍒锋柊锛岄伩鍏嶆棫鏁版嵁琚瓫鎺夛紱榛樿閫変腑棣栦釜鐗瑰伐
       setSelectedSide('all');
       setSelectedAbilityIndex(null);
       const firstAgent = agents[0];
@@ -305,7 +305,7 @@ function App() {
   };
 
   const handleEditorSave = async () => {
-    if (!newLineupData.title.trim()) return setAlertMessage('标题不能为空');
+    if (!newLineupData.title.trim()) return setAlertMessage('鏍囬涓嶈兘涓虹┖');
     const commonData = {
       ...newLineupData,
       mapName: selectedMap.displayName,
@@ -322,11 +322,11 @@ function App() {
           .update({ ...toDbPayload(commonData, userId), updated_at: new Date().toISOString() })
           .eq('id', editingLineupId);
         if (error) throw error;
-        setAlertMessage('更新成功');
+        setAlertMessage('鏇存柊鎴愬姛');
       } else {
         const { error } = await supabase.from(TABLE).insert({ ...toDbPayload(commonData, userId), created_at: new Date().toISOString() });
         if (error) throw error;
-        setAlertMessage('保存成功');
+        setAlertMessage('淇濆瓨鎴愬姛');
       }
       setIsEditorOpen(false);
       setEditingLineupId(null);
@@ -334,7 +334,7 @@ function App() {
       fetchLineups();
     } catch (e) {
       console.error(e);
-      setAlertMessage('保存失败');
+      setAlertMessage('淇濆瓨澶辫触');
     }
   };
 
@@ -347,9 +347,9 @@ function App() {
     if (!deleteTargetId) return;
     const { error } = await supabase.from(TABLE).delete().eq('id', deleteTargetId);
     if (error) {
+    if (error) {
       setAlertMessage('删除失败，请重试。');
     } else {
-      if (selectedLineupId === deleteTargetId) {
         setSelectedLineupId(null);
         setViewingLineup(null);
       }
@@ -360,7 +360,7 @@ function App() {
 
   const handleShare = (id, e) => {
     e.stopPropagation();
-    // 仅复制点位 ID，避免暴露域名/IP
+    // 浠呭鍒剁偣锟?ID锛岄伩鍏嶆毚闇插煙锟?IP
     const url = id;
     const textArea = document.createElement('textarea');
     textArea.value = url;
@@ -371,9 +371,9 @@ function App() {
     textArea.select();
     try {
       document.execCommand('copy');
-      setAlertMessage('点位 ID 已复制到剪贴板，可直接发送给好友');
+      setAlertMessage('鐐逛綅 ID 宸插鍒跺埌鍓创鏉匡紝鍙洿鎺ュ彂閫佺粰濂藉弸');
     } catch (err) {
-      setAlertMessage('复制失败，请手动复制 ID：\n' + url);
+      setAlertMessage('澶嶅埗澶辫触锛岃鎵嬪姩澶嶅埗 ID锛歕n' + url);
     }
     document.body.removeChild(textArea);
   };
@@ -415,7 +415,7 @@ function App() {
       };
       const { error } = await supabase.from(TABLE).insert({ ...toDbPayload(payload, userId), created_at: new Date().toISOString() });
       if (error) throw error;
-      setAlertMessage('已成功保存到您的点位列表');
+      setAlertMessage('宸叉垚鍔熶繚瀛樺埌鎮ㄧ殑鐐逛綅鍒楄〃');
       handleTabSwitch('view');
       fetchLineups();
     } catch (err) {
@@ -461,7 +461,7 @@ function App() {
               <img src="/brand-logo.svg" alt="Logo" className="w-[168px] h-[32px]" />
             </div>
             <button onClick={() => handleTabSwitch('view')} className="flex items-center gap-2 text-xs text-gray-400 hover:text-white transition-colors">
-              返回主页
+              杩斿洖涓婚〉
             </button>
           </div>
 
@@ -469,7 +469,7 @@ function App() {
             <div className="flex items-center justify-between gap-3 mb-2">
               <div className="flex items-center gap-3">
                 <span className={`text-xs font-bold px-2 py-0.5 rounded ${sharedLineup.side === 'attack' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
-                  {sharedLineup.side === 'attack' ? '进攻 (ATK)' : '防守 (DEF)'}
+                  {sharedLineup.side === 'attack' ? '杩涙敾 (ATK)' : '闃插畧 (DEF)'}
                 </span>
                 <span className="text-xs text-gray-400 font-mono uppercase tracking-wider">
                   {getMapDisplayName(getMapEnglishName(sharedLineup.mapName))}
@@ -479,8 +479,7 @@ function App() {
                 onClick={handleSaveShared}
                 className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-200 transition-colors px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/30"
               >
-                <Icon name="Save" size={14} /> 保存到我的点位
-              </button>
+                <Icon name="Save" size={14} /> 淇濆瓨鍒版垜鐨勭偣锟?              </button>
             </div>
             <h2 className="text-2xl font-bold text-white leading-tight mb-4">{sharedLineup.title}</h2>
             <div className="flex items-center gap-3 text-sm text-gray-400">
@@ -492,10 +491,10 @@ function App() {
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#181b1f]">
             <div className="grid grid-cols-1 gap-4">
               {[
-                { src: sharedLineup.standImg, desc: sharedLineup.standDesc, label: '1. 站位 (Stand)' },
-                { src: sharedLineup.aimImg, desc: sharedLineup.aimDesc, label: '2. 瞄点 1 (Aim)' },
-                { src: sharedLineup.aim2Img, desc: sharedLineup.aim2Desc, label: '3. 瞄点 2 (Aim)' },
-                { src: sharedLineup.landImg, desc: sharedLineup.landDesc, label: '4. 落点 (Land)' },
+                { src: sharedLineup.standImg, desc: sharedLineup.standDesc, label: '1. 绔欎綅 (Stand)' },
+                { src: sharedLineup.aimImg, desc: sharedLineup.aimDesc, label: '2. 鐬勭偣 1 (Aim)' },
+                { src: sharedLineup.aim2Img, desc: sharedLineup.aim2Desc, label: '3. 鐬勭偣 2 (Aim)' },
+                { src: sharedLineup.landImg, desc: sharedLineup.landDesc, label: '4. 钀界偣 (Land)' },
               ].map((item, idx) =>
                 item.src ? (
                   <div key={idx} className="flex flex-col gap-2">
@@ -515,7 +514,7 @@ function App() {
               )}
             </div>
             {!sharedLineup.standImg && !sharedLineup.aimImg && !sharedLineup.aim2Img && !sharedLineup.landImg && (
-              <div className="h-full flex items-center justify-center text-gray-500 text-sm">暂无图片资料</div>
+              <div className="h-full flex items-center justify-center text-gray-500 text-sm">鏆傛棤鍥剧墖璧勬枡</div>
             )}
           </div>
 
@@ -565,8 +564,8 @@ function App() {
         <div className="absolute top-6 left-6 z-[400] pointer-events-none">
           <div className="glass px-6 py-3 rounded-r-xl border-l-4 border-[#ff4655] shadow-2xl backdrop-blur-md bg-black/50">
             <div className="text-xs uppercase tracking-[0.2em] text-gray-300 font-bold">Map</div>
-            <div className="text-lg font-bold text-white">{selectedMap ? getMapDisplayName(selectedMap.displayName) : '加载中...'}</div>
-            <div className="text-xs text-gray-500">侧栏可切换攻防 & 特工</div>
+            <div className="text-lg font-bold text-white">{selectedMap ? getMapDisplayName(selectedMap.displayName) : '鍔犺浇锟?..'}</div>
+            <div className="text-xs text-gray-500">渚ф爮鍙垏鎹㈡敾锟?& 鐗瑰伐</div>
           </div>
         </div>
         <LeafletMap
@@ -660,3 +659,5 @@ function App() {
 }
 
 export default App;
+
+

@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import React from 'react';
 import Icon from './Icon';
 
@@ -53,7 +53,7 @@ const LeftPanel: React.FC<Props> = ({
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6">
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">当前地图 (Map)</label>
+            <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">当前地图 (Map)</label>
           </div>
           {selectedMap && (
             <div
@@ -70,9 +70,9 @@ const LeftPanel: React.FC<Props> = ({
 
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">选择特工 (Agent)</label>
+            <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">选择特工 (Agent)</label>
             {activeTab === 'view' && selectedAgent && (
-              <button onClick={() => setSelectedAgent(null)} className="text-[10px] text-gray-500 hover:text-white">显示全部</button>
+              <button onClick={() => setSelectedAgent(null)} className="text-[12px] text-gray-500 hover:text-white">显示全部</button>
             )}
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -95,7 +95,7 @@ const LeftPanel: React.FC<Props> = ({
 
         {selectedAgent && (
           <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+            <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">
               {activeTab === 'create' ? '选择使用技能 (Ability)' : '按技能筛选 (Filter by Ability)'}
             </label>
             <div className="flex gap-2 justify-between bg-[#0f1923] p-2 rounded-lg border border-white/10">

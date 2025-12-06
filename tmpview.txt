@@ -128,9 +128,7 @@ const RightPanel: React.FC<Props> = ({
                   <span className="text-xs font-bold">{newLineupData.skillPos ? '落点已定' : '设置落点'}</span>
                 </button>
               </div>
-              <p className="text-[12px] text-gray-500 mt-2 text-center">
-                {placingType ? '请在地图上点击位置完成标注' : '点击上方按钮开始标注'}
-              </p>
+              <p className="text-[12px] text-gray-500 mt-2 text-center">{placingType ? '请在地图上点击位�?..' : '点击上方按钮开始标�?}</p>
             </div>
 
             <div>
@@ -162,30 +160,9 @@ const RightPanel: React.FC<Props> = ({
 
             <div className="flex-1 overflow-y-auto space-y-2 pr-1">
               <div className="flex bg-[#0f1923] p-1 rounded-lg border border-white/10 mb-3">
-                <button
-                  onClick={() => setSelectedSide('all')}
-                  className={`flex-1 py-2 rounded text-xs font-bold transition-all border ${
-                    selectedSide === 'all' ? 'bg-gray-600 text-white border-gray-500 shadow' : 'text-gray-500 border-transparent hover:text-white'
-                  }`}
-                >
-                  全部
-                </button>
-                <button
-                  onClick={() => setSelectedSide('attack')}
-                  className={`flex-1 py-2 rounded text-xs font-bold flex items-center justify-center gap-1 transition-all border ${
-                    selectedSide === 'attack' ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow' : 'text-gray-500 border-transparent hover:text-red-400'
-                  }`}
-                >
-                  <Icon name="Sword" size={14} /> 进攻
-                </button>
-                <button
-                  onClick={() => setSelectedSide('defense')}
-                  className={`flex-1 py-2 rounded text-xs font-bold flex items-center justify-center gap-1 transition-all border ${
-                    selectedSide === 'defense' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow' : 'text-gray-500 border-transparent hover:text-emerald-400'
-                  }`}
-                >
-                  <Icon name="Shield" size={14} /> 防守
-                </button>
+                <button onClick={() => setSelectedSide('all')} className={`flex-1 py-2 rounded text-xs font-bold transition-all border ${selectedSide === 'all' ? 'bg-gray-600 text-white border-gray-500 shadow' : 'text-gray-500 border-transparent hover:text-white'}`}>全部</button>
+                <button onClick={() => setSelectedSide('attack')} className={`flex-1 py-2 rounded text-xs font-bold flex items-center justify-center gap-1 transition-all border ${selectedSide === 'attack' ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow' : 'text-gray-500 border-transparent hover:text-red-400'}`}><Icon name="Sword" size={14} /> 进攻</button>
+                <button onClick={() => setSelectedSide('defense')} className={`flex-1 py-2 rounded text-xs font-bold flex items-center justify-center gap-1 transition-all border ${selectedSide === 'defense' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow' : 'text-gray-500 border-transparent hover:text-emerald-400'}`}><Icon name="Shield" size={14} /> 防守</button>
               </div>
               {filteredLineups.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-64 text-gray-500">
@@ -257,8 +234,7 @@ const RightPanel: React.FC<Props> = ({
                 className="w-full bg-[#ff4655] hover:bg-[#d93a49] text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors uppercase tracking-wider shadow-lg shadow-red-900/20 group"
               >
                 <Icon name="Trash2" size={20} className="group-hover:scale-110 transition-transform" />
-                一键清空我的点位
-              </button>
+                一键清空我的点�?              </button>
             </div>
           </div>
         )}
@@ -268,3 +244,4 @@ const RightPanel: React.FC<Props> = ({
 };
 
 export default RightPanel;
+

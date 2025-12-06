@@ -27,13 +27,13 @@ const ViewerModal = ({ viewingLineup, setViewingLineup, handleEditStart, setView
         <div className="p-6 border-b border-white/10 bg-[#252a30]">
           <div className="flex items-center gap-3 mb-1">
             <span
-              className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+              className={`text-[12px] font-bold px-2 py-0.5 rounded ${
                 viewingLineup.side === 'attack' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
               }`}
             >
               {viewingLineup.side === 'attack' ? '进攻 (ATK)' : '防守 (DEF)'}
             </span>
-            <span className="text-[10px] text-gray-500 font-mono">
+            <span className="text-[12px] text-gray-500 font-mono">
               {getMapDisplayName(getMapEnglishName(viewingLineup.mapName))}
             </span>
           </div>
