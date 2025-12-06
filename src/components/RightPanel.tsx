@@ -190,6 +190,11 @@ const RightPanel: React.FC<Props> = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between gap-2 items-center mb-1">
                         <h4 className={`text-sm font-bold truncate ${selectedLineupId === l.id ? 'text-[#ff4655]' : 'text-white'}`}>{l.title}</h4>
+                        <div className="flex gap-1 text-[10px] text-gray-500 shrink-0">
+                          <span>{getMapDisplayName(l.mapName)}</span>
+                          <span>·</span>
+                          <span>{l.agentName}</span>
+                        </div>
                       </div>
                       <div className="flex justify-between items-center">
                         <span
@@ -201,11 +206,6 @@ const RightPanel: React.FC<Props> = ({
                         >
                           {l.side === 'attack' ? '进攻' : '防守'}
                         </span>
-                        <div className="flex gap-1 text-[10px] text-gray-500">
-                          <span>{getMapDisplayName(l.mapName)}</span>
-                          <span>·</span>
-                          <span>{l.agentName}</span>
-                        </div>
                         <div className="flex gap-1">
                           <button
                             onClick={(e) => handleShare(l.id, e)}
@@ -232,8 +232,9 @@ const RightPanel: React.FC<Props> = ({
             <div className="mt-3">
               <button
                 onClick={handleClearAll}
-                className="w-full py-2 rounded bg-red-600/30 hover:bg-red-600/50 text-red-200 text-sm font-bold border border-red-500/40 transition-colors"
+                className="w-full bg-[#ff4655] hover:bg-[#d93a49] text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors uppercase tracking-wider shadow-lg shadow-red-900/20 group"
               >
+                <Icon name="Trash2" size={20} className="group-hover:scale-110 transition-transform" />
                 一键清空我的点位
               </button>
             </div>
