@@ -263,10 +263,11 @@ function App() {
       });
       if (selectedSide === 'all') setSelectedSide('attack');
     } else if (tab === 'view') {
-      // 返回查看时重置筛选并主动刷新，避免旧数据被筛掉
+      // 返回查看时重置筛选并主动刷新，避免旧数据被筛掉；默认选中首个特工
       setSelectedSide('all');
       setSelectedAbilityIndex(null);
-      setSelectedAgent(null);
+      const firstAgent = agents[0];
+      if (firstAgent) setSelectedAgent(firstAgent);
       fetchLineups();
     }
   };
@@ -359,7 +360,8 @@ function App() {
 
   const handleShare = (id, e) => {
     e.stopPropagation();
-    const url = `${window.location.origin}${window.location.pathname}?id=${id}`;
+    // 仅复制点位 ID，避免暴露域名/IP
+    const url = id;
     const textArea = document.createElement('textarea');
     textArea.value = url;
     textArea.style.position = 'fixed';
@@ -369,9 +371,9 @@ function App() {
     textArea.select();
     try {
       document.execCommand('copy');
-      setAlertMessage('链接已复制到剪贴板！\n发送给好友即可分享点位');
+      setAlertMessage('点位 ID 已复制到剪贴板，可直接发送给好友');
     } catch (err) {
-      setAlertMessage('复制失败，请手动复制链接：\n' + url);
+      setAlertMessage('复制失败，请手动复制 ID：\n' + url);
     }
     document.body.removeChild(textArea);
   };
