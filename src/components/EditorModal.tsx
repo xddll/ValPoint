@@ -5,7 +5,7 @@ import Icon from './Icon';
 const fields = [
   { k: 'stand', l: '站位图' },
   { k: 'aim', l: '瞄点图' },
-  { k: 'aim2', l: '瞄点图 2' },
+  { k: 'aim2', l: '瞄点图2' },
   { k: 'land', l: '技能落点图' },
 ];
 
@@ -41,16 +41,30 @@ const EditorModal = ({ isEditorOpen, setIsEditorOpen, editingLineupId, newLineup
                 </div>
                 <input
                   className="w-full bg-[#0f1923] border border-gray-700 rounded p-2 text-white mb-2 focus:border-[#ff4655] outline-none"
-                  placeholder="图片链接 (可选)"
+                  placeholder="图片链接（可选）"
                   value={newLineupData[`${field.k}Img`]}
                   onChange={(e) => setNewLineupData({ ...newLineupData, [`${field.k}Img`]: e.target.value })}
                 />
                 <textarea
                   className="w-full bg-[#0f1923] border border-gray-700 rounded p-2 text-white h-20 resize-none focus:border-[#ff4655] outline-none"
-                  placeholder="描述 (可选)"
+                  placeholder="描述（可选）"
                   value={newLineupData[`${field.k}Desc`]}
                   onChange={(e) => setNewLineupData({ ...newLineupData, [`${field.k}Desc`]: e.target.value })}
                 />
+                {newLineupData[`${field.k}Img`] ? (
+                  <div className="mt-3 relative overflow-hidden rounded border border-white/10 bg-[#0f1923]">
+                    <img
+                      src={newLineupData[`${field.k}Img`]}
+                      alt={`${field.l} 预览`}
+                      className="w-full h-40 object-cover"
+                      onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-3 h-40 flex items-center justify-center text-xs text-gray-600 border border-dashed border-white/10 rounded bg-[#0f1923]">
+                    暂无预览
+                  </div>
+                )}
               </div>
             ))}
           </div>
