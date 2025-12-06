@@ -7,43 +7,54 @@ const ViewerModal = ({ viewingLineup, setViewingLineup, handleEditStart, setView
   return (
     <div className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
       <div className="modal-content bg-[#1f2326] w-full max-w-4xl max-h-[90vh] flex flex-col rounded-xl border border-white/10 shadow-2xl overflow-hidden relative">
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
-          <button
-            type="button"
-            onClick={() => handleEditStart(viewingLineup)}
-            className="w-8 h-8 flex items-center justify-center bg-black/60 hover:bg-[#ff4655] rounded-full text-white transition-all backdrop-blur-sm border border-white/10"
-            title="编辑"
-          >
-            <Icon name="Pencil" size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewingLineup(null)}
-            className="w-8 h-8 flex items-center justify-center bg-black/60 hover:bg-[#ff4655] rounded-full text-white transition-all backdrop-blur-sm border border-white/10"
-            title="关闭"
-          >
-            <Icon name="X" size={18} />
-          </button>
-        </div>
-
         <div className="p-6 border-b border-white/10 bg-[#252a30]">
-          <div className="flex items-center gap-3 mb-1">
-            <span
-              className={`text-[12px] font-bold px-2 py-0.5 rounded ${
-                viewingLineup.side === 'attack' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
-              }`}
-            >
-              {viewingLineup.side === 'attack' ? '进攻 (ATK)' : '防守 (DEF)'}
-            </span>
-            <span className="text-[12px] text-gray-500 font-mono">
-              {getMapDisplayName(getMapEnglishName(viewingLineup.mapName))}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white tracking-tight">{viewingLineup.title}</h2>
-            <div className="flex items-center gap-2 opacity-50">
-              {viewingLineup.agentIcon && <img src={viewingLineup.agentIcon} className="w-6 h-6 rounded-full" />}
-              <span className="text-xs font-bold text-white">{viewingLineup.agentName}</span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <span
+                  className={`text-[12px] font-bold px-2 py-0.5 rounded ${
+                    viewingLineup.side === 'attack' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
+                  }`}
+                >
+                  {viewingLineup.side === 'attack' ? '进攻 (ATK)' : '防守 (DEF)'}
+                </span>
+                <span className="text-[12px] text-gray-500 font-mono">
+                  {getMapDisplayName(getMapEnglishName(viewingLineup.mapName))}
+                </span>
+              </div>
+              <h2 className="text-2xl font-bold text-white tracking-tight">{viewingLineup.title}</h2>
+              <div className="flex items-center gap-2 opacity-70">
+                {viewingLineup.agentIcon && <img src={viewingLineup.agentIcon} className="w-7 h-7 rounded-full" />}
+                <span className="text-sm font-bold text-white">{viewingLineup.agentName}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {viewingLineup.sourceLink && (
+                <a
+                  href={viewingLineup.sourceLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white hover:border-[#ff4655] hover:text-[#ff4655] transition-colors"
+                >
+                  <Icon name="ExternalLink" size={14} /> 查看来源
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={() => handleEditStart(viewingLineup)}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white hover:border-[#ff4655] hover:text-[#ff4655] transition-colors"
+                title="编辑"
+              >
+                <Icon name="Pencil" size={14} /> 编辑
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewingLineup(null)}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-[#ff4655]/60 bg-[#ff4655]/10 text-sm text-white hover:bg-[#ff4655]/20 hover:border-[#ff4655] transition-colors"
+                title="关闭"
+              >
+                <Icon name="X" size={14} /> 关闭
+              </button>
             </div>
           </div>
         </div>

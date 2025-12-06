@@ -63,6 +63,7 @@ const toDbPayload = (data, userId) => ({
   aim2_desc: data.aim2Desc,
   land_img: data.landImg,
   land_desc: data.landDesc,
+  source_link: data.sourceLink,
   user_id: userId,
   cloned_from: data.clonedFrom || null,
 });
@@ -89,6 +90,7 @@ const normalizeLineup = (raw, mapNameZhToEn) => {
     aim2Desc: pick(raw.aim2_desc, raw.aim2Desc),
     landImg: pick(raw.land_img, raw.landImg),
     landDesc: pick(raw.land_desc, raw.landDesc),
+    sourceLink: pick(raw.source_link, raw.sourceLink),
     createdAt: pick(raw.created_at, raw.createdAt),
     updatedAt: pick(raw.updated_at, raw.updatedAt),
     clonedFrom: pick(raw.cloned_from, raw.clonedFrom),
@@ -131,6 +133,7 @@ function App() {
     aim2Desc: '',
     landImg: '',
     landDesc: '',
+    sourceLink: '',
   });
   const [placingType, setPlacingType] = useState(null);
   const [customUserIdInput, setCustomUserIdInput] = useState('');
@@ -372,6 +375,7 @@ function App() {
       aim2Desc: lineup.aim2Desc || '',
       landImg: lineup.landImg || '',
       landDesc: lineup.landDesc || '',
+      sourceLink: lineup.sourceLink || '',
     });
     setEditingLineupId(lineup.id);
     setViewingLineup(null);
@@ -389,6 +393,7 @@ function App() {
       skillIcon: selectedAbilityIndex !== null ? selectedAgent.abilities[selectedAbilityIndex].displayIcon : null,
       side: selectedSide,
       abilityIndex: selectedAbilityIndex,
+      sourceLink: newLineupData.sourceLink,
     };
     try {
       if (editingLineupId) {

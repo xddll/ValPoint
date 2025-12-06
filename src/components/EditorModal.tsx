@@ -23,16 +23,28 @@ const EditorModal = ({ isEditorOpen, setIsEditorOpen, editingLineupId, newLineup
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          <div>
-            <label className="text-xs font-bold text-gray-500 uppercase block mb-2">标题 (Title)</label>
-            <input
-              className="w-full bg-[#0f1923] border border-gray-700 rounded p-3 text-white focus:border-[#ff4655] outline-none"
-              placeholder="例如：B区窗户进攻瞬爆烟"
-              value={newLineupData.title}
-              onChange={(e) => setNewLineupData({ ...newLineupData, title: e.target.value })}
-              autoFocus
-            />
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs font-bold text-gray-500 uppercase block mb-2">标题 (Title)</label>
+              <input
+                className="w-full bg-[#0f1923] border border-gray-700 rounded p-3 text-white focus:border-[#ff4655] outline-none"
+                placeholder="例如：B区窗户进攻瞬爆烟"
+                value={newLineupData.title}
+                onChange={(e) => setNewLineupData({ ...newLineupData, title: e.target.value })}
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-500 uppercase block mb-2">点位来源链接 (可选)</label>
+              <input
+                className="w-full bg-[#0f1923] border border-gray-700 rounded p-3 text-white focus:border-[#ff4655] outline-none"
+                placeholder="视频/来源链接，查看时可点击跳转"
+                value={newLineupData.sourceLink || ''}
+                onChange={(e) => setNewLineupData({ ...newLineupData, sourceLink: e.target.value })}
+              />
+            </div>
           </div>
+
           <div className="grid grid-cols-2 gap-6">
             {fields.map((field) => (
               <div key={field.k} className="bg-[#181b1f] p-4 rounded border border-white/5">

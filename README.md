@@ -52,6 +52,7 @@ stand_img text, stand_desc text,
 aim_img text, aim_desc text,
 aim2_img text, aim2_desc text,
 land_img text, land_desc text,
+source_link text,
 cloned_from text,
 created_at timestamptz default now(),
 updated_at timestamptz
@@ -87,6 +88,7 @@ create table if not exists public.valorant_shared (
   aim_img text, aim_desc text,
   aim2_img text, aim2_desc text,
   land_img text, land_desc text,
+  source_link text,
   cloned_from text,
   created_at timestamptz default now(),
   updated_at timestamptz
