@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Icon from './Icon';
 
 type Props = {
@@ -53,6 +53,25 @@ const RightPanel: React.FC<Props> = ({
   handleApplyCustomUserId,
   handleResetUserId,
 }) => {
+  const pageSize = 6;
+  const [page, setPage] = useState(1);
+  const showPagination = filteredLineups.length > 7;
+  const totalPages = Math.max(1, Math.ceil(filteredLineups.length / pageSize));
+
+  useEffect(() => {
+    setPage(1);
+  }, [filteredLineups]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const visibleLineups = useMemo(() => {
+    if (!showPagination) return filteredLineups;
+    const start = (page - 1) * pageSize;
+    return filteredLineups.slice(start, start + pageSize);
+  }, [filteredLineups, page, showPagination]);
+
   return (
     <div className="w-96 flex-shrink-0 flex flex-col bg-[#1f2326] border-l border-white/10 z-20 shadow-2xl">
       <div className="flex border-b border-white/10">
@@ -191,17 +210,26 @@ const RightPanel: React.FC<Props> = ({
           </div>
         ) : (
           <div className="h-full flex flex-col">
-            <div className="relative mb-4">
-              <input
-                type="text"
-                placeholder="搜索点位标题..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#0f1923] border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-sm text-white focus:border-[#ff4655] outline-none transition-colors"
-              />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                <Icon name="Search" size={16} />
+            <div className="flex items-center gap-2 mb-4">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="搜索点位标题..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-12 bg-[#0f1923] border border-gray-700 rounded-lg pl-10 pr-4 text-sm text-white focus:border-[#ff4655] outline-none transition-colors"
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  <Icon name="Search" size={16} />
+                </div>
               </div>
+              <button
+                onClick={handleClearAll}
+                className="h-12 px-3 whitespace-nowrap bg-[#ff4655] hover:bg-[#d93a49] text-white font-bold rounded-lg flex items-center justify-center gap-2 transition-colors uppercase tracking-wider shadow-lg shadow-red-900/20 group"
+              >
+                <Icon name="Trash2" size={16} className="group-hover:scale-110 transition-transform" />
+                清空点位
+              </button>
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-2 pr-1">
@@ -239,7 +267,7 @@ const RightPanel: React.FC<Props> = ({
                   <span className="text-xs">暂无相关点位</span>
                 </div>
               ) : (
-                filteredLineups.map((l) => (
+                visibleLineups.map((l) => (
                   <div
                     key={l.id}
                     onClick={() => handleViewLineup(l.id)}
@@ -296,16 +324,35 @@ const RightPanel: React.FC<Props> = ({
                 ))
               )}
             </div>
-
-            <div className="mt-3">
-              <button
-                onClick={handleClearAll}
-                className="w-full bg-[#ff4655] hover:bg-[#d93a49] text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors uppercase tracking-wider shadow-lg shadow-red-900/20 group"
-              >
-                <Icon name="Trash2" size={20} className="group-hover:scale-110 transition-transform" />
-                一键清空我的点位
-              </button>
-            </div>
+            {showPagination && (
+              <div className="mt-4 flex items-center justify-center gap-3 text-sm text-gray-200">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className={`px-4 py-2 rounded-lg border transition-colors ${
+                    page === 1
+                      ? 'border-white/5 text-gray-600 cursor-not-allowed'
+                      : 'border-white/10 text-white hover:border-white/40 hover:bg-white/5'
+                  }`}
+                >
+                  上一页
+                </button>
+                <div className="px-4 h-10 flex items-center justify-center rounded-lg bg-black/30 border border-white/10 text-white font-mono text-xs">
+                  {page} / {totalPages}
+                </div>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className={`px-4 py-2 rounded-lg border transition-colors ${
+                    page === totalPages
+                      ? 'border-white/5 text-gray-600 cursor-not-allowed'
+                      : 'border-[#ff4655]/60 text-white bg-[#ff4655]/10 hover:bg-[#ff4655]/20 hover:border-[#ff4655]'
+                  }`}
+                >
+                  下一页
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
