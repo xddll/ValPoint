@@ -9,6 +9,8 @@ export function useModalState() {
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
+  const [alertActionLabel, setAlertActionLabel] = useState(null);
+  const [alertAction, setAlertAction] = useState(null);
   const [viewingImage, setViewingImage] = useState(null);
   const [isChangelogOpen, setIsChangelogOpen] = useState(false);
 
@@ -27,6 +29,10 @@ export function useModalState() {
     setDeleteTargetId,
     alertMessage,
     setAlertMessage,
+    alertActionLabel,
+    setAlertActionLabel,
+    alertAction,
+    setAlertAction,
     viewingImage,
     setViewingImage,
     isChangelogOpen,

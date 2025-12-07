@@ -15,6 +15,8 @@ type Params = {
   isGuest: boolean;
   getMapEnglishName: (name: string) => string;
   setAlertMessage: (msg: string | null) => void;
+  setAlertActionLabel: (label: string | null) => void;
+  setAlertAction: (fn: (() => void) | null) => void;
   setIsSharing: (v: boolean) => void;
   saveNewLineup: (payload: any) => Promise<void>;
   fetchLineups: (userId: string | null) => Promise<void>;
@@ -27,6 +29,8 @@ export const useShareActions = ({
   isGuest,
   getMapEnglishName,
   setAlertMessage,
+  setAlertActionLabel,
+  setAlertAction,
   setIsSharing,
   saveNewLineup,
   fetchLineups,
@@ -39,6 +43,33 @@ export const useShareActions = ({
         setAlertMessage('未找到要分享的点位');
         return;
       }
+      // 若该点位来自共享库副本，提示直接使用原分享，无需再次创建，避免重复数据
+      if (lineup.clonedFrom) {
+        const originalShareId = toShortShareId(lineup.clonedFrom);
+        setAlertActionLabel('复制原分享ID');
+        setAlertAction(() => () => {
+          const textArea = document.createElement('textarea');
+          textArea.value = originalShareId;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-9999px';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            setAlertMessage('已复制原分享ID');
+          } catch (err) {
+            setAlertMessage(`请手动复制原分享ID：${originalShareId}`);
+          }
+          document.body.removeChild(textArea);
+          setAlertActionLabel(null);
+          setAlertAction(null);
+        });
+        setAlertMessage('该点位来自共享库，直接使用原分享ID即可，无需再次分享。');
+        return;
+      }
+      setAlertActionLabel(null);
+      setAlertAction(null);
       const shareId = toShortShareId(id);
       const payload = {
         share_id: shareId,
@@ -91,10 +122,12 @@ export const useShareActions = ({
         console.error(err);
         setAlertMessage('分享失败，请重试');
       } finally {
+        setAlertActionLabel(null);
+        setAlertAction(null);
         setIsSharing(false);
       }
     },
-    [lineups, userId, getMapEnglishName, setAlertMessage, setIsSharing],
+    [lineups, userId, getMapEnglishName, setAlertMessage, setAlertActionLabel, setAlertAction, setIsSharing],
   );
 
   const handleSaveShared = useCallback(
@@ -103,6 +136,8 @@ export const useShareActions = ({
         setAlertMessage('游客模式无法保存点位，请先输入密码切换到登录模式');
         return;
       }
+      setAlertActionLabel(null);
+      setAlertAction(null);
       const target = lineupToSave || fallbackSharedLineup;
       if (!target) return;
       try {

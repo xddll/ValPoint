@@ -67,6 +67,10 @@ function App() {
     setDeleteTargetId,
     alertMessage,
     setAlertMessage,
+    alertActionLabel,
+    setAlertActionLabel,
+    alertAction,
+    setAlertAction,
     viewingImage,
     setViewingImage,
     isChangelogOpen,
@@ -326,7 +330,7 @@ function App() {
     try {
       if (editingLineupId) {
         await updateLineup(editingLineupId, { ...toDbPayload(commonData, userId), updated_at: new Date().toISOString() });
-        setAlertMessage('更新成功');
+        setAlertMessage('更新成功，如已分享，请重新分享以同步共享库');
       } else {
         await saveNewLineup({ ...toDbPayload(commonData, userId), created_at: new Date().toISOString() });
         setAlertMessage('保存成功');
@@ -379,6 +383,8 @@ function App() {
     saveNewLineup,
     fetchLineups,
     handleTabSwitch,
+    setAlertActionLabel,
+    setAlertAction,
   });
   const onShare = useCallback(
     (id, e) => {
@@ -749,7 +755,16 @@ function App() {
         onSubmit={handlePreviewSubmit}
       />
 
-      <AlertModal message={alertMessage} onClose={() => setAlertMessage(null)} />
+      <AlertModal
+        message={alertMessage}
+        actionLabel={alertActionLabel}
+        onAction={alertAction}
+        onClose={() => {
+          setAlertMessage(null);
+          setAlertActionLabel(null);
+          setAlertAction(null);
+        }}
+      />
 
       <DeleteConfirmModal deleteTargetId={deleteTargetId} onCancel={() => setDeleteTargetId(null)} onConfirm={performDelete} />
       {isClearConfirmOpen && (

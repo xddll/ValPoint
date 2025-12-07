@@ -2,7 +2,7 @@
 import React from 'react';
 import Icon from './Icon';
 
-const AlertModal = ({ message, onClose }) => {
+const AlertModal = ({ message, onClose, actionLabel, onAction }) => {
   if (!message) return null;
   return (
     <div className="fixed inset-0 z-[2200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -18,10 +18,10 @@ const AlertModal = ({ message, onClose }) => {
         </div>
         <div className="mt-6 flex justify-end">
           <button
-            onClick={onClose}
+            onClick={onAction ? () => { onAction(); onClose(); } : onClose}
             className="px-6 py-2 rounded bg-white/10 hover:bg-white/20 text-white text-sm font-bold transition-colors"
           >
-            关闭
+            {actionLabel || '关闭'}
           </button>
         </div>
       </div>
