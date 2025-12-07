@@ -767,6 +767,8 @@ function App() {
         setNewLineupData={setNewLineupData}
         handleEditorSave={handleEditorSave}
         onClose={handleEditorClose}
+        selectedSide={selectedSide}
+        setSelectedSide={setSelectedSide}
       />
 
       <ViewerModal

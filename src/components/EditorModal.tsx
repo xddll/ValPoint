@@ -4,13 +4,22 @@ import Icon from './Icon';
 
 const fields = [
   { k: 'stand', l: '站位图' },
-  { k: 'stand2', l: '站位图 2', toggleKey: 'enableStand2' },
+  { k: 'stand2', l: '站位图2', toggleKey: 'enableStand2' },
   { k: 'aim', l: '瞄点图' },
-  { k: 'aim2', l: '瞄点图 2', toggleKey: 'enableAim2' },
+  { k: 'aim2', l: '瞄点图2', toggleKey: 'enableAim2' },
   { k: 'land', l: '技能落点图' },
 ];
 
-const EditorModal = ({ isEditorOpen, editingLineupId, newLineupData, setNewLineupData, handleEditorSave, onClose }) => {
+const EditorModal = ({
+  isEditorOpen,
+  editingLineupId,
+  newLineupData,
+  setNewLineupData,
+  handleEditorSave,
+  onClose,
+  selectedSide,
+  setSelectedSide,
+}) => {
   if (!isEditorOpen) return null;
 
   const toggleField = (field) => {
@@ -50,6 +59,25 @@ const EditorModal = ({ isEditorOpen, editingLineupId, newLineupData, setNewLineu
                 onChange={(e) => setNewLineupData({ ...newLineupData, title: e.target.value })}
                 autoFocus
               />
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="text-xs font-bold text-gray-500 uppercase">阵营 (Side)</div>
+              <div className="flex items-center gap-2 bg-[#0f1923] border border-gray-700 rounded px-2 py-1">
+                <button
+                  type="button"
+                  onClick={() => setSelectedSide('attack')}
+                  className={`px-3 py-1 rounded text-sm font-bold ${selectedSide === 'attack' ? 'bg-[#ff4655] text-white' : 'text-gray-200 hover:text-white hover:bg-white/10'}`}
+                >
+                  进攻 (ATK)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedSide('defense')}
+                  className={`px-3 py-1 rounded text-sm font-bold ${selectedSide === 'defense' ? 'bg-emerald-500 text-white' : 'text-gray-200 hover:text-white hover:bg-white/10'}`}
+                >
+                  防守 (DEF)
+                </button>
+              </div>
             </div>
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase block mb-2">点位来源链接 (可选)</label>
