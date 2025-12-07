@@ -2,7 +2,17 @@
 import React from 'react';
 import Icon from './Icon';
 
-const ViewerModal = ({ viewingLineup, onClose, handleEditStart, setViewingImage, getMapDisplayName, getMapEnglishName, isGuest }) => {
+const ViewerModal = ({
+  viewingLineup,
+  onClose,
+  handleEditStart,
+  setViewingImage,
+  getMapDisplayName,
+  getMapEnglishName,
+  isGuest,
+  libraryMode,
+  handleCopyShared,
+}) => {
   if (!viewingLineup) return null;
   return (
     <div className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
@@ -39,7 +49,7 @@ const ViewerModal = ({ viewingLineup, onClose, handleEditStart, setViewingImage,
                   <Icon name="ExternalLink" size={14} /> 查看来源
                 </a>
               )}
-              {!isGuest && (
+              {libraryMode !== 'shared' && !isGuest && (
                 <button
                   type="button"
                   onClick={() => handleEditStart(viewingLineup)}
@@ -47,6 +57,16 @@ const ViewerModal = ({ viewingLineup, onClose, handleEditStart, setViewingImage,
                   title="编辑"
                 >
                   <Icon name="Pencil" size={14} /> 编辑
+                </button>
+              )}
+              {libraryMode === 'shared' && (
+                <button
+                  type="button"
+                  onClick={() => handleCopyShared(viewingLineup)}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-500/50 bg-emerald-500/10 text-sm text-emerald-300 hover:border-emerald-400 hover:text-emerald-200 transition-colors"
+                  title="保存到我的点位"
+                >
+                  <Icon name="Save" size={14} /> 保存到我的点位
                 </button>
               )}
               <button

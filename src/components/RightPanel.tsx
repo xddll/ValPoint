@@ -27,6 +27,8 @@ type Props = {
   setCustomUserIdInput: (v: string) => void;
   handleApplyCustomUserId: () => void;
   handleResetUserId: () => void;
+  libraryMode: 'personal' | 'shared';
+  setLibraryMode: (v: 'personal' | 'shared') => void;
 };
 
 const RightPanel: React.FC<Props> = ({
@@ -54,11 +56,14 @@ const RightPanel: React.FC<Props> = ({
   setCustomUserIdInput,
   handleApplyCustomUserId,
   handleResetUserId,
+  libraryMode,
+  setLibraryMode,
 }) => {
   const pageSize = 7;
   const [page, setPage] = useState(1);
   const showPagination = filteredLineups.length > 8;
   const totalPages = Math.max(1, Math.ceil(filteredLineups.length / pageSize));
+  const isSharedMode = libraryMode === 'shared';
 
   useEffect(() => {
     setPage(1);
@@ -87,10 +92,14 @@ const RightPanel: React.FC<Props> = ({
         </button>
         {userMode === 'login' && (
           <button
-            onClick={() => handleTabSwitch('create')}
+            onClick={() => {
+              if (isSharedMode) return;
+              handleTabSwitch('create');
+            }}
+            disabled={isSharedMode}
             className={`flex-1 py-4 flex items-center justify-center gap-2 font-bold uppercase tracking-wider transition-colors ${
               activeTab === 'create' ? 'bg-[#ff4655] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'
-            }`}
+            } ${isSharedMode ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Icon name="Plus" size={18} /> 新增点位
           </button>
@@ -219,6 +228,24 @@ const RightPanel: React.FC<Props> = ({
           </div>
         ) : (
           <div className="h-full flex flex-col">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs text-gray-400">库来源</span>
+              <div className="flex rounded-lg overflow-hidden border border-white/10">
+                <button
+                  onClick={() => setLibraryMode('personal')}
+                  className={`px-3 py-1 text-xs font-bold ${isSharedMode ? 'text-gray-400 hover:text-white' : 'bg-[#ff4655] text-white'}`}
+                >
+                  个人库
+                </button>
+                <button
+                  onClick={() => setLibraryMode('shared')}
+                  className={`px-3 py-1 text-xs font-bold ${isSharedMode ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  共享库
+                </button>
+              </div>
+              {isSharedMode && <span className="text-[11px] text-gray-500">仅查看与复制，禁用编辑/删除</span>}
+            </div>
             <div className="flex items-center gap-2 mb-4">
               <div className="relative flex-1">
                 <input
@@ -234,13 +261,19 @@ const RightPanel: React.FC<Props> = ({
               </div>
               <button
                 onClick={handleClearAll}
-                disabled={userMode === 'guest'}
+                disabled={userMode === 'guest' || isSharedMode}
                 className={`h-12 px-3 whitespace-nowrap font-bold rounded-lg flex items-center justify-center gap-2 uppercase tracking-wider shadow-lg shadow-red-900/20 group transition-colors ${
-                  userMode === 'guest'
+                  userMode === 'guest' || isSharedMode
                     ? 'bg-gray-700 text-gray-400 cursor-not-allowed border border-white/10'
                     : 'bg-[#ff4655] hover:bg-[#d93a49] text-white'
                 }`}
-                title={userMode === 'guest' ? '游客模式仅可查看' : '清空当前 ID 的全部点位'}
+                title={
+                  userMode === 'guest'
+                    ? '游客模式仅可查看'
+                    : isSharedMode
+                    ? '共享库仅可查看/复制'
+                    : '清空当前 ID 的全部点位'
+                }
               >
                 <Icon name="Trash2" size={16} className="group-hover:scale-110 transition-transform" />
                 清空点位
@@ -318,14 +351,16 @@ const RightPanel: React.FC<Props> = ({
                           {l.side === 'attack' ? '进攻' : '防守'}
                         </span>
                         <div className="flex gap-1">
-                          <button
-                            onClick={(e) => handleShare(l.id, e)}
-                            className="text-gray-600 hover:text-blue-400 p-1 rounded hover:bg-white/5 transition-colors"
-                            title="分享"
-                          >
-                            <Icon name="Share2" size={14} />
-                          </button>
-                          {userMode === 'login' && (
+                          {!isSharedMode && (
+                            <button
+                              onClick={(e) => handleShare(l.id, e)}
+                              className="text-gray-600 hover:text-blue-400 p-1 rounded hover:bg-white/5 transition-colors"
+                              title="分享"
+                            >
+                              <Icon name="Share2" size={14} />
+                            </button>
+                          )}
+                          {userMode === 'login' && !isSharedMode && (
                             <button
                               onClick={(e) => handleRequestDelete(l.id, e)}
                               className="text-gray-600 hover:text-red-500 p-1 rounded hover:bg-white/5 transition-colors"

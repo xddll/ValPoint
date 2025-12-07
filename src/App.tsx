@@ -118,6 +118,8 @@ function App() {
   const [previewInput, setPreviewInput] = useState('');
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [sharedLineup, setSharedLineup] = useState(null);
+  const [sharedLineups, setSharedLineups] = useState([]);
+  const [libraryMode, setLibraryMode] = useState('personal'); // personal | shared
   const createEmptyLineup = () => ({
     title: '',
     agentPos: null,
@@ -164,13 +166,14 @@ function App() {
     if (!selectedMap) return {};
     const mapKey = selectedMap.displayName;
     const counts = {};
-    lineups.forEach((l) => {
+    const source = libraryMode === 'shared' ? sharedLineups : lineups;
+    source.forEach((l) => {
       if (l.mapName !== mapKey) return;
       if (selectedSide !== 'all' && l.side !== selectedSide) return;
       counts[l.agentName] = (counts[l.agentName] || 0) + 1;
     });
     return counts;
-  }, [lineups, selectedMap, selectedSide]);
+  }, [lineups, sharedLineups, selectedMap, selectedSide, libraryMode]);
 
   const filteredLineups = useMemo(() => {
     if (!selectedMap) return [];
@@ -184,6 +187,19 @@ function App() {
       return mapMatch && agentMatch && sideMatch && abilityMatch && searchMatch;
     });
   }, [lineups, selectedMap, selectedAgent, selectedSide, selectedAbilityIndex, searchQuery]);
+
+  const sharedFilteredLineups = useMemo(() => {
+    if (!selectedMap) return [];
+    const mapKey = selectedMap.displayName;
+    return sharedLineups.filter((l) => {
+      const mapMatch = l.mapName === mapKey;
+      const agentMatch = !selectedAgent || l.agentName === selectedAgent.displayName;
+      const sideMatch = selectedSide === 'all' || l.side === selectedSide;
+      const abilityMatch = selectedAbilityIndex === null || l.abilityIndex === selectedAbilityIndex;
+      const searchMatch = !searchQuery || l.title.toLowerCase().includes(searchQuery.toLowerCase());
+      return mapMatch && agentMatch && sideMatch && abilityMatch && searchMatch;
+    });
+  }, [sharedLineups, selectedMap, selectedAgent, selectedSide, selectedAbilityIndex, searchQuery]);
 
   const fetchLineups = useCallback(
     async (targetUserId = userId) => {
@@ -247,6 +263,28 @@ function App() {
   useEffect(() => {
     fetchLineups();
   }, [fetchLineups]);
+
+  useEffect(() => {
+    setSelectedLineupId(null);
+    setViewingLineup(null);
+  }, [libraryMode]);
+
+  const fetchSharedLineups = useCallback(async () => {
+    const { data, error } = await shareSupabase
+      .from(SHARE_TABLE)
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Supabase shared fetch error', error);
+      return;
+    }
+    const normalized = data.map((d) => normalizeLineup(d, mapNameZhToEn));
+    setSharedLineups(normalized);
+  }, [mapNameZhToEn]);
+
+  useEffect(() => {
+    if (libraryMode === 'shared') fetchSharedLineups();
+  }, [libraryMode, fetchSharedLineups]);
 
   const openAuthModalForId = (id) => {
     setPendingUserId(id);
@@ -391,6 +429,7 @@ function App() {
     setViewingLineup(null);
     setEditingLineupId(null);
     setSharedLineup(null);
+    if (tab === 'create') setLibraryMode('personal');
     if (tab !== 'shared') {
       try {
         window.history.replaceState({}, document.title, window.location.pathname);
@@ -616,15 +655,16 @@ function App() {
     }
   };
 
-  const handleSaveShared = async () => {
+  const handleSaveShared = async (lineupParam = null) => {
     if (isGuest) {
       setAlertMessage('游客模式无法保存点位，请先输入密码切换到登录模式');
       return;
     }
-    if (!sharedLineup) return;
+    const lineupToSave = lineupParam || sharedLineup;
+    if (!lineupToSave) return;
     try {
-      const mapNameEn = getMapEnglishName(sharedLineup.mapName);
-      const { id, ...data } = sharedLineup;
+      const mapNameEn = getMapEnglishName(lineupToSave.mapName);
+      const { id, ...data } = lineupToSave;
       const payload = {
         ...data,
         mapName: mapNameEn,
@@ -646,18 +686,19 @@ function App() {
   const handleViewLineup = useCallback(
     (id) => {
       setSelectedLineupId(id);
-      const lineup = lineups.find((l) => l.id === id);
+      const source = libraryMode === 'shared' ? sharedLineups : lineups;
+      const lineup = source.find((l) => l.id === id);
       if (lineup) setViewingLineup(lineup);
     },
-    [lineups],
+    [lineups, sharedLineups, libraryMode],
   );
 
   const isFlipped = activeTab === 'shared' ? sharedLineup?.side === 'defense' : selectedSide === 'defense';
   const mapLineups = useMemo(() => {
     if (activeTab === 'shared' && sharedLineup) return [sharedLineup];
-    if (activeTab === 'view' || activeTab === 'create') return filteredLineups;
-    return lineups;
-  }, [activeTab, sharedLineup, filteredLineups, lineups]);
+    if (activeTab === 'view' || activeTab === 'create') return libraryMode === 'shared' ? sharedFilteredLineups : filteredLineups;
+    return libraryMode === 'shared' ? sharedLineups : lineups;
+  }, [activeTab, sharedLineup, filteredLineups, sharedFilteredLineups, lineups, sharedLineups, libraryMode]);
 
   const getMapUrl = () => {
     if (activeTab === 'shared' && sharedLineup) {
@@ -816,7 +857,7 @@ function App() {
         handleOpenEditor={handleOpenEditor}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        filteredLineups={filteredLineups}
+        filteredLineups={libraryMode === 'shared' ? sharedFilteredLineups : filteredLineups}
         selectedLineupId={selectedLineupId}
         handleViewLineup={handleViewLineup}
         handleShare={handleShare}
@@ -830,6 +871,12 @@ function App() {
         setCustomUserIdInput={setCustomUserIdInput}
         handleApplyCustomUserId={handleApplyCustomUserId}
         handleResetUserId={handleResetUserId}
+        libraryMode={libraryMode}
+        setLibraryMode={(mode) => {
+          setLibraryMode(mode);
+          setSelectedLineupId(null);
+          setViewingLineup(null);
+        }}
       />
 
       {isAuthModalOpen && (
@@ -971,6 +1018,8 @@ function App() {
         getMapDisplayName={getMapDisplayName}
         getMapEnglishName={getMapEnglishName}
         isGuest={isGuest}
+        libraryMode={libraryMode}
+        handleCopyShared={handleSaveShared}
       />
 
       <Lightbox viewingImage={viewingImage} setViewingImage={setViewingImage} />
