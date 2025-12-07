@@ -15,8 +15,10 @@ import Icon from './components/Icon';
 import { supabase, shareSupabase } from './supabaseClient';
 
 const LOCAL_USER_KEY = 'valpoint_user_id';
+const LOCAL_USER_MODE_KEY = 'valpoint_user_mode';
 const TABLE = 'valorant_lineups';
 const SHARE_TABLE = 'valorant_shared';
+const USER_TABLE = 'valorant_users';
 const ID_LENGTH = 8;
 const ID_REGEX = /^[A-Za-z0-9]{8}$/;
 
@@ -29,15 +31,6 @@ const generateRandomUserId = () => {
   }
   return out;
 };
-const ensureUserId = () => {
-  let id = localStorage.getItem(LOCAL_USER_KEY);
-  if (!id || !ID_REGEX.test(id)) {
-    id = generateRandomUserId();
-    localStorage.setItem(LOCAL_USER_KEY, id);
-  }
-  return id;
-};
-
 const toShortShareId = (uuid) => {
   if (!uuid) return '';
   const parts = uuid.split('-');
@@ -139,6 +132,13 @@ function App() {
   const [placingType, setPlacingType] = useState(null);
   const [customUserIdInput, setCustomUserIdInput] = useState('');
   const [isSharing, setIsSharing] = useState(false);
+  const [userMode, setUserMode] = useState('login'); // login | guest
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingUserId, setPendingUserId] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
+  const isGuest = userMode === 'guest';
+  const targetUserId = pendingUserId || customUserIdInput || userId || '';
 
   const getMapDisplayName = (apiMapName) => MAP_TRANSLATIONS[apiMapName] || apiMapName;
   const getMapEnglishName = (displayName) =>
@@ -177,25 +177,39 @@ function App() {
     });
   }, [lineups, selectedMap, selectedAgent, selectedSide, selectedAbilityIndex, searchQuery]);
 
-  const fetchLineups = useCallback(async () => {
-    if (!userId) return;
-    const { data, error } = await supabase
-      .from(TABLE)
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-    if (error) {
-      console.error('Supabase fetch error', error);
-      return;
-    }
-    const normalized = data.map((d) => normalizeLineup(d, mapNameZhToEn));
-    setLineups(normalized);
-  }, [userId, mapNameZhToEn]);
+  const fetchLineups = useCallback(
+    async (targetUserId = userId) => {
+      const resolvedUserId = targetUserId || userId;
+      if (!resolvedUserId) return;
+      const { data, error } = await supabase
+        .from(TABLE)
+        .select('*')
+        .eq('user_id', resolvedUserId)
+        .order('created_at', { ascending: false });
+      if (error) {
+        console.error('Supabase fetch error', error);
+        return;
+      }
+      const normalized = data.map((d) => normalizeLineup(d, mapNameZhToEn));
+      setLineups(normalized);
+    },
+    [userId, mapNameZhToEn],
+  );
 
   useEffect(() => {
-    const id = ensureUserId();
-    setUserId(id);
-    setCustomUserIdInput(id);
+    const savedId = localStorage.getItem(LOCAL_USER_KEY);
+    const savedMode = localStorage.getItem(LOCAL_USER_MODE_KEY);
+    if (savedId && ID_REGEX.test(savedId)) {
+      setUserId(savedId);
+      setCustomUserIdInput(savedId);
+      const mode = savedMode === 'guest' ? 'guest' : 'login';
+      setUserMode(mode);
+    } else {
+      const newId = generateRandomUserId();
+      setPendingUserId(newId);
+      setCustomUserIdInput(newId);
+      setIsAuthModalOpen(true);
+    }
 
     fetch('https://valorant-api.com/v1/maps')
       .then((res) => res.json())
@@ -226,38 +240,84 @@ function App() {
     fetchLineups();
   }, [fetchLineups]);
 
+  const openAuthModalForId = (id) => {
+    setPendingUserId(id);
+    setPasswordInput('');
+    setIsAuthModalOpen(true);
+  };
+
   const handleApplyCustomUserId = async () => {
     const trimmed = customUserIdInput.trim().toUpperCase();
     if (!ID_REGEX.test(trimmed)) {
       setAlertMessage('ID 必须是 8 位字母或数字（不区分大小写）');
       return;
     }
-    localStorage.setItem(LOCAL_USER_KEY, trimmed);
-    setCustomUserIdInput(trimmed);
-    setUserId(trimmed);
-    setLineups([]);
-    setSelectedLineupId(null);
-    setViewingLineup(null);
-    setSharedLineup(null);
-    setEditingLineupId(null);
-    setAlertMessage('ID 已保存，正在加载该 ID 的数据');
-    await fetchLineups();
-    setAlertMessage(null);
+    openAuthModalForId(trimmed);
   };
 
   const handleResetUserId = async () => {
     const newId = generateRandomUserId();
-    localStorage.setItem(LOCAL_USER_KEY, newId);
     setCustomUserIdInput(newId);
-    setUserId(newId);
-    setLineups([]);
-    setSelectedLineupId(null);
-    setViewingLineup(null);
-    setSharedLineup(null);
-    setEditingLineupId(null);
-    setAlertMessage('已生成新的匿名 ID');
-    await fetchLineups();
-    setAlertMessage(null);
+    openAuthModalForId(newId);
+  };
+
+  const handleConfirmUserAuth = async (forcedPassword = null) => {
+    const finalId = (pendingUserId || customUserIdInput || '').trim().toUpperCase();
+    if (!ID_REGEX.test(finalId)) {
+      setAlertMessage('ID 必须是 8 位字母或数字（不区分大小写）');
+      return;
+    }
+    const password = forcedPassword !== null ? forcedPassword.trim() : passwordInput.trim();
+    const nextMode = password ? 'login' : 'guest';
+    setIsAuthLoading(true);
+    try {
+      if (nextMode === 'login') {
+        const { data, error } = await supabase
+          .from(USER_TABLE)
+          .select('password, created_at')
+          .eq('user_id', finalId);
+        if (error) throw error;
+        const existing = data?.[0];
+        if (existing && existing.password && existing.password !== password) {
+          setAlertMessage('密码不正确，请重新输入。');
+          setIsAuthLoading(false);
+          return;
+        }
+        const now = new Date().toISOString();
+        const { error: upsertError } = await supabase
+          .from(USER_TABLE)
+          .upsert({
+            user_id: finalId,
+            password,
+            created_at: existing?.created_at || now,
+            updated_at: now,
+          });
+        if (upsertError) throw upsertError;
+      }
+
+      localStorage.setItem(LOCAL_USER_KEY, finalId);
+      localStorage.setItem(LOCAL_USER_MODE_KEY, nextMode);
+      setUserId(finalId);
+      setCustomUserIdInput(finalId);
+      setUserMode(nextMode);
+      setLineups([]);
+      setSelectedLineupId(null);
+      setViewingLineup(null);
+      setSharedLineup(null);
+      setEditingLineupId(null);
+      setIsEditorOpen(false);
+      setPlacingType(null);
+      setNewLineupData(createEmptyLineup());
+      setActiveTab('view');
+      setIsAuthModalOpen(false);
+      setPendingUserId('');
+      await fetchLineups(finalId);
+    } catch (e) {
+      console.error(e);
+      setAlertMessage('保存账号信息失败，请稍后重试');
+    } finally {
+      setIsAuthLoading(false);
+    }
   };
 
   const fetchSharedById = useCallback(
@@ -313,6 +373,10 @@ function App() {
   };
 
   const handleTabSwitch = (tab) => {
+    if (isGuest && tab === 'create') {
+      setAlertMessage('游客模式仅支持查看，如需新增或编辑请设置密码进入登录模式');
+      return;
+    }
     setActiveTab(tab);
     setPlacingType(null);
     setSelectedLineupId(null);
@@ -340,6 +404,10 @@ function App() {
   };
 
   const handleOpenEditor = () => {
+    if (isGuest) {
+      setAlertMessage('游客模式仅支持查看，填写密码进入登录模式后才能新增或编辑点位');
+      return;
+    }
     if (!newLineupData.agentPos || !newLineupData.skillPos) return setAlertMessage('请先在地图上完成标注');
     if (!selectedAgent) return setAlertMessage('请先选择一名特工');
     setIsEditorOpen(true);
@@ -358,6 +426,10 @@ function App() {
   };
 
   const handleEditStart = (lineup) => {
+    if (isGuest) {
+      setAlertMessage('游客模式无法编辑点位，请先输入密码切换到登录模式');
+      return;
+    }
     const mapObj = maps.find((m) => getMapDisplayName(m.displayName) === lineup.mapName || m.displayName === lineup.mapName);
     if (mapObj) setSelectedMap(mapObj);
     const agentObj = agents.find((a) => a.displayName === lineup.agentName);
@@ -385,6 +457,10 @@ function App() {
   };
 
   const handleEditorSave = async () => {
+    if (isGuest) {
+      setAlertMessage('游客模式无法保存点位，请先输入密码切换到登录模式');
+      return;
+    }
     if (!newLineupData.title.trim()) return setAlertMessage('标题不能为空');
     const commonData = {
       ...newLineupData,
@@ -421,11 +497,20 @@ function App() {
   };
 
   const handleRequestDelete = (id, e) => {
+    if (isGuest) {
+      e?.stopPropagation();
+      setAlertMessage('游客模式无法删除点位，请先输入密码切换到登录模式');
+      return;
+    }
     e.stopPropagation();
     setDeleteTargetId(id);
   };
 
   const performDelete = async () => {
+    if (isGuest) {
+      setAlertMessage('游客模式无法删除点位，请先输入密码切换到登录模式');
+      return;
+    }
     if (!deleteTargetId) return;
     const { error } = await supabase.from(TABLE).delete().eq('id', deleteTargetId);
     if (error) {
@@ -439,6 +524,11 @@ function App() {
   };
 
   const handleShare = async (id, e) => {
+    if (isGuest) {
+      e?.stopPropagation();
+      setAlertMessage('游客模式无法分享点位，请先输入密码切换到登录模式');
+      return;
+    }
     e.stopPropagation();
     const lineup = lineups.find((l) => l.id === id);
     if (!lineup) {
@@ -479,9 +569,19 @@ function App() {
     }
   };
 
-  const togglePlacingType = (type) => setPlacingType((prev) => (prev === type ? null : type));
+  const togglePlacingType = (type) => {
+    if (isGuest) {
+      setAlertMessage('游客模式无法标注点位，请先输入密码进入登录模式');
+      return;
+    }
+    setPlacingType((prev) => (prev === type ? null : type));
+  };
 
   const handleClearAll = () => {
+    if (isGuest) {
+      setAlertMessage('游客模式无法删除点位，请先输入密码切换到登录模式');
+      return;
+    }
     if (!lineups.length) {
       setAlertMessage('当前没有可删除的点位。');
       return;
@@ -503,6 +603,10 @@ function App() {
   };
 
   const handleSaveShared = async () => {
+    if (isGuest) {
+      setAlertMessage('游客模式无法保存点位，请先输入密码切换到登录模式');
+      return;
+    }
     if (!sharedLineup) return;
     try {
       const mapNameEn = getMapEnglishName(sharedLineup.mapName);
@@ -701,11 +805,103 @@ function App() {
         getMapDisplayName={getMapDisplayName}
         setIsPreviewModalOpen={setIsPreviewModalOpen}
         userId={userId}
+        userMode={userMode}
         customUserIdInput={customUserIdInput}
         setCustomUserIdInput={setCustomUserIdInput}
         handleApplyCustomUserId={handleApplyCustomUserId}
         handleResetUserId={handleResetUserId}
       />
+
+      {isAuthModalOpen && (
+        <div className="fixed inset-0 z-[1200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-[#1f2326] border border-white/10 rounded-xl shadow-2xl p-6 space-y-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">创建/登录 ID</div>
+                <h3 className="text-xl font-bold text-white mt-1">选择进入模式</h3>
+                <p className="text-sm text-gray-400 mt-1">输入密码进入登录模式；留空进入游客模式（仅查看）。</p>
+              </div>
+              <button
+                type="button"
+                disabled={!userId}
+                onClick={() => {
+                  if (!userId) return;
+                  setIsAuthModalOpen(false);
+                  setPendingUserId('');
+                  setPasswordInput('');
+                }}
+                className={`p-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-white/40 transition-colors ${
+                  userId ? '' : 'opacity-40 cursor-not-allowed'
+                }`}
+                title={userId ? '关闭' : '请先完成模式选择'}
+              >
+                <Icon name="X" size={16} />
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-gray-400">
+                <span>当前 ID</span>
+                <button
+                  type="button"
+                  onClick={handleResetUserId}
+                  className="px-2 py-1 rounded border border-white/10 text-[11px] text-blue-300 hover:text-white hover:border-white/40 transition-colors"
+                  title="生成新的随机 ID"
+                >
+                  随机 ID
+                </button>
+              </div>
+              <input
+                type="text"
+                value={targetUserId.toUpperCase()}
+                onChange={(e) => {
+                  const next = (e.target.value || '').toUpperCase();
+                  setPendingUserId(next);
+                  setCustomUserIdInput(next);
+                }}
+                placeholder="请输入 8 位字母或数字"
+                className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-lg font-mono text-sm text-white focus:border-[#ff4655] outline-none transition-colors"
+                maxLength={8}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs text-gray-400">密码（留空则游客模式，仅可查看）</label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="请输入密码，或留空以游客身份进入"
+                className="w-full bg-black/30 border border-gray-700 rounded-lg py-3 px-3 text-sm text-white focus:border-[#ff4655] outline-none transition-colors"
+              />
+            </div>
+            <div className="text-[12px] text-gray-400 bg-black/20 border border-white/10 rounded-lg p-3 leading-relaxed">
+              登录模式：可新增、编辑、删除、分享点位。<br />
+              游客模式：仅可查看该 ID 的点位数据，隐藏新增/分享/编辑/删除入口。
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => handleConfirmUserAuth('')}
+                disabled={isAuthLoading}
+                className="px-4 py-2 rounded-lg border border-white/20 text-sm text-gray-200 hover:border-white/60 hover:bg-white/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                以游客模式进入
+              </button>
+              <button
+                type="button"
+                onClick={() => handleConfirmUserAuth()}
+                disabled={isAuthLoading}
+                className="px-4 py-2 rounded-lg bg-[#ff4655] hover:bg-[#d93a49] text-white font-bold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isAuthLoading && <Icon name="Loader2" className="animate-spin" size={16} />}
+                保存密码并登录
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <MapPickerModal
         isOpen={isMapModalOpen}
@@ -754,6 +950,7 @@ function App() {
         setViewingImage={setViewingImage}
         getMapDisplayName={getMapDisplayName}
         getMapEnglishName={getMapEnglishName}
+        isGuest={isGuest}
       />
 
       <Lightbox viewingImage={viewingImage} setViewingImage={setViewingImage} />

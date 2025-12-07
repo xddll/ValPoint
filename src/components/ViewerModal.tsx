@@ -2,7 +2,7 @@
 import React from 'react';
 import Icon from './Icon';
 
-const ViewerModal = ({ viewingLineup, onClose, handleEditStart, setViewingImage, getMapDisplayName, getMapEnglishName }) => {
+const ViewerModal = ({ viewingLineup, onClose, handleEditStart, setViewingImage, getMapDisplayName, getMapEnglishName, isGuest }) => {
   if (!viewingLineup) return null;
   return (
     <div className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
@@ -39,14 +39,16 @@ const ViewerModal = ({ viewingLineup, onClose, handleEditStart, setViewingImage,
                   <Icon name="ExternalLink" size={14} /> 查看来源
                 </a>
               )}
-              <button
-                type="button"
-                onClick={() => handleEditStart(viewingLineup)}
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white hover:border-[#ff4655] hover:text-[#ff4655] transition-colors"
-                title="编辑"
-              >
-                <Icon name="Pencil" size={14} /> 编辑
-              </button>
+              {!isGuest && (
+                <button
+                  type="button"
+                  onClick={() => handleEditStart(viewingLineup)}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white hover:border-[#ff4655] hover:text-[#ff4655] transition-colors"
+                  title="编辑"
+                >
+                  <Icon name="Pencil" size={14} /> 编辑
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onClose}
