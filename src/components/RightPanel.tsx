@@ -318,15 +318,13 @@ const RightPanel: React.FC<Props> = ({
                           {l.side === 'attack' ? '进攻' : '防守'}
                         </span>
                         <div className="flex gap-1">
-                          {userMode === 'login' && (
-                            <button
-                              onClick={(e) => handleShare(l.id, e)}
-                              className="text-gray-600 hover:text-blue-400 p-1 rounded hover:bg-white/5 transition-colors"
-                              title="分享"
-                            >
-                              <Icon name="Share2" size={14} />
-                            </button>
-                          )}
+                          <button
+                            onClick={(e) => handleShare(l.id, e)}
+                            className="text-gray-600 hover:text-blue-400 p-1 rounded hover:bg-white/5 transition-colors"
+                            title="分享"
+                          >
+                            <Icon name="Share2" size={14} />
+                          </button>
                           {userMode === 'login' && (
                             <button
                               onClick={(e) => handleRequestDelete(l.id, e)}

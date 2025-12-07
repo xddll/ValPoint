@@ -524,11 +524,6 @@ function App() {
   };
 
   const handleShare = async (id, e) => {
-    if (isGuest) {
-      e?.stopPropagation();
-      setAlertMessage('游客模式无法分享点位，请先输入密码切换到登录模式');
-      return;
-    }
     e.stopPropagation();
     const lineup = lineups.find((l) => l.id === id);
     if (!lineup) {
@@ -744,6 +739,7 @@ function App() {
           />
         </div>
         <Lightbox viewingImage={viewingImage} setViewingImage={setViewingImage} />
+        <AlertModal message={alertMessage} onClose={() => setAlertMessage(null)} />
       </div>
     );
   }
@@ -819,7 +815,7 @@ function App() {
               <div>
                 <div className="text-xs text-gray-400 uppercase tracking-wider">创建/登录 ID</div>
                 <h3 className="text-xl font-bold text-white mt-1">选择进入模式</h3>
-                <p className="text-sm text-gray-400 mt-1">输入密码进入登录模式；留空进入游客模式（仅查看）。</p>
+                <p className="text-sm text-gray-400 mt-1">输入密码进入登录模式；留空进入游客模式（可查看和分享）。</p>
               </div>
               <button
                 type="button"
@@ -866,7 +862,7 @@ function App() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs text-gray-400">密码（留空则游客模式，仅可查看）</label>
+              <label className="text-xs text-gray-400">密码（留空则游客模式：仅查看与分享）</label>
               <input
                 type="password"
                 value={passwordInput}
@@ -877,7 +873,7 @@ function App() {
             </div>
             <div className="text-[12px] text-gray-400 bg-black/20 border border-white/10 rounded-lg p-3 leading-relaxed">
               登录模式：可新增、编辑、删除、分享点位。<br />
-              游客模式：仅可查看该 ID 的点位数据，隐藏新增/分享/编辑/删除入口。
+              游客模式：可查看和分享该 ID 的点位数据，新增/编辑/删除入口隐藏。
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
