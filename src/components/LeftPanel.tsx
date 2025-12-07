@@ -110,19 +110,22 @@ const LeftPanel: React.FC<Props> = ({
             <div className="flex gap-2 justify-between bg-[#0f1923] p-2 rounded-lg border border-white/10">
               {selectedAgent.abilities
                 .filter((a: any) => a.slot !== 'Passive')
-                .map((ability: any, idx: number) => (
-                  <button
-                    key={idx}
-                  onClick={() => setSelectedAbilityIndex(selectedAbilityIndex === idx ? null : idx)}
-                  className={`ability-icon flex flex-col items-center gap-1 flex-1 p-1 rounded ${selectedAbilityIndex === idx ? 'selected bg-white/5' : ''}`}
-                  title={getAbilityTitle(selectedAgent, ability.slot, ability.displayName)}
-                >
-                  <img src={getAbilityIcon(selectedAgent, idx)} className="w-8 h-8 object-contain" />
-                  <span className="text-[10px] uppercase font-bold text-gray-500">
-                    技能：{['C', 'Q', 'E', 'X'][idx] || ability.slot}
-                  </span>
-                </button>
-              ))}
+                .map((ability: any, idx: number) => {
+                  const slotKey = ability?.keypad || ['C', 'Q', 'E', 'X'][idx];
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedAbilityIndex(selectedAbilityIndex === idx ? null : idx)}
+                      className={`ability-icon flex flex-col items-center gap-1 flex-1 p-1 rounded ${selectedAbilityIndex === idx ? 'selected bg-white/5' : ''}`}
+                      title={getAbilityTitle(selectedAgent, slotKey, ability.displayName)}
+                    >
+                      <img src={getAbilityIcon(selectedAgent, idx)} className="w-8 h-8 object-contain" />
+                      <span className="text-[10px] uppercase font-bold text-gray-500">
+                        技能：{['C', 'Q', 'E', 'X'][idx] || slotKey}
+                      </span>
+                    </button>
+                  );
+                })}
             </div>
           </div>
         )}

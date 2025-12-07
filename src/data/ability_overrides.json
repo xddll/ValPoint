@@ -1,0 +1,786 @@
+{
+  "铁臂": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_x.png"
+    },
+    "titles": {
+      "Ability1": "剧震余波",
+      "Ability2": "闪点爆破",
+      "Grenade": "山崩地陷",
+      "Ultimate": "惊雷卷地"
+    }
+  },
+  "Breach": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/01_x.png"
+    },
+    "titles": {
+      "Ability1": "剧震余波",
+      "Ability2": "闪点爆破",
+      "Grenade": "山崩地陷",
+      "Ultimate": "惊雷卷地"
+    }
+  },
+  "捷风": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_x.png"
+    },
+    "titles": {
+      "Ability1": "瞬云",
+      "Ability2": "凌空",
+      "Grenade": "逐风",
+      "Ultimate": "飓刃"
+    }
+  },
+  "Jett": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/02_x.png"
+    },
+    "titles": {
+      "Ability1": "瞬云",
+      "Ability2": "凌空",
+      "Grenade": "逐风",
+      "Ultimate": "飓刃"
+    }
+  },
+  "雷兹": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_x.png"
+    },
+    "titles": {
+      "Ability1": "花车巡游",
+      "Ability2": "惊喜翻腾",
+      "Grenade": "彩雷飞溅",
+      "Ultimate": "晚安焰火"
+    }
+  },
+  "Raze": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/03_x.png"
+    },
+    "titles": {
+      "Ability1": "花车巡游",
+      "Ability2": "惊喜翻腾",
+      "Grenade": "彩雷飞溅",
+      "Ultimate": "晚安焰火"
+    }
+  },
+  "幽影": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_x.png"
+    },
+    "titles": {
+      "Ability1": "践影",
+      "Ability2": "暗魇",
+      "Grenade": "黑瘴",
+      "Ultimate": "离魂"
+    }
+  },
+  "Omen": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/04_x.png"
+    },
+    "titles": {
+      "Ability1": "践影",
+      "Ability2": "暗魇",
+      "Grenade": "黑瘴",
+      "Ultimate": "离魂"
+    }
+  },
+  "炼狱": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_x.png"
+    },
+    "titles": {
+      "Ability1": "振奋信标",
+      "Ability2": "燃烧榴弹",
+      "Grenade": "空投烟幕",
+      "Ultimate": "天基光束"
+    }
+  },
+  "Brimstone": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/05_x.png"
+    },
+    "titles": {
+      "Ability1": "振奋信标",
+      "Ability2": "燃烧榴弹",
+      "Grenade": "空投烟幕",
+      "Ultimate": "天基光束"
+    }
+  },
+  "不死鸟": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_x.png"
+    },
+    "titles": {
+      "Ability1": "火冒三丈",
+      "Ability2": "火热手感",
+      "Grenade": "闪光曲球",
+      "Ultimate": "再火一回"
+    }
+  },
+  "Phoenix": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/06_x.png"
+    },
+    "titles": {
+      "Ability1": "火冒三丈",
+      "Ability2": "火热手感",
+      "Grenade": "闪光曲球",
+      "Ultimate": "再火一回"
+    }
+  },
+  "贤者": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_x.png"
+    },
+    "titles": {
+      "Ability1": "玉城",
+      "Ability2": "薄冰",
+      "Grenade": "逢春",
+      "Ultimate": "再起"
+    }
+  },
+  "Sage": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/07_x.png"
+    },
+    "titles": {
+      "Ability1": "玉城",
+      "Ability2": "薄冰",
+      "Grenade": "逢春",
+      "Ultimate": "再起"
+    }
+  },
+  "猎枭": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_x.png"
+    },
+    "titles": {
+      "Ability1": "枭型无人机",
+      "Ability2": "雷击箭",
+      "Grenade": "寻敌箭",
+      "Ultimate": "狂猎之怒"
+    }
+  },
+  "Sova": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/08_x.png"
+    },
+    "titles": {
+      "Ability1": "枭型无人机",
+      "Ability2": "雷击箭",
+      "Grenade": "寻敌箭",
+      "Ultimate": "狂猎之怒"
+    }
+  },
+  "蝰蛇": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_x.png"
+    },
+    "titles": {
+      "Ability1": "蛇吻",
+      "Ability2": "瘴云",
+      "Grenade": "毒幕",
+      "Ultimate": "蝰腹"
+    }
+  },
+  "Viper": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/09_x.png"
+    },
+    "titles": {
+      "Ability1": "蛇吻",
+      "Ability2": "瘴云",
+      "Grenade": "毒幕",
+      "Ultimate": "蝰腹"
+    }
+  },
+  "零": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_x.png"
+    },
+    "titles": {
+      "Ability1": "震慑绊线",
+      "Ability2": "赛博囚笼",
+      "Grenade": "战术监控",
+      "Ultimate": "神经取析"
+    }
+  },
+  "Cypher": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/10_x.png"
+    },
+    "titles": {
+      "Ability1": "震慑绊线",
+      "Ability2": "赛博囚笼",
+      "Grenade": "战术监控",
+      "Ultimate": "神经取析"
+    }
+  },
+  "芮娜": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_x.png"
+    },
+    "titles": {
+      "Ability1": "睥睨",
+      "Ability2": "噬尽",
+      "Grenade": "逐散",
+      "Ultimate": "女皇旨令"
+    }
+  },
+  "Reyna": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/11_x.png"
+    },
+    "titles": {
+      "Ability1": "睥睨",
+      "Ability2": "噬尽",
+      "Grenade": "逐散",
+      "Ultimate": "女皇旨令"
+    }
+  },
+  "奇乐": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_x.png"
+    },
+    "titles": {
+      "Ability1": "纳米蜂群",
+      "Ability2": "自动哨兵",
+      "Grenade": "哨戒炮台",
+      "Ultimate": "全面封锁"
+    }
+  },
+  "Killjoy": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/12_x.png"
+    },
+    "titles": {
+      "Ability1": "纳米蜂群",
+      "Ability2": "自动哨兵",
+      "Grenade": "哨戒炮台",
+      "Ultimate": "全面封锁"
+    }
+  },
+  "斯凯": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_x.png"
+    },
+    "titles": {
+      "Ability1": "愈生之息",
+      "Ability2": "辟林之虎",
+      "Grenade": "引路之隼",
+      "Ultimate": "追猎之灵"
+    }
+  },
+  "Skye": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/13_x.png"
+    },
+    "titles": {
+      "Ability1": "愈生之息",
+      "Ability2": "辟林之虎",
+      "Grenade": "引路之隼",
+      "Ultimate": "追猎之灵"
+    }
+  },
+  "夜露": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_x.png"
+    },
+    "titles": {
+      "Ability1": "出其不意",
+      "Ability2": "攻其不备",
+      "Grenade": "不请自来",
+      "Ultimate": "神鬼不觉"
+    }
+  },
+  "Yoru": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/14_x.png"
+    },
+    "titles": {
+      "Ability1": "出其不意",
+      "Ability2": "攻其不备",
+      "Grenade": "不请自来",
+      "Ultimate": "神鬼不觉"
+    }
+  },
+  "星礈": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_x.png"
+    },
+    "titles": {
+      "Ability1": "重力之阱",
+      "Ability2": "新星脉冲",
+      "Grenade": "星云/消散",
+      "Ultimate": "宇宙分裂"
+    }
+  },
+  "Astra": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/15_x.png"
+    },
+    "titles": {
+      "Ability1": "重力之阱",
+      "Ability2": "新星脉冲",
+      "Grenade": "星云/消散",
+      "Ultimate": "宇宙分裂"
+    }
+  },
+  "K/O": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_x.png"
+    },
+    "titles": {
+      "Ability1": "碎片溢出",
+      "Ability2": "闪存过载",
+      "Grenade": "零点嗅探",
+      "Ultimate": "无效命令"
+    }
+  },
+  "KAY/O": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/16_x.png"
+    },
+    "titles": {
+      "Ability1": "碎片溢出",
+      "Ability2": "闪存过载",
+      "Grenade": "零点嗅探",
+      "Ultimate": "无效命令"
+    }
+  },
+  "尚勃勒": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_x.png"
+    },
+    "titles": {
+      "Ability1": "贵宾限行",
+      "Ability2": "金牌猎头",
+      "Grenade": "闪转自如",
+      "Ultimate": "孤高火力"
+    }
+  },
+  "Chamber": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/17_x.png"
+    },
+    "titles": {
+      "Ability1": "贵宾限行",
+      "Ability2": "金牌猎头",
+      "Grenade": "闪转自如",
+      "Ultimate": "孤高火力"
+    }
+  },
+  "霓虹": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_x.png"
+    },
+    "titles": {
+      "Ability1": "高速通道",
+      "Ability2": "闪电弹球",
+      "Grenade": "充能疾驰",
+      "Ultimate": "超限暴走"
+    }
+  },
+  "Neon": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/18_x.png"
+    },
+    "titles": {
+      "Ability1": "高速通道",
+      "Ability2": "闪电弹球",
+      "Grenade": "充能疾驰",
+      "Ultimate": "超限暴走"
+    }
+  },
+  "黑梦": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_x.png"
+    },
+    "titles": {
+      "Ability1": "黯兽",
+      "Ability2": "幽爪",
+      "Grenade": "诡眼",
+      "Ultimate": "夜临"
+    }
+  },
+  "Fade": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/19_x.png"
+    },
+    "titles": {
+      "Ability1": "黯兽",
+      "Ability2": "幽爪",
+      "Grenade": "诡眼",
+      "Ultimate": "夜临"
+    }
+  },
+  "海神": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_e.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_q.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_x.png"
+    },
+    "titles": {
+      "Ability1": "乱涌",
+      "Ability2": "狂潮",
+      "Grenade": "海盾",
+      "Ultimate": "怒涛"
+    }
+  },
+  "Harbor": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_e.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_q.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/20_x.png"
+    },
+    "titles": {
+      "Ability1": "乱涌",
+      "Ability2": "狂潮",
+      "Grenade": "海盾",
+      "Ultimate": "怒涛"
+    }
+  },
+  "盖可": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_x.png"
+    },
+    "titles": {
+      "Ability1": "嗨爆全场",
+      "Ability2": "顽皮搭档",
+      "Grenade": "炫晕光波",
+      "Ultimate": "无敌超鲨"
+    }
+  },
+  "Gekko": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/21_x.png"
+    },
+    "titles": {
+      "Ability1": "嗨爆全场",
+      "Ability2": "顽皮搭档",
+      "Grenade": "炫晕光波",
+      "Ultimate": "无敌超鲨"
+    }
+  },
+  "钢锁": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_x.png"
+    },
+    "titles": {
+      "Ability1": "阻域屏障",
+      "Ability2": "声感陷阱",
+      "Grenade": "重力捕网",
+      "Ultimate": "断魂索道"
+    }
+  },
+  "Deadlock": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/22_x.png"
+    },
+    "titles": {
+      "Ability1": "阻域屏障",
+      "Ability2": "声感陷阱",
+      "Grenade": "重力捕网",
+      "Ultimate": "断魂索道"
+    }
+  },
+  "壹决": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_x.png"
+    },
+    "titles": {
+      "Ability1": "绝对屏障",
+      "Ability2": "稳态剥离",
+      "Grenade": "战斗心流",
+      "Ultimate": "决斗通牒"
+    }
+  },
+  "Iso": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/23_x.png"
+    },
+    "titles": {
+      "Ability1": "绝对屏障",
+      "Ability2": "稳态剥离",
+      "Grenade": "战斗心流",
+      "Ultimate": "决斗通牒"
+    }
+  },
+  "暮蝶": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_x.png"
+    },
+    "titles": {
+      "Ability1": "虹吸",
+      "Ability2": "整蛊",
+      "Grenade": "霞染",
+      "Ultimate": "化蝶"
+    }
+  },
+  "Clove": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/24_x.png"
+    },
+    "titles": {
+      "Ability1": "虹吸",
+      "Ability2": "整蛊",
+      "Grenade": "霞染",
+      "Ultimate": "化蝶"
+    }
+  },
+  "维斯": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_x.png"
+    },
+    "titles": {
+      "Ability1": "剃刀藤蔓",
+      "Ability2": "裁断",
+      "Grenade": "弧光玫瑰",
+      "Ultimate": "铁棘禁园"
+    }
+  },
+  "Vyse": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/25_x.png"
+    },
+    "titles": {
+      "Ability1": "剃刀藤蔓",
+      "Ability2": "裁断",
+      "Grenade": "弧光玫瑰",
+      "Ultimate": "铁棘禁园"
+    }
+  },
+  "钛狐": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_x.png"
+    },
+    "titles": {
+      "Ability1": "潜袭爬虫",
+      "Ability2": "特快专递",
+      "Grenade": "精准投放",
+      "Ultimate": "末日审判"
+    }
+  },
+  "Tejo": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_q.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_e.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/26_x.png"
+    },
+    "titles": {
+      "Ability1": "潜袭爬虫",
+      "Ability2": "特快专递",
+      "Grenade": "精准投放",
+      "Ultimate": "末日审判"
+    }
+  },
+  "幻棱": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_q.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_e.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_c.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_x.png"
+    },
+    "titles": {
+      "Ability1": "光棱闪爆",
+      "Ability2": "光速飞跃",
+      "Grenade": "溯流回光",
+      "Ultimate": "时光修罗场"
+    }
+  },
+  "Waylay": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_q.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_e.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_c.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/27_x.png"
+    },
+    "titles": {
+      "Ability1": "光棱闪爆",
+      "Ability2": "光速飞跃",
+      "Grenade": "溯流回光",
+      "Ultimate": "时光修罗场"
+    }
+  },
+  "禁灭": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_e.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_q.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_x.png"
+    },
+    "titles": {
+      "Ability1": "涡流折跃",
+      "Ability2": "裂变残片",
+      "Grenade": "噬源体",
+      "Ultimate": "完全进化"
+    }
+  },
+  "Veto": {
+    "iconUrl": {
+      "Ability1": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_c.png",
+      "Ability2": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_e.png",
+      "Grenade": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_q.png",
+      "Ultimate": "https://game.gtimg.cn/images/val/agamezlk/agentskill/28_x.png"
+    },
+    "titles": {
+      "Ability1": "涡流折跃",
+      "Ability2": "裂变残片",
+      "Grenade": "噬源体",
+      "Ultimate": "完全进化"
+    }
+  }
+}
