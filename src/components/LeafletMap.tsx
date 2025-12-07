@@ -158,6 +158,15 @@ const LeafletMap: React.FC<Props> = ({
     const map = mapInstance.current;
     if (!map) return;
 
+    if (layers.current.activeLine) {
+      map.removeLayer(layers.current.activeLine);
+      layers.current.activeLine = null;
+    }
+    if (hoverLayer.current) {
+      map.removeLayer(hoverLayer.current);
+      hoverLayer.current = null;
+    }
+
     layers.current.createLayer.forEach((l) => map.removeLayer(l));
     layers.current.createLayer = [];
     if (layers.current.sharedLayer.length) {
