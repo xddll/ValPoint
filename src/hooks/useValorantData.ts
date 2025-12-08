@@ -8,7 +8,7 @@ export function useValorantData() {
   const [selectedAgent, setSelectedAgent] = useState(null);
 
   useEffect(() => {
-    // 拉取地图并设置默认地图
+    // 获取地图列表（仅保留在 MAP_TRANSLATIONS 或自定义覆盖表里的地图）
     fetch('https://valorant-api.com/v1/maps')
       .then((res) => res.json())
       .then((data: any) => {
@@ -23,15 +23,13 @@ export function useValorantData() {
         }
       });
 
-    // 拉取特工并设置默认特工
+    // 获取特工列表（中文），默认选中排序后的第一个
     fetch('https://valorant-api.com/v1/agents?language=zh-CN&isPlayableCharacter=true')
       .then((res) => res.json())
       .then((data: any) => {
         const sorted = (data?.data || []).sort((a: any, b: any) => a.displayName.localeCompare(b.displayName));
         setAgents(sorted);
-        const sova = sorted.find((a: any) => a.displayName === '猎枭' || a.displayName === 'Sova');
-        if (sova) setSelectedAgent(sova);
-        else if (sorted.length > 0) setSelectedAgent(sorted[0]);
+        if (sorted.length > 0) setSelectedAgent(sorted[0]);
       });
   }, []);
 
