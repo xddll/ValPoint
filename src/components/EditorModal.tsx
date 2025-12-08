@@ -19,6 +19,7 @@ const EditorModal = ({
   onClose,
   selectedSide,
   setSelectedSide,
+  onJumpToMap, // 聚焦地图标注（关闭弹窗，切换标注模式）
 }) => {
   if (!isEditorOpen) return null;
 
@@ -78,6 +79,15 @@ const EditorModal = ({
                   防守 (DEF)
                 </button>
               </div>
+              {onJumpToMap && (
+                <button
+                  type="button"
+                  onClick={() => onJumpToMap()}
+                  className="ml-auto px-3 py-2 rounded border border-white/15 text-xs text-gray-200 hover:text-white hover:border-[#ff4655] hover:bg-[#ff4655]/10 transition-colors"
+                >
+                  去地图重新标注
+                </button>
+              )}
             </div>
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase block mb-2">点位来源链接 (可选)</label>
