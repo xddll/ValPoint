@@ -19,8 +19,10 @@ type Params = {
   setAlertMessage: (msg: string | null) => void;
   setAlertActionLabel: (label: string | null) => void;
   setAlertAction: (fn: (() => void) | null) => void;
+  setAlertSecondaryLabel: (label: string | null) => void;
+  setAlertSecondaryAction: (fn: (() => void) | null) => void;
   setIsSharing: (v: boolean) => void;
-  saveNewLineup: (payload: any) => Promise<void>;
+  saveNewLineup: (payload: any) => Promise<any>;
   fetchLineups: (userId: string | null) => Promise<void>;
   handleTabSwitch: (tab: string) => void;
   imageBedConfig: any;
@@ -40,6 +42,8 @@ export const useShareActions = ({
   setAlertMessage,
   setAlertActionLabel,
   setAlertAction,
+  setAlertSecondaryLabel,
+  setAlertSecondaryAction,
   setIsSharing,
   saveNewLineup,
   fetchLineups,
@@ -143,7 +147,17 @@ export const useShareActions = ({
         setIsSharing(false);
       }
     },
-    [lineups, userId, getMapEnglishName, setAlertMessage, setAlertActionLabel, setAlertAction, setIsSharing],
+    [
+      lineups,
+      userId,
+      getMapEnglishName,
+      setAlertMessage,
+      setAlertActionLabel,
+      setAlertSecondaryLabel,
+      setAlertSecondaryAction,
+      setAlertAction,
+      setIsSharing,
+    ],
   );
 
   const hasAnyImage = (target: any) =>
@@ -388,6 +402,8 @@ export const useShareActions = ({
       setIsSavingShared(true);
       setAlertActionLabel(null);
       setAlertAction(null);
+      setAlertSecondaryLabel(null);
+      setAlertSecondaryAction(null);
       const target = lineupToSave || fallbackSharedLineup;
       if (!target) {
         setIsSavingShared(false);
@@ -434,40 +450,65 @@ export const useShareActions = ({
 
         // 后台异步转存：保存原链接立即完成，图片再替换
         const imageCount = ['standImg', 'stand2Img', 'aimImg', 'aim2Img', 'landImg'].filter((k) => payloadData[k]).length;
-        if (imageCount) {
-          onTransferStart(imageCount);
-          if (ensureImageBedConfigured() && inserted?.id) {
-            (async () => {
-              try {
-                const { replaced, failed } = await transferImagesToOwnBed(data, () => onTransferProgress(-1));
-                if (Object.keys(replaced).length) {
-                  const dbReplaced = normalizeImageKeysForDb(replaced);
-                  await updateLineup(inserted.id, { ...dbReplaced, updated_at: new Date().toISOString() });
-                  await fetchLineups(userId);
-                }
-                if (failed.length) {
-                  setAlertMessage('部分图片转存失败，已保留原链接。');
-                }
-              } catch (err) {
-                console.error('后台转存失败', err);
+        if (imageCount && inserted?.id) {
+          setAlertActionLabel('转移并替换');
+          setAlertSecondaryLabel('保留原图');
+          setAlertSecondaryAction(() => () => {
+            setAlertMessage(null);
+            setAlertActionLabel(null);
+            setAlertAction(null);
+            setAlertSecondaryLabel(null);
+            setAlertSecondaryAction(null);
+          });
+          setAlertAction(() => async () => {
+            onTransferStart(imageCount);
+            setAlertMessage(null);
+            setAlertActionLabel(null);
+            setAlertAction(null);
+            setAlertSecondaryLabel(null);
+            setAlertSecondaryAction(null);
+            if (!ensureImageBedConfigured()) {
+              onTransferProgress(-imageCount);
+              return;
+            }
+            try {
+              const { replaced, failed } = await transferImagesToOwnBed(data, () => onTransferProgress(-1));
+              if (Object.keys(replaced).length) {
+                const dbReplaced = normalizeImageKeysForDb(replaced);
+                await updateLineup(inserted.id, { ...dbReplaced, updated_at: new Date().toISOString() });
+                await fetchLineups(userId);
+              } else {
+                onTransferProgress(-imageCount);
               }
-            })();
-          } else {
-            // 配置缺失或无 ID，立即抵消计数
-            onTransferProgress(-imageCount);
-          }
+              if (failed.length) {
+                setAlertMessage('部分图片转存失败，已保留原链接。');
+              }
+            } catch (err) {
+              console.error('后台转存失败', err);
+              setAlertMessage('图片转存失败，已保留原链接。');
+            }
+          });
+          setAlertMessage('是否将图片转移到你的图床？点击“转移并替换”将在后台同步并更新链接，选择“保留原图”则直接使用当前链接。');
+        } else {
+          setAlertMessage(null);
+          setAlertActionLabel(null);
+          setAlertAction(null);
+          setAlertSecondaryLabel(null);
+          setAlertSecondaryAction(null);
         }
-
-        setAlertMessage('已保存，图片后台同步中…');
-        handleTabSwitch('view');
+      handleTabSwitch('view');
         fetchLineups(userId);
       } catch (err) {
         console.error(err);
         setAlertMessage('保存失败，请重试。');
+        setAlertActionLabel(null);
+        setAlertAction(null);
+        setAlertSecondaryLabel(null);
+        setAlertSecondaryAction(null);
       } finally {
         setIsSavingShared(false);
       }
-    },
+  },
     [
       isGuest,
       getMapEnglishName,
@@ -476,10 +517,16 @@ export const useShareActions = ({
       handleTabSwitch,
       fetchLineups,
       setAlertMessage,
+      setAlertActionLabel,
+      setAlertSecondaryLabel,
+      setAlertSecondaryAction,
       isSavingShared,
       setIsSavingShared,
       imageBedConfig,
       openImageBedConfig,
+      updateLineup,
+      onTransferStart,
+      onTransferProgress,
     ],
   );
 

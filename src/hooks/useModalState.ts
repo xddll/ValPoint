@@ -11,6 +11,8 @@ export function useModalState() {
   const [alertMessage, setAlertMessage] = useState(null);
   const [alertActionLabel, setAlertActionLabel] = useState(null);
   const [alertAction, setAlertAction] = useState(null);
+  const [alertSecondaryLabel, setAlertSecondaryLabel] = useState(null);
+  const [alertSecondaryAction, setAlertSecondaryAction] = useState(null);
   const [viewingImage, setViewingImage] = useState(null);
   const [isChangelogOpen, setIsChangelogOpen] = useState(false);
 
@@ -33,6 +35,10 @@ export function useModalState() {
     setAlertActionLabel,
     alertAction,
     setAlertAction,
+    alertSecondaryLabel,
+    setAlertSecondaryLabel,
+    alertSecondaryAction,
+    setAlertSecondaryAction,
     viewingImage,
     setViewingImage,
     isChangelogOpen,

@@ -74,6 +74,10 @@ function App() {
     setAlertActionLabel,
     alertAction,
     setAlertAction,
+    alertSecondaryLabel,
+    setAlertSecondaryLabel,
+    alertSecondaryAction,
+    setAlertSecondaryAction,
     viewingImage,
     setViewingImage,
     isChangelogOpen,
@@ -418,6 +422,8 @@ function App() {
     handleTabSwitch,
     setAlertActionLabel,
     setAlertAction,
+    setAlertSecondaryLabel,
+    setAlertSecondaryAction,
     imageBedConfig,
     openImageBedConfig: () => setIsImageConfigOpen(true),
     isSavingShared,
@@ -859,10 +865,14 @@ function App() {
         message={alertMessage}
         actionLabel={alertActionLabel}
         onAction={alertAction}
+        secondaryLabel={alertSecondaryLabel}
+        onSecondary={alertSecondaryAction}
         onClose={() => {
           setAlertMessage(null);
           setAlertActionLabel(null);
           setAlertAction(null);
+          setAlertSecondaryLabel(null);
+          setAlertSecondaryAction(null);
         }}
       />
 

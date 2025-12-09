@@ -2,8 +2,21 @@
 import React from 'react';
 import Icon from './Icon';
 
-const AlertModal = ({ message, onClose, actionLabel, onAction }) => {
+const AlertModal = ({ message, onClose, actionLabel, onAction, secondaryLabel, onSecondary }) => {
   if (!message) return null;
+  const handlePrimary = () => {
+    if (onAction) {
+      onAction();
+    }
+    onClose?.();
+  };
+  const handleSecondary = () => {
+    if (onSecondary) {
+      onSecondary();
+    } else {
+      onClose?.();
+    }
+  };
   return (
     <div className="fixed inset-0 z-[2200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="modal-content bg-[#1f2326] border-l-4 border-[#ff4655] p-6 rounded shadow-2xl max-w-sm w-full">
@@ -16,12 +29,20 @@ const AlertModal = ({ message, onClose, actionLabel, onAction }) => {
             <p className="text-gray-300 text-sm whitespace-pre-line">{message}</p>
           </div>
         </div>
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-2">
+          {actionLabel && (
+            <button
+              onClick={handlePrimary}
+              className="px-6 py-2 rounded bg-white/10 hover:bg-white/20 text-white text-sm font-bold transition-colors"
+            >
+              {actionLabel}
+            </button>
+          )}
           <button
-            onClick={onAction ? () => { onAction(); onClose(); } : onClose}
-            className="px-6 py-2 rounded bg-white/10 hover:bg-white/20 text-white text-sm font-bold transition-colors"
+            onClick={handleSecondary}
+            className="px-5 py-2 rounded bg-[#ff4655] hover:bg-[#d93a49] text-white text-sm font-bold transition-colors"
           >
-            {actionLabel || '关闭'}
+            {secondaryLabel || '关闭'}
           </button>
         </div>
       </div>
