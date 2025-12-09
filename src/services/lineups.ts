@@ -13,8 +13,9 @@ export async function fetchLineupsApi(userId: string, mapNameZhToEn: Record<stri
 }
 
 export async function saveLineupApi(payload: any) {
-  const { error } = await supabase.from(TABLE.lineups).insert(payload);
+  const { data, error } = await supabase.from(TABLE.lineups).insert(payload).select().single();
   if (error) throw error;
+  return data;
 }
 
 export async function updateLineupApi(id: string, payload: any) {

@@ -12,6 +12,7 @@ const ViewerModal = ({
   isGuest,
   libraryMode,
   handleCopyShared,
+  isSavingShared,
 }) => {
   if (!viewingLineup) return null;
 
@@ -23,6 +24,7 @@ const ViewerModal = ({
     { src: viewingLineup.landImg, desc: viewingLineup.landDesc, label: '落点 (Land)' },
   ];
   const imageList = imageItems.filter((item) => item.src).map((item) => item.src);
+
   return (
     <div className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
       <div className="modal-content bg-[#1f2326] w-full max-w-4xl max-h-[90vh] flex flex-col rounded-xl border border-white/10 shadow-2xl overflow-hidden relative">
@@ -72,10 +74,11 @@ const ViewerModal = ({
                 <button
                   type="button"
                   onClick={() => handleCopyShared(viewingLineup)}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-500/50 bg-emerald-500/10 text-sm text-emerald-300 hover:border-emerald-400 hover:text-emerald-200 transition-colors"
+                  disabled={isSavingShared}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-500/50 bg-emerald-500/10 text-sm text-emerald-300 hover:border-emerald-400 hover:text-emerald-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   title="保存到我的点位"
                 >
-                  <Icon name="Save" size={14} /> 保存到我的点位
+                  <Icon name="Save" size={14} /> {isSavingShared ? '保存中...' : '保存到我的点位'}
                 </button>
               )}
               <button

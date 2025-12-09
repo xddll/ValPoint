@@ -116,6 +116,8 @@ function App() {
   const [newLineupData, setNewLineupData] = useState(createEmptyLineup());
   const [placingType, setPlacingType] = useState(null);
   const [isSharing, setIsSharing] = useState(false);
+  const [isSavingShared, setIsSavingShared] = useState(false);
+  const [pendingTransfers, setPendingTransfers] = useState(0);
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isImageConfigOpen, setIsImageConfigOpen] = useState(false);
   const [imageBedConfig, setImageBedConfig] = useState(defaultImageBedConfig);
@@ -416,6 +418,13 @@ function App() {
     handleTabSwitch,
     setAlertActionLabel,
     setAlertAction,
+    imageBedConfig,
+    openImageBedConfig: () => setIsImageConfigOpen(true),
+    isSavingShared,
+    setIsSavingShared,
+    updateLineup,
+    onTransferStart: (count: number) => setPendingTransfers((v) => v + count),
+    onTransferProgress: (delta: number) => setPendingTransfers((v) => Math.max(0, v + delta)),
   });
   const onShare = useCallback(
     (id, e) => {
@@ -551,9 +560,10 @@ function App() {
               </div>
               <button
                 onClick={() => onSaveShared(sharedLineup)}
-                className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-200 transition-colors px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/30"
+                disabled={isSavingShared}
+                className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-200 transition-colors px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <Icon name="Save" size={14} /> 保存到我的点位
+                <Icon name="Save" size={14} /> {isSavingShared ? '保存中...' : '保存到我的点位'}
               </button>
             </div>
             <h2 className="text-2xl font-bold text-white leading-tight mb-4">{sharedLineup.title}</h2>
@@ -622,6 +632,7 @@ function App() {
             onImageBedConfig={handleImageBedConfig}
             onChangePassword={handleChangePassword}
             onClearLineups={handleQuickClear}
+            pendingTransfers={pendingTransfers}
           />
         </div>
         <Lightbox viewingImage={viewingImage} setViewingImage={setViewingImage} />
@@ -673,6 +684,7 @@ function App() {
           onImageBedConfig={handleImageBedConfig}
           onChangePassword={handleChangePassword}
           onClearLineups={handleQuickClear}
+          pendingTransfers={pendingTransfers}
         />
         {activeTab !== 'shared' && (
           <div className="absolute top-3 left-3 z-20 flex overflow-hidden rounded-xl border border-white/15 bg-black/70 backdrop-blur px-2 py-2 shadow-lg">
@@ -896,6 +908,7 @@ function App() {
         isGuest={isGuest}
         libraryMode={libraryMode}
         handleCopyShared={onSaveShared}
+        isSavingShared={isSavingShared}
       />
 
       <Lightbox viewingImage={viewingImage} setViewingImage={setViewingImage} />

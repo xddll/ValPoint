@@ -3,7 +3,7 @@ import { saveLineupApi, updateLineupApi, deleteLineupApi, clearLineupsApi } from
 
 export const useLineupActions = () => {
   const saveNewLineup = async (payload: any) => {
-    await saveLineupApi(payload);
+    return await saveLineupApi(payload);
   };
 
   const updateLineup = async (id: string, payload: any) => {
