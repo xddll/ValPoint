@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { useCallback, useState } from 'react';
 import { fetchLineupsApi } from '../services/lineups';
+import { BaseLineup } from '../types/lineup';
 
 export const useLineups = (mapNameZhToEn: Record<string, string>) => {
-  const [lineups, setLineups] = useState<any[]>([]);
+  const [lineups, setLineups] = useState<BaseLineup[]>([]);
 
   const fetchLineups = useCallback(
     async (userId: string | null) => {

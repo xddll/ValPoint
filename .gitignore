@@ -6,3 +6,5 @@ node_modules
 .env.development
 *.bak
 tx-val
+dist
+coverage

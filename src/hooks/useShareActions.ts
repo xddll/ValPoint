@@ -24,7 +24,7 @@ type Params = {
   setIsSharing: (v: boolean) => void;
   saveNewLineup: (payload: any) => Promise<any>;
   fetchLineups: (userId: string | null) => Promise<void>;
-  handleTabSwitch: (tab: string) => void;
+  handleTabSwitch: (tab: 'view' | 'create' | 'shared') => void;
   imageBedConfig: any;
   openImageBedConfig: () => void;
   isSavingShared: boolean;

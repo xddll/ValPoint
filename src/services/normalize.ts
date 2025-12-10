@@ -1,6 +1,7 @@
 import { MAP_TRANSLATIONS } from '../constants/maps';
+import { BaseLineup } from '../types/lineup';
 
-export const normalizeLineup = (raw: any, mapNameZhToEn: Record<string, string>) => {
+export const normalizeLineup = (raw: any, mapNameZhToEn: Record<string, string>): BaseLineup => {
   const pick = (a: any, b: any) => (a !== undefined ? a : b);
   const mapNameRaw = pick(raw.map_name, raw.mapName);
   return {

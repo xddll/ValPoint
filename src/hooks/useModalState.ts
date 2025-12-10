@@ -2,19 +2,19 @@ import { useState } from 'react';
 
 // 统一管理弹窗与提醒相关的状态
 export function useModalState() {
-  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
-  const [previewInput, setPreviewInput] = useState('');
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
-  const [deleteTargetId, setDeleteTargetId] = useState(null);
-  const [alertMessage, setAlertMessage] = useState(null);
-  const [alertActionLabel, setAlertActionLabel] = useState(null);
-  const [alertAction, setAlertAction] = useState(null);
-  const [alertSecondaryLabel, setAlertSecondaryLabel] = useState(null);
-  const [alertSecondaryAction, setAlertSecondaryAction] = useState(null);
-  const [viewingImage, setViewingImage] = useState(null);
-  const [isChangelogOpen, setIsChangelogOpen] = useState(false);
+  const [isMapModalOpen, setIsMapModalOpen] = useState<boolean>(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState<boolean>(false);
+  const [previewInput, setPreviewInput] = useState<string>('');
+  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState<boolean>(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertActionLabel, setAlertActionLabel] = useState<string | null>(null);
+  const [alertAction, setAlertAction] = useState<(() => void) | null>(null);
+  const [alertSecondaryLabel, setAlertSecondaryLabel] = useState<string | null>(null);
+  const [alertSecondaryAction, setAlertSecondaryAction] = useState<(() => void) | null>(null);
+  const [viewingImage, setViewingImage] = useState<any>(null);
+  const [isChangelogOpen, setIsChangelogOpen] = useState<boolean>(false);
 
   return {
     isMapModalOpen,

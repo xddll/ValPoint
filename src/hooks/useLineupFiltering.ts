@@ -1,6 +1,19 @@
-// @ts-nocheck
 import { useMemo } from 'react';
 import { MAP_TRANSLATIONS } from '../constants/maps';
+import { BaseLineup, SharedLineup, LineupSide } from '../types/lineup';
+
+type UseLineupFilteringParams = {
+  lineups: BaseLineup[];
+  sharedLineups: BaseLineup[];
+  libraryMode: 'personal' | 'shared';
+  selectedMap: { displayName: string } | null;
+  selectedAgent: { displayName: string } | null;
+  selectedSide: 'all' | LineupSide;
+  selectedAbilityIndex: number | null;
+  searchQuery: string;
+  activeTab: string;
+  sharedLineup: SharedLineup | null;
+};
 
 export function useLineupFiltering({
   lineups,
@@ -13,20 +26,20 @@ export function useLineupFiltering({
   searchQuery,
   activeTab,
   sharedLineup,
-}) {
-  const mapZhToEn = useMemo(() => {
-    const reverse = {};
+}: UseLineupFilteringParams) {
+  const mapZhToEn = useMemo<Record<string, string>>(() => {
+    const reverse: Record<string, string> = {};
     Object.entries(MAP_TRANSLATIONS).forEach(([en, zh]) => {
       reverse[zh] = en;
     });
     return reverse;
   }, []);
 
-  const agentCounts = useMemo(() => {
+  const agentCounts = useMemo<Record<string, number>>(() => {
     if (!selectedMap) return {};
     const mapKey = selectedMap.displayName;
     const mapKeyEn = mapZhToEn[mapKey] || mapKey;
-    const counts = {};
+    const counts: Record<string, number> = {};
     const source = libraryMode === 'shared' ? sharedLineups : lineups;
     source.forEach((l) => {
       if (l.mapName !== mapKey && l.mapName !== mapKeyEn) return;

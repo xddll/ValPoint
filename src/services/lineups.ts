@@ -1,8 +1,9 @@
 import { supabase } from '../supabaseClient';
 import { TABLE } from './tables';
 import { normalizeLineup } from './normalize';
+import { BaseLineup, LineupDbPayload } from '../types/lineup';
 
-export async function fetchLineupsApi(userId: string, mapNameZhToEn: Record<string, string>) {
+export async function fetchLineupsApi(userId: string, mapNameZhToEn: Record<string, string>): Promise<BaseLineup[]> {
   const { data, error } = await supabase
     .from(TABLE.lineups)
     .select('*')
@@ -12,13 +13,13 @@ export async function fetchLineupsApi(userId: string, mapNameZhToEn: Record<stri
   return data.map((d) => normalizeLineup(d, mapNameZhToEn));
 }
 
-export async function saveLineupApi(payload: any) {
+export async function saveLineupApi(payload: LineupDbPayload): Promise<BaseLineup> {
   const { data, error } = await supabase.from(TABLE.lineups).insert(payload).select().single();
   if (error) throw error;
-  return data;
+  return normalizeLineup(data, {});
 }
 
-export async function updateLineupApi(id: string, payload: any) {
+export async function updateLineupApi(id: string, payload: Partial<LineupDbPayload>) {
   const { error } = await supabase.from(TABLE.lineups).update(payload).eq('id', id);
   if (error) throw error;
 }

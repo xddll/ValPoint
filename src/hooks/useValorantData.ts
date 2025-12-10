@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { CUSTOM_MAP_URLS, MAP_TRANSLATIONS } from '../constants/maps';
+import { AgentData, MapOption } from '../types/lineup';
 
 export function useValorantData() {
-  const [maps, setMaps] = useState([]);
-  const [agents, setAgents] = useState([]);
-  const [selectedMap, setSelectedMap] = useState(null);
-  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [maps, setMaps] = useState<MapOption[]>([]);
+  const [agents, setAgents] = useState<AgentData[]>([]);
+  const [selectedMap, setSelectedMap] = useState<MapOption | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<AgentData | null>(null);
 
   useEffect(() => {
     // 获取地图列表（仅保留在 MAP_TRANSLATIONS 或自定义覆盖表里的地图）

@@ -1,8 +1,9 @@
 import { shareSupabase, supabase } from '../supabaseClient';
 import { TABLE } from './tables';
 import { normalizeLineup } from './normalize';
+import { BaseLineup, SharedLineup } from '../types/lineup';
 
-export async function fetchSharedByShareId(shareId: string, mapNameZhToEn: Record<string, string>) {
+export async function fetchSharedByShareId(shareId: string, mapNameZhToEn: Record<string, string>): Promise<SharedLineup | null> {
   const { data: sharedData, error: sharedError } = await shareSupabase
     .from(TABLE.shared)
     .select('*')
@@ -20,7 +21,7 @@ export async function fetchSharedByShareId(shareId: string, mapNameZhToEn: Recor
   return null;
 }
 
-export async function fetchSharedList(mapNameZhToEn: Record<string, string>) {
+export async function fetchSharedList(mapNameZhToEn: Record<string, string>): Promise<BaseLineup[]> {
   const { data, error } = await shareSupabase.from(TABLE.shared).select('*').order('created_at', { ascending: false });
   if (error) throw error;
   return data.map((d) => normalizeLineup(d, mapNameZhToEn));

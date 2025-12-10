@@ -5,10 +5,10 @@ import { getAbilityIcon } from '../utils/abilityIcons';
 
 type Lineup = {
   id: string;
-  agentPos?: { lat: number; lng: number };
-  skillPos?: { lat: number; lng: number };
-  agentIcon?: string;
-  skillIcon?: string;
+  agentPos?: { lat: number; lng: number } | null;
+  skillPos?: { lat: number; lng: number } | null;
+  agentIcon?: string | null;
+  skillIcon?: string | null;
 };
 
 type Props = {
