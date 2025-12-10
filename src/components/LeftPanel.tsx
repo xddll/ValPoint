@@ -1,17 +1,20 @@
-﻿// @ts-nocheck
 import React from 'react';
 import Icon from './Icon';
 import { getAbilityIcon, getAbilityTitle } from '../utils/abilityIcons';
+import { ActiveTab } from '../types/app';
+import { Ability, AgentData, MapOption } from '../types/lineup';
+
+type MapWithIcon = MapOption & { listViewIcon?: string | null };
 
 type Props = {
-  activeTab: string;
-  selectedMap: any;
+  activeTab: ActiveTab;
+  selectedMap: MapWithIcon | null;
   setIsMapModalOpen: (val: boolean) => void;
-  selectedSide: string;
-  setSelectedSide: (val: string) => void;
-  selectedAgent: any;
-  setSelectedAgent: (agent: any) => void;
-  agents: any[];
+  selectedSide: 'all' | 'attack' | 'defense';
+  setSelectedSide: (val: 'all' | 'attack' | 'defense') => void;
+  selectedAgent: AgentData | null;
+  setSelectedAgent: (agent: AgentData | null) => void;
+  agents: AgentData[];
   agentCounts: Record<string, number>;
   selectedAbilityIndex: number | null;
   setSelectedAbilityIndex: (idx: number | null) => void;
@@ -36,7 +39,7 @@ const LeftPanel: React.FC<Props> = ({
   getMapDisplayName,
   openChangelog,
 }) => {
-  const handleAgentClick = (agent: any) => {
+  const handleAgentClick = (agent: AgentData) => {
     if (selectedAgent?.uuid === agent.uuid) {
       if (activeTab === 'view') setSelectedAgent(null);
     } else {
@@ -69,9 +72,25 @@ const LeftPanel: React.FC<Props> = ({
               onClick={() => setIsMapModalOpen(true)}
               className="group relative h-28 w-full rounded-lg overflow-hidden border border-white/20 cursor-pointer hover:border-[#ff4655] transition-all shadow-lg"
             >
-              <img src={selectedMap.listViewIcon} alt={selectedMap.displayName} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              {(() => {
+                const mapImageSrc: string | undefined =
+                  typeof selectedMap.listViewIcon === 'string'
+                    ? selectedMap.listViewIcon
+                    : typeof selectedMap.displayIcon === 'string'
+                    ? selectedMap.displayIcon
+                    : undefined;
+                return (
+                  <img
+                    src={mapImageSrc}
+                    alt={selectedMap.displayName}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                );
+              })()}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-4">
-                <span className="font-bold text-xl uppercase tracking-widest text-white drop-shadow-md">{getMapDisplayName(selectedMap.displayName)}</span>
+                <span className="font-bold text-xl uppercase tracking-widest text-white drop-shadow-md">
+                  {getMapDisplayName(selectedMap.displayName)}
+                </span>
               </div>
             </div>
           )}
@@ -81,7 +100,9 @@ const LeftPanel: React.FC<Props> = ({
           <div className="flex justify-between items-center mb-2">
             <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">选择特工 (Agent)</label>
             {activeTab === 'view' && selectedAgent && (
-              <button onClick={() => setSelectedAgent(null)} className="text-[12px] text-gray-500 hover:text-white">显示全部</button>
+              <button onClick={() => setSelectedAgent(null)} className="text-[12px] text-gray-500 hover:text-white">
+                显示全部
+              </button>
             )}
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -89,12 +110,14 @@ const LeftPanel: React.FC<Props> = ({
               const count = agentCounts[agent.displayName] || 0;
               return (
                 <div
-                  key={agent.uuid}
+                  key={agent.uuid || agent.displayName}
                   onClick={() => handleAgentClick(agent)}
-                  className={`agent-item aspect-square rounded cursor-pointer overflow-hidden relative border-2 ${selectedAgent?.uuid === agent.uuid ? 'selected border-[#ff4655]' : 'border-transparent bg-[#0f1923]'}`}
+                  className={`agent-item aspect-square rounded cursor-pointer overflow-hidden relative border-2 ${
+                    selectedAgent?.uuid === agent.uuid ? 'selected border-[#ff4655]' : 'border-transparent bg-[#0f1923]'
+                  }`}
                   title={agent.displayName}
                 >
-                  <img src={agent.displayIcon} alt={agent.displayName} className="w-full h-full object-cover" />
+                  <img src={agent.displayIcon || undefined} alt={agent.displayName} className="w-full h-full object-cover" />
                   {activeTab === 'view' && <span className={`count-badge ${count > 0 ? 'count-has-data' : 'count-empty'}`}>{count}</span>}
                 </div>
               );
@@ -109,20 +132,20 @@ const LeftPanel: React.FC<Props> = ({
             </label>
             <div className="flex gap-2 justify-between bg-[#0f1923] p-2 rounded-lg border border-white/10">
               {selectedAgent.abilities
-                .filter((a: any) => a.slot !== 'Passive')
-                .map((ability: any, idx: number) => {
+                ?.filter((a: Ability) => (a.slot || '').toLowerCase() !== 'passive')
+                .map((ability: Ability, idx: number) => {
                   const slotKey = ability?.keypad || ['C', 'Q', 'E', 'X'][idx];
                   return (
                     <button
                       key={idx}
                       onClick={() => setSelectedAbilityIndex(selectedAbilityIndex === idx ? null : idx)}
-                      className={`ability-icon flex flex-col items-center gap-1 flex-1 p-1 rounded ${selectedAbilityIndex === idx ? 'selected bg-white/5' : ''}`}
-                      title={getAbilityTitle(selectedAgent, slotKey, ability.displayName)}
+                      className={`ability-icon flex flex-col items-center gap-1 flex-1 p-1 rounded ${
+                        selectedAbilityIndex === idx ? 'selected bg-white/5' : ''
+                      }`}
+                      title={getAbilityTitle(selectedAgent, slotKey || '', ability.displayName || ability.name)}
                     >
                       <img src={getAbilityIcon(selectedAgent, idx)} className="w-8 h-8 object-contain" />
-                      <span className="text-[10px] uppercase font-bold text-gray-500">
-                        技能：{['C', 'Q', 'E', 'X'][idx] || slotKey}
-                      </span>
+                      <span className="text-[10px] uppercase font-bold text-gray-500">技能：{['C', 'Q', 'E', 'X'][idx] || slotKey}</span>
                     </button>
                   );
                 })}

@@ -39,10 +39,10 @@ export type SharedLineup = BaseLineup & {
   sourceId?: string | null;
 };
 
-export type AgentOption = { displayName: string; displayIcon?: string | null };
+export type AgentOption = { displayName: string; displayIcon?: string | null; uuid?: string };
 export type MapOption = { displayName: string; displayIcon?: string | null };
 
-export type Ability = { slot?: string; displayIcon?: string; name?: string; keypad?: string };
+export type Ability = { slot?: string; displayIcon?: string; name?: string; displayName?: string; keypad?: string };
 export type AgentData = AgentOption & { abilities?: Ability[] };
 
 export type NewLineupForm = {

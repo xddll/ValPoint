@@ -10,6 +10,8 @@ import Lightbox from '../../components/Lightbox';
 import AuthModal from '../../components/AuthModal';
 import ChangelogModal from '../../components/ChangelogModal';
 import { BaseLineup, SharedLineup, MapOption, LineupSide, NewLineupForm } from '../../types/lineup';
+import { ImageBedConfig } from '../../components/ImageBedConfigModal';
+import { LightboxImage } from '../../types/ui';
 
 type Props = {
   // auth
@@ -53,9 +55,9 @@ type Props = {
   onClearConfirm: () => void;
   // image bed
   isImageConfigOpen: boolean;
-  imageBedConfig: any;
+  imageBedConfig: ImageBedConfig;
   onImageConfigClose: () => void;
-  onImageConfigSave: (cfg: any) => void;
+  onImageConfigSave: (cfg: ImageBedConfig) => void;
   // editor/viewer
   isEditorOpen: boolean;
   editingLineupId: string | null;
@@ -68,14 +70,14 @@ type Props = {
   viewingLineup: BaseLineup | null;
   onViewerClose: () => void;
   handleEditStart: (lineup: BaseLineup) => void;
-  setViewingImage: (val: any) => void;
+  setViewingImage: (val: LightboxImage | null) => void;
   getMapEnglishName: (name: string) => string;
   isGuest: boolean;
   libraryMode: 'personal' | 'shared';
   handleCopyShared: (lineup?: SharedLineup | null) => void;
   isSavingShared: boolean;
   // lightbox
-  viewingImage: any;
+  viewingImage: LightboxImage | null;
   // changelog
   isChangelogOpen: boolean;
   onChangelogClose: () => void;

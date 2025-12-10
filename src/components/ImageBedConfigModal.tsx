@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import Icon from './Icon';
 
-const defaultConfig = {
+export const defaultImageBedConfig = {
   name: '',
   accessKeyId: '',
   accessKeySecret: '',
@@ -14,21 +13,23 @@ const defaultConfig = {
   processParams: '',
 };
 
+export type ImageBedConfig = typeof defaultImageBedConfig;
+
 type Props = {
   isOpen: boolean;
-  config: typeof defaultConfig;
+  config: ImageBedConfig;
   onClose: () => void;
-  onSave: (cfg: typeof defaultConfig) => void;
+  onSave: (cfg: ImageBedConfig) => void;
 };
 
 const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave }) => {
-  const [localConfig, setLocalConfig] = useState(defaultConfig);
+  const [localConfig, setLocalConfig] = useState<ImageBedConfig>(defaultImageBedConfig);
 
   useEffect(() => {
-    if (isOpen) setLocalConfig(config || defaultConfig);
+    if (isOpen) setLocalConfig(config || defaultImageBedConfig);
   }, [isOpen, config]);
 
-  const updateField = (key: keyof typeof defaultConfig, value: string) => {
+  const updateField = (key: keyof ImageBedConfig, value: string) => {
     setLocalConfig((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -46,13 +47,13 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
     if (!text) return;
     try {
       const parsed = JSON.parse(text);
-      setLocalConfig({ ...defaultConfig, ...parsed });
+      setLocalConfig({ ...defaultImageBedConfig, ...parsed });
     } catch (e) {
       alert('解析失败，请确认格式正确。');
     }
   };
 
-  const handleReset = () => setLocalConfig(defaultConfig);
+  const handleReset = () => setLocalConfig(defaultImageBedConfig);
 
   if (!isOpen) return null;
 
@@ -64,7 +65,7 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
             <Icon name="Cloudy" className="text-[#ff4655]" />
             <div>
               <div className="text-xl font-bold text-white">阿里云 OSS 配置</div>
-              <div className="text-xs text-gray-400">本地存储，仅当前设备生效，可复制导入导出</div>
+              <div className="text-xs text-gray-400">本地存储，仅当前设备生效，可复制/导入/导出</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -84,19 +85,19 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Field label="配置名" required value={localConfig.name} onChange={(v) => updateField('name', v)} />
-          <Field label="设置 accessKeyId" required value={localConfig.accessKeyId} onChange={(v) => updateField('accessKeyId', v)} />
-          <Field label="设置 accessKeySecret" required value={localConfig.accessKeySecret} onChange={(v) => updateField('accessKeySecret', v)} />
-          <Field label="设置 Bucket" required value={localConfig.bucket} onChange={(v) => updateField('bucket', v)} />
-          <Field label="设置存储区域" placeholder="如：oss-cn-guangzhou" value={localConfig.region} onChange={(v) => updateField('region', v)} />
-          <Field label="设置存储路径" placeholder="/img_share" value={localConfig.basePath} onChange={(v) => updateField('basePath', v)} />
-          <Field label="设置网关路径" placeholder="用于拼接网址路径" value={localConfig.endpointPath} onChange={(v) => updateField('endpointPath', v)} />
-          <Field label="设置自定义域名" placeholder="https://test.com" value={localConfig.customDomain} onChange={(v) => updateField('customDomain', v)} />
-          <Field label="设置网址后缀" placeholder="?x-oss-process=xxx" value={localConfig.processParams} onChange={(v) => updateField('processParams', v)} />
+          <Field label="配置名称" required value={localConfig.name} onChange={(v) => updateField('name', v)} />
+          <Field label="accessKeyId" required value={localConfig.accessKeyId} onChange={(v) => updateField('accessKeyId', v)} />
+          <Field label="accessKeySecret" required value={localConfig.accessKeySecret} onChange={(v) => updateField('accessKeySecret', v)} />
+          <Field label="Bucket" required value={localConfig.bucket} onChange={(v) => updateField('bucket', v)} />
+          <Field label="存储区域" placeholder="如：oss-cn-guangzhou" value={localConfig.region} onChange={(v) => updateField('region', v)} />
+          <Field label="存储路径" placeholder="/img_share" value={localConfig.basePath} onChange={(v) => updateField('basePath', v)} />
+          <Field label="网关路径" placeholder="用于拼接网址路径" value={localConfig.endpointPath} onChange={(v) => updateField('endpointPath', v)} />
+          <Field label="自定义域名" placeholder="https://test.com" value={localConfig.customDomain} onChange={(v) => updateField('customDomain', v)} />
+          <Field label="网址后缀" placeholder="?x-oss-process=xxx" value={localConfig.processParams} onChange={(v) => updateField('processParams', v)} />
         </div>
 
         <div className="flex items-center justify-between pt-2">
-          <div className="text-xs text-gray-500">提示：密钥仅保存在本机；换设备需导出导入。</div>
+          <div className="text-xs text-gray-500">提示：密钥仅保存在本机；如需换设备请先导出。</div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleReset}
@@ -123,7 +124,15 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
   );
 };
 
-const Field = ({ label, value, onChange, required = false, placeholder = '' }) => {
+type FieldProps = {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  required?: boolean;
+  placeholder?: string;
+};
+
+const Field: React.FC<FieldProps> = ({ label, value, onChange, required = false, placeholder = '' }) => {
   return (
     <label className="flex flex-col gap-1 text-sm text-gray-300">
       <span className="text-xs text-gray-400">
@@ -141,4 +150,3 @@ const Field = ({ label, value, onChange, required = false, placeholder = '' }) =
 };
 
 export default ImageBedConfigModal;
-export { defaultConfig as defaultImageBedConfig };

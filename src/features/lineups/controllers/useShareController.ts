@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useShareActions } from '../../../hooks/useShareActions';
-import { SharedLineup } from '../../../types/lineup';
+import { BaseLineup, SharedLineup, LineupDbPayload } from '../../../types/lineup';
 import { ActiveTab } from '../../../types/app';
+import { ImageBedConfig } from '../../../components/ImageBedConfigModal';
 
 type Params = {
-  lineups: any[];
+  lineups: BaseLineup[];
   userId: string | null;
   isGuest: boolean;
   getMapEnglishName: (name: string) => string;
@@ -14,10 +15,10 @@ type Params = {
   setAlertAction: (fn: (() => void) | null) => void;
   setAlertSecondaryLabel: (label: string | null) => void;
   setAlertSecondaryAction: (fn: (() => void) | null) => void;
-  imageBedConfig: any;
-  saveNewLineup: (payload: any) => Promise<any>;
+  imageBedConfig: ImageBedConfig;
+  saveNewLineup: (payload: LineupDbPayload) => Promise<void>;
   fetchLineups: (userId: string | null) => Promise<void>;
-  updateLineup: (id: string, payload: any) => Promise<any>;
+  updateLineup: (id: string, payload: Partial<LineupDbPayload>) => Promise<void>;
 };
 
 export function useShareController({

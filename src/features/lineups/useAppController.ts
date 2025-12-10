@@ -294,6 +294,8 @@ export function useAppController() {
     handleShare: onShare,
     handleRequestDelete,
     handleClearAll,
+    setSelectedLineupId,
+    setViewingLineup,
     userId,
     userMode,
     customUserIdInput,

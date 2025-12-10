@@ -1,12 +1,12 @@
-// @ts-nocheck
 import { saveLineupApi, updateLineupApi, deleteLineupApi, clearLineupsApi } from '../services/lineups';
+import { LineupDbPayload } from '../types/lineup';
 
 export const useLineupActions = () => {
-  const saveNewLineup = async (payload: any) => {
-    return await saveLineupApi(payload);
+  const saveNewLineup = async (payload: LineupDbPayload) => {
+    await saveLineupApi(payload);
   };
 
-  const updateLineup = async (id: string, payload: any) => {
+  const updateLineup = async (id: string, payload: Partial<LineupDbPayload>) => {
     await updateLineupApi(id, payload);
   };
 

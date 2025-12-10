@@ -1,5 +1,5 @@
 import { ActiveTab } from '../../../types/app';
-import { AgentOption, MapOption, SharedLineup } from '../../../types/lineup';
+import { AgentOption, BaseLineup, MapOption, NewLineupForm, SharedLineup } from '../../../types/lineup';
 import { createEmptyLineup } from '../lineupHelpers';
 
 type Params = {
@@ -11,15 +11,15 @@ type Params = {
   previewInput: string;
   setActiveTab: (tab: ActiveTab) => void;
   setPlacingType: (val: 'agent' | 'skill' | null) => void;
-  setSelectedLineupId: (id: string | null) => void;
-  setViewingLineup: (lineup: any) => void;
-  setEditingLineupId: (id: string | null) => void;
+  setSelectedLineupId: React.Dispatch<React.SetStateAction<string | null>>;
+  setViewingLineup: React.Dispatch<React.SetStateAction<BaseLineup | null>>;
+  setEditingLineupId: React.Dispatch<React.SetStateAction<string | null>>;
   setSharedLineup: (lineup: SharedLineup | null) => void;
-  setLibraryMode: (mode: 'personal' | 'shared') => void;
-  setNewLineupData: (data: any) => void;
-  setSelectedSide: (side: 'all' | 'attack' | 'defense') => void;
-  setSelectedAbilityIndex: (idx: number | null) => void;
-  setSelectedAgent: (agent: AgentOption | null) => void;
+  setLibraryMode: React.Dispatch<React.SetStateAction<'personal' | 'shared'>>;
+  setNewLineupData: React.Dispatch<React.SetStateAction<NewLineupForm>>;
+  setSelectedSide: React.Dispatch<React.SetStateAction<'all' | 'attack' | 'defense'>>;
+  setSelectedAbilityIndex: React.Dispatch<React.SetStateAction<number | null>>;
+  setSelectedAgent: React.Dispatch<React.SetStateAction<AgentOption | null>>;
   fetchLineups: (userId: string | null) => Promise<void>;
   userId: string | null;
   setIsPreviewModalOpen: (open: boolean) => void;

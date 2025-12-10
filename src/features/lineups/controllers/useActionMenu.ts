@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { defaultImageBedConfig } from '../../../components/ImageBedConfigModal';
+import { defaultImageBedConfig, ImageBedConfig } from '../../../components/ImageBedConfigModal';
 
 type Params = {
   userId: string | null;
@@ -22,7 +22,7 @@ export function useActionMenu({
 }: Params) {
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isImageConfigOpen, setIsImageConfigOpen] = useState(false);
-  const [imageBedConfig, setImageBedConfig] = useState(defaultImageBedConfig);
+  const [imageBedConfig, setImageBedConfig] = useState<ImageBedConfig>(defaultImageBedConfig);
 
   useEffect(() => {
     try {
@@ -56,7 +56,7 @@ export function useActionMenu({
     handleClearAll();
   };
 
-  const handleImageConfigSave = (cfg: typeof defaultImageBedConfig) => {
+  const handleImageConfigSave = (cfg: ImageBedConfig) => {
     setImageBedConfig(cfg);
     try {
       localStorage.setItem('valpoint_imagebed_config', JSON.stringify(cfg));

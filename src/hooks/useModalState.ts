@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { LightboxImage } from '../types/ui';
 
 // 统一管理弹窗与提醒相关的状态
 export function useModalState() {
@@ -13,7 +14,7 @@ export function useModalState() {
   const [alertAction, setAlertAction] = useState<(() => void) | null>(null);
   const [alertSecondaryLabel, setAlertSecondaryLabel] = useState<string | null>(null);
   const [alertSecondaryAction, setAlertSecondaryAction] = useState<(() => void) | null>(null);
-  const [viewingImage, setViewingImage] = useState<any>(null);
+  const [viewingImage, setViewingImage] = useState<LightboxImage | null>(null);
   const [isChangelogOpen, setIsChangelogOpen] = useState<boolean>(false);
 
   return {

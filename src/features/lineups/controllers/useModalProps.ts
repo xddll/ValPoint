@@ -1,7 +1,8 @@
 import React from 'react';
 import AppModals from '../AppModals';
-import { ActiveTab } from '../../../types/app';
 import { MapOption, NewLineupForm, SharedLineup, BaseLineup, LibraryMode } from '../../../types/lineup';
+import { ImageBedConfig } from '../../../components/ImageBedConfigModal';
+import { LightboxImage } from '../../../types/ui';
 
 type Params = {
   // auth
@@ -49,8 +50,8 @@ type Params = {
   setDeleteTargetId: (v: string | null) => void;
   // image bed
   isImageConfigOpen: boolean;
-  imageBedConfig: any;
-  onImageConfigSave: (cfg: any) => void;
+  imageBedConfig: ImageBedConfig;
+  onImageConfigSave: (cfg: ImageBedConfig) => void;
   setIsImageConfigOpen: (v: boolean) => void;
   // editor/viewer
   isEditorOpen: boolean;
@@ -65,13 +66,13 @@ type Params = {
   setViewingLineup: (v: BaseLineup | null) => void;
   setSelectedLineupId: (v: string | null) => void;
   handleEditStart: (lineup: BaseLineup) => void;
-  setViewingImage: (v: any) => void;
+  setViewingImage: (v: LightboxImage | null) => void;
   getMapEnglishName: (name: string) => string;
   isGuest: boolean;
   libraryMode: LibraryMode;
   onSaveShared: (lineup?: SharedLineup | null) => void;
   isSavingShared: boolean;
-  viewingImage: any;
+  viewingImage: LightboxImage | null;
   isChangelogOpen: boolean;
   setIsChangelogOpen: (v: boolean) => void;
 };

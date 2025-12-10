@@ -1,5 +1,6 @@
 import AlertModal from '../../../components/AlertModal';
 import Lightbox from '../../../components/Lightbox';
+import { LightboxImage } from '../../../types/ui';
 
 type Params = {
   alertMessage: string | null;
@@ -12,8 +13,8 @@ type Params = {
   setAlertAction: (val: (() => void) | null) => void;
   setAlertSecondaryLabel: (val: string | null) => void;
   setAlertSecondaryAction: (val: (() => void) | null) => void;
-  viewingImage: any;
-  setViewingImage: (v: any) => void;
+  viewingImage: LightboxImage | null;
+  setViewingImage: (v: LightboxImage | null) => void;
 };
 
 export function buildUiProps(params: Params): {

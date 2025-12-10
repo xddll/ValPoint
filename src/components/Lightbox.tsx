@@ -1,8 +1,13 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import Icon from './Icon';
+import { LightboxImage } from '../types/ui';
 
-const Lightbox = ({ viewingImage, setViewingImage }) => {
+type Props = {
+  viewingImage: LightboxImage | null;
+  setViewingImage: (v: LightboxImage | null) => void;
+};
+
+const Lightbox: React.FC<Props> = ({ viewingImage, setViewingImage }) => {
   if (!viewingImage) return null;
 
   const { src, list, index } = useMemo(() => {
@@ -19,14 +24,14 @@ const Lightbox = ({ viewingImage, setViewingImage }) => {
   const hasList = list && list.length > 1;
   const currentIndex = hasList ? Math.min(Math.max(index, 0), list.length - 1) : 0;
 
-  const goPrev = (e) => {
+  const goPrev = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!hasList) return;
     const nextIndex = (currentIndex - 1 + list.length) % list.length;
     setViewingImage({ src: list[nextIndex], list, index: nextIndex });
   };
 
-  const goNext = (e) => {
+  const goNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!hasList) return;
     const nextIndex = (currentIndex + 1) % list.length;

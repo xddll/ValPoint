@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { getAbilityIcon } from '../../../utils/abilityIcons';
 import { ActiveTab } from '../../../types/app';
-import { AgentOption, BaseLineup, LibraryMode, NewLineupForm, SharedLineup } from '../../../types/lineup';
+import { AgentOption, BaseLineup, LibraryMode, NewLineupForm, SharedLineup, LineupDbPayload } from '../../../types/lineup';
 import { createEmptyLineup, toDbPayload } from '../lineupHelpers';
 
 type EditorParams = {
@@ -13,24 +13,24 @@ type EditorParams = {
   selectedSide: 'all' | 'attack' | 'defense';
   selectedAbilityIndex: number | null;
   newLineupData: NewLineupForm;
-  setNewLineupData: (data: NewLineupForm) => void;
-  setSelectedSide: (side: 'all' | 'attack' | 'defense') => void;
-  setSelectedAbilityIndex: (idx: number | null) => void;
+  setNewLineupData: React.Dispatch<React.SetStateAction<NewLineupForm>>;
+  setSelectedSide: React.Dispatch<React.SetStateAction<'all' | 'attack' | 'defense'>>;
+  setSelectedAbilityIndex: React.Dispatch<React.SetStateAction<number | null>>;
   setActiveTab: (tab: ActiveTab) => void;
-  setPlacingType: (val: 'agent' | 'skill' | null) => void;
+  setPlacingType: React.Dispatch<React.SetStateAction<'agent' | 'skill' | null>>;
   setIsEditorOpen: (val: boolean) => void;
-  setEditingLineupId: (val: string | null) => void;
-  setSelectedLineupId: (id: string | null) => void;
-  setViewingLineup: (lineup: BaseLineup | null) => void;
-  setSelectedMap: (map: { displayName: string; displayIcon?: string | null } | null) => void;
-  setSelectedAgent: (agent: AgentOption | null) => void;
+  setEditingLineupId: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedLineupId: React.Dispatch<React.SetStateAction<string | null>>;
+  setViewingLineup: React.Dispatch<React.SetStateAction<BaseLineup | null>>;
+  setSelectedMap: React.Dispatch<React.SetStateAction<{ displayName: string; displayIcon?: string | null } | null>>;
+  setSelectedAgent: React.Dispatch<React.SetStateAction<AgentOption | null>>;
   maps: { displayName: string; displayIcon?: string | null }[];
   agents: AgentOption[];
   getMapDisplayName: (name: string) => string;
   setAlertMessage: (msg: string) => void;
   fetchLineups: (userId: string) => void;
-  saveNewLineup: (payload: any) => Promise<any>;
-  updateLineup: (id: string, payload: any) => Promise<any>;
+  saveNewLineup: (payload: LineupDbPayload) => Promise<void>;
+  updateLineup: (id: string, payload: Partial<LineupDbPayload>) => Promise<void>;
   editingLineupId: string | null;
   lineups: BaseLineup[];
 };
