@@ -10,7 +10,7 @@ import Lightbox from '../../components/Lightbox';
 import AuthModal from '../../components/AuthModal';
 import ChangelogModal from '../../components/ChangelogModal';
 import { BaseLineup, SharedLineup, MapOption, LineupSide, NewLineupForm } from '../../types/lineup';
-import { ImageBedConfig } from '../../components/ImageBedConfigModal';
+import { ImageBedConfig } from '../../types/imageBed';
 import { LightboxImage } from '../../types/ui';
 
 type Props = {

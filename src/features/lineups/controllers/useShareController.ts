@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useShareActions } from '../../../hooks/useShareActions';
 import { BaseLineup, SharedLineup, LineupDbPayload } from '../../../types/lineup';
 import { ActiveTab } from '../../../types/app';
-import { ImageBedConfig } from '../../../components/ImageBedConfigModal';
+import { ImageBedConfig } from '../../../types/imageBed';
 
 type Params = {
   lineups: BaseLineup[];
@@ -16,7 +16,7 @@ type Params = {
   setAlertSecondaryLabel: (label: string | null) => void;
   setAlertSecondaryAction: (fn: (() => void) | null) => void;
   imageBedConfig: ImageBedConfig;
-  saveNewLineup: (payload: LineupDbPayload) => Promise<void>;
+  saveNewLineup: (payload: LineupDbPayload) => Promise<BaseLineup>;
   fetchLineups: (userId: string | null) => Promise<void>;
   updateLineup: (id: string, payload: Partial<LineupDbPayload>) => Promise<void>;
 };
@@ -73,7 +73,7 @@ export function useShareController({
 
   const onSaveShared = useCallback(
     (lineupParam: SharedLineup | null = null, sharedLineup?: SharedLineup | null) => {
-      void handleSaveShared(lineupParam, sharedLineup);
+      void handleSaveShared(lineupParam, sharedLineup ?? null);
     },
     [handleSaveShared],
   );

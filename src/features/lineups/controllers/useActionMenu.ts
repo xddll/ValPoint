@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { defaultImageBedConfig, ImageBedConfig } from '../../../components/ImageBedConfigModal';
+import { defaultImageBedConfig } from '../../../components/ImageBedConfigModal';
+import { ImageBedConfig } from '../../../types/imageBed';
 
 type Params = {
   userId: string | null;

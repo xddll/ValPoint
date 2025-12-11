@@ -1,8 +1,17 @@
-// @ts-nocheck
 import { useCallback } from 'react';
 import { upsertShared } from '../services/shared';
 import { findLineupByClone } from '../services/lineups';
-import { uploadToOss } from '../utils/ossUpload';
+import { transferImageFromUrl } from '../lib/ossTransfer';
+import { ImageBedConfig } from '../types/imageBed';
+import { BaseLineup, SharedLineup, LineupDbPayload } from '../types/lineup';
+
+type AlertSetter = (msg: string | null) => void;
+type ActionSetter = (fn: (() => void) | null) => void;
+type Tab = 'view' | 'create' | 'shared';
+type ImageFieldKey = 'standImg' | 'stand2Img' | 'aimImg' | 'aim2Img' | 'landImg';
+type ImageSources = Partial<Record<ImageFieldKey, string | null | undefined>>;
+
+const imageFields: ImageFieldKey[] = ['standImg', 'stand2Img', 'aimImg', 'aim2Img', 'landImg'];
 
 const toShortShareId = (uuid: string) => {
   if (!uuid) return '';
@@ -12,26 +21,86 @@ const toShortShareId = (uuid: string) => {
 };
 
 type Params = {
-  lineups: any[];
+  lineups: BaseLineup[];
   userId: string | null;
   isGuest: boolean;
   getMapEnglishName: (name: string) => string;
-  setAlertMessage: (msg: string | null) => void;
+  setAlertMessage: AlertSetter;
   setAlertActionLabel: (label: string | null) => void;
-  setAlertAction: (fn: (() => void) | null) => void;
+  setAlertAction: ActionSetter;
   setAlertSecondaryLabel: (label: string | null) => void;
-  setAlertSecondaryAction: (fn: (() => void) | null) => void;
+  setAlertSecondaryAction: ActionSetter;
   setIsSharing: (v: boolean) => void;
-  saveNewLineup: (payload: any) => Promise<any>;
+  saveNewLineup: (payload: LineupDbPayload) => Promise<BaseLineup>;
   fetchLineups: (userId: string | null) => Promise<void>;
-  handleTabSwitch: (tab: 'view' | 'create' | 'shared') => void;
-  imageBedConfig: any;
+  handleTabSwitch: (tab: Tab) => void;
+  imageBedConfig: ImageBedConfig;
   openImageBedConfig: () => void;
   isSavingShared: boolean;
   setIsSavingShared: (v: boolean) => void;
-  updateLineup: (id: string, payload: any) => Promise<void>;
+  updateLineup: (id: string, payload: Partial<LineupDbPayload>) => Promise<void>;
   onTransferStart: (count: number) => void;
   onTransferProgress: (delta: number) => void;
+};
+
+const normalizeImageKeysForDb = (data: Partial<Record<ImageFieldKey, string>>) => {
+  const result: Partial<LineupDbPayload> = {};
+  Object.entries(data).forEach(([k, v]) => {
+    const key = k as ImageFieldKey;
+    switch (key) {
+      case 'standImg':
+        result.stand_img = v;
+        break;
+      case 'stand2Img':
+        result.stand2_img = v;
+        break;
+      case 'aimImg':
+        result.aim_img = v;
+        break;
+      case 'aim2Img':
+        result.aim2_img = v;
+        break;
+      case 'landImg':
+        result.land_img = v;
+        break;
+      default:
+        break;
+    }
+  });
+  return result;
+};
+
+const transferImagesToOwnBed = async (
+  target: ImageSources,
+  config: ImageBedConfig,
+  onStep?: () => void,
+) => {
+  const replaced: Partial<Record<ImageFieldKey, string>> = {};
+  const failed: ImageFieldKey[] = [];
+  const cache = new Map<string, string>();
+
+  const tasks = imageFields.map(async (key) => {
+    const url = target[key];
+    if (!url) return;
+    if (cache.has(url)) {
+      replaced[key] = cache.get(url) as string;
+      onStep?.();
+      return;
+    }
+    try {
+      const newUrl = await transferImageFromUrl(url, config);
+      cache.set(url, newUrl);
+      replaced[key] = newUrl;
+    } catch (err) {
+      console.error('转存图片失败', key, url, err);
+      failed.push(key);
+    } finally {
+      onStep?.();
+    }
+  });
+
+  await Promise.all(tasks);
+  return { replaced, failed };
 };
 
 export const useShareActions = ({
@@ -56,6 +125,17 @@ export const useShareActions = ({
   onTransferStart,
   onTransferProgress,
 }: Params) => {
+  const ensureImageBedConfigured = () => {
+    const required: Array<keyof ImageBedConfig> = ['accessKeyId', 'accessKeySecret', 'bucket', 'region'];
+    const missing = required.filter((key) => !imageBedConfig?.[key]);
+    if (!missing.length) return true;
+    openImageBedConfig?.();
+    setAlertActionLabel(null);
+    setAlertAction(null);
+    setAlertMessage('检测到未配置图床，已为你打开配置面板，请填写后再尝试转存图片。');
+    return false;
+  };
+
   const handleShare = useCallback(
     async (id: string) => {
       const lineup = lineups.find((l) => l.id === id);
@@ -63,7 +143,6 @@ export const useShareActions = ({
         setAlertMessage('未找到要分享的点位');
         return;
       }
-      // 若该点位来自共享库副本，提示直接使用原分享，避免重复数据
       if (lineup.clonedFrom) {
         const originalShareId = toShortShareId(lineup.clonedFrom);
         setAlertActionLabel('复制原分享ID');
@@ -147,249 +226,11 @@ export const useShareActions = ({
         setIsSharing(false);
       }
     },
-    [
-      lineups,
-      userId,
-      getMapEnglishName,
-      setAlertMessage,
-      setAlertActionLabel,
-      setAlertSecondaryLabel,
-      setAlertSecondaryAction,
-      setAlertAction,
-      setIsSharing,
-    ],
+    [lineups, userId, getMapEnglishName, setAlertMessage, setAlertActionLabel, setAlertAction, setIsSharing],
   );
 
-  const hasAnyImage = (target: any) =>
-    !!(target?.standImg || target?.stand2Img || target?.aimImg || target?.aim2Img || target?.landImg);
-
-  const ensureImageBedConfigured = () => {
-    const required = ['accessKeyId', 'accessKeySecret', 'bucket', 'region'];
-    const missing = required.filter((key) => !imageBedConfig?.[key]);
-    if (!missing.length) return true;
-    openImageBedConfig?.();
-    setAlertActionLabel(null);
-    setAlertAction(null);
-    setAlertMessage('检测到未配置图床，已为你打开配置面板，请填写后再尝试转存图片。');
-    return false;
-  };
-
-  const getExtFromUrl = (url: string, mime = '') => {
-    const clean = (url || '').split('?')[0].split('#')[0];
-    const parts = clean.split('.');
-    const extFromUrl = parts.length > 1 ? parts.pop() : '';
-    if (extFromUrl && extFromUrl.length <= 5) return extFromUrl;
-    if (mime.includes('/')) return mime.split('/').pop() || 'png';
-    return 'png';
-  };
-
-  const isOssUrl = (url: string) => {
-    try {
-      const u = new URL(url);
-      const hostParts = u.hostname.split('.');
-      if (hostParts.length < 3) return null;
-      const [, region] = hostParts;
-      const bucket = hostParts[0];
-      const key = u.pathname.replace(/^\/+/, '');
-      if (!bucket || !region || !key) return null;
-      return { bucket, region, key };
-    } catch (e) {
-      return null;
-    }
-  };
-
-  const buildTimestampName = () => {
-    const d = new Date();
-    const pad = (num: number, len = 2) => num.toString().padStart(len, '0');
-    return (
-      d.getFullYear().toString() +
-      pad(d.getMonth() + 1) +
-      pad(d.getDate()) +
-      pad(d.getHours()) +
-      pad(d.getMinutes()) +
-      pad(d.getSeconds()) +
-      pad(d.getMilliseconds(), 3)
-    );
-  };
-
-  const trimSlashes = (value = '') => value.replace(/^\/+|\/+$/g, '');
-
-  const buildObjectKey = (basePath: string, filename: string) => {
-    const prefix = trimSlashes(basePath);
-    return [prefix, filename].filter(Boolean).join('/');
-  };
-
-  const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    bytes.forEach((b) => {
-      binary += String.fromCharCode(b);
-    });
-    return btoa(binary);
-  };
-
-  const signString = async (value: string, secret: string) => {
-    const encoder = new TextEncoder();
-    const key = await crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
-    const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(value));
-    return arrayBufferToBase64(signature);
-  };
-
-  const copyOssObject = async (sourceUrl: string, extHint: string) => {
-    const source = isOssUrl(sourceUrl);
-    if (!source) return null;
-    const { accessKeyId, accessKeySecret, bucket, region, basePath, endpointPath, customDomain, processParams } = imageBedConfig || {};
-    if (!accessKeyId || !accessKeySecret || !bucket || !region) return null;
-
-    const filename = `${buildTimestampName()}.${extHint || 'png'}`;
-    const objectKey = buildObjectKey(basePath || '', filename);
-    const date = new Date().toUTCString();
-    const copySource = `/${source.bucket}/${source.key}`;
-    const canonicalHeaders = [`x-oss-copy-source:${copySource}`, 'x-oss-forbid-overwrite:true'].join('\n');
-    const canonicalResource = `/${bucket}/${objectKey}`;
-    const stringToSign = ['PUT', '', '', date, `${canonicalHeaders}\n${canonicalResource}`].join('\n');
-    const signature = await signString(stringToSign, accessKeySecret);
-    const auth = `OSS ${accessKeyId}:${signature}`;
-    const uploadHost = `https://${bucket}.${region}.aliyuncs.com`;
-    const targetUrl = `${uploadHost}/${objectKey}`;
-
-    const resp = await fetch(targetUrl, {
-      method: 'PUT',
-      headers: {
-        Authorization: auth,
-        Date: date,
-        'x-oss-copy-source': copySource,
-        'x-oss-forbid-overwrite': 'true',
-      },
-    });
-    if (!resp.ok && resp.status !== 200 && resp.status !== 201) {
-      return null;
-    }
-
-    const baseUrl = (customDomain || uploadHost).replace(/\/+$/g, '');
-    const path = [trimSlashes(endpointPath || ''), objectKey].filter(Boolean).join('/');
-    const finalUrl = `${baseUrl}/${path}${processParams ? (processParams.startsWith('?') || processParams.startsWith('&') ? processParams : `?${processParams}`) : ''}`;
-    return finalUrl;
-  };
-
-  const fetchWithTimeout = async (url: string, options: any, timeoutMs = 8000) => {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const resp = await fetch(url, { ...options, signal: controller.signal });
-      return resp;
-    } finally {
-      clearTimeout(id);
-    }
-  };
-
-  const fetchImageBlob = async (url: string, preferProxy = false) => {
-    const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
-    // 若已知直连慢/失败，直接走代理
-    if (preferProxy) {
-      const resp = await fetchWithTimeout(proxyUrl, {}, 10000);
-      if (!resp.ok) throw new Error(`PROXY_DOWNLOAD_${resp.status}`);
-      console.info('[transfer] proxy fetch ok', proxyUrl);
-      return await resp.blob();
-    }
-    try {
-      const directResp = await fetchWithTimeout(url, { referrer: 'no-referrer' }, 8000);
-      if (!directResp.ok) throw new Error(`DOWNLOAD_${directResp.status}`);
-      console.info('[transfer] direct fetch ok', url);
-      return await directResp.blob();
-    } catch (err) {
-      console.warn('[transfer] direct fetch failed, try proxy', url, err);
-      const resp = await fetchWithTimeout(proxyUrl, {}, 10000);
-      if (!resp.ok) throw new Error(`PROXY_DOWNLOAD_${resp.status}`);
-      console.info('[transfer] proxy fetch ok', proxyUrl);
-      return await resp.blob();
-    }
-  };
-
-  const transferImagesToOwnBed = async (target: any, onStep?: () => void) => {
-    const fields = ['standImg', 'stand2Img', 'aimImg', 'aim2Img', 'landImg'];
-    const replaced: Record<string, string> = {};
-    const failed: string[] = [];
-    const cache = new Map<string, string>();
-    let directFetchAvailable = true;
-    let allowOssCopy = true; // 同区域时尝试一次 copy，避免跨区域 403 拖慢
-
-    const tasks = fields.map(async (key) => {
-      const url = target?.[key];
-      if (!url) return;
-      if (cache.has(url)) {
-        replaced[key] = cache.get(url) as string;
-        onStep?.();
-        return;
-      }
-      try {
-        // 仅当源是 OSS 且区域与目标一致时尝试服务器端拷贝
-        if (allowOssCopy) {
-          const srcInfo = isOssUrl(url);
-          const destRegion = imageBedConfig?.region;
-          if (srcInfo && destRegion && srcInfo.region === destRegion) {
-            try {
-              const extHint = getExtFromUrl(url, '');
-              const copied = await copyOssObject(url, extHint);
-              if (copied) {
-                console.info('[transfer] oss copy success', { src: url, dest: copied });
-                cache.set(url, copied);
-                replaced[key] = copied;
-                return;
-              }
-            } catch (err) {
-              console.warn('[transfer] oss copy failed, fallback to fetch', url, err);
-              allowOssCopy = false; // 避免同批后续继续尝试 copy 拖时间
-            }
-          }
-        }
-        const blob = await (async () => {
-          if (!directFetchAvailable) {
-            return fetchImageBlob(url, true); // 直连已有失败，直接代理
-          }
-          try {
-            return await fetchImageBlob(url);
-          } catch (err) {
-            directFetchAvailable = false;
-            throw err;
-          }
-        })();
-        const ext = getExtFromUrl(url, blob.type);
-        const file = new File([blob], `shared_${key}_${Date.now()}.${ext}`, { type: blob.type || 'application/octet-stream' });
-        const { url: newUrl } = await uploadToOss(file, imageBedConfig);
-        console.info('[transfer] frontend upload success', { src: url, dest: newUrl });
-        cache.set(url, newUrl);
-        replaced[key] = newUrl;
-      } catch (err) {
-        console.error('转存图片失败', key, url, err);
-        failed.push(key);
-      } finally {
-        onStep?.();
-      }
-    });
-
-    await Promise.all(tasks);
-    return { replaced, failed };
-  };
-
-  const normalizeImageKeysForDb = (data: Record<string, string>) => {
-    const keyMap: Record<string, string> = {
-      standImg: 'stand_img',
-      stand2Img: 'stand2_img',
-      aimImg: 'aim_img',
-      aim2Img: 'aim2_img',
-      landImg: 'land_img',
-    };
-    const result: Record<string, string> = {};
-    Object.entries(data).forEach(([k, v]) => {
-      const dbKey = keyMap[k];
-      if (dbKey) result[dbKey] = v;
-    });
-    return result;
-  };
-
   const handleSaveShared = useCallback(
-    async (lineupToSave: any, fallbackSharedLineup: any) => {
+    async (lineupToSave: SharedLineup | null, fallbackSharedLineup: SharedLineup | null) => {
       if (isGuest) {
         setAlertMessage('游客模式无法保存点位，请先输入密码切换到登录模式');
         return;
@@ -414,42 +255,40 @@ export const useShareActions = ({
         if (existing) {
           setAlertMessage('你已经保存过这个共享点位，无需重复添加。');
           handleTabSwitch('view');
-          fetchLineups(userId);
+          await fetchLineups(userId);
           return;
         }
         const mapNameEn = getMapEnglishName(target.mapName);
         const { id, ...data } = target;
-        const payloadData = { ...data };
 
-        const payload = {
-          title: payloadData.title,
+        const payload: LineupDbPayload = {
+          title: data.title,
           map_name: mapNameEn,
-          agent_name: payloadData.agentName,
-          agent_icon: payloadData.agentIcon,
-          skill_icon: payloadData.skillIcon,
-          side: payloadData.side,
-          ability_index: payloadData.abilityIndex ?? null,
-          agent_pos: payloadData.agentPos,
-          skill_pos: payloadData.skillPos,
-          stand_img: payloadData.standImg,
-          stand_desc: payloadData.standDesc,
-          stand2_img: payloadData.stand2Img,
-          stand2_desc: payloadData.stand2Desc,
-          aim_img: payloadData.aimImg,
-          aim_desc: payloadData.aimDesc,
-          aim2_img: payloadData.aim2Img,
-          aim2_desc: payloadData.aim2Desc,
-          land_img: payloadData.landImg,
-          land_desc: payloadData.landDesc,
-          source_link: payloadData.sourceLink,
+          agent_name: data.agentName,
+          agent_icon: data.agentIcon || null,
+          skill_icon: data.skillIcon || null,
+          side: data.side,
+          ability_index: data.abilityIndex ?? null,
+          agent_pos: data.agentPos ?? null,
+          skill_pos: data.skillPos ?? null,
+          stand_img: data.standImg || null,
+          stand_desc: data.standDesc || null,
+          stand2_img: data.stand2Img || null,
+          stand2_desc: data.stand2Desc || null,
+          aim_img: data.aimImg || null,
+          aim_desc: data.aimDesc || null,
+          aim2_img: data.aim2Img || null,
+          aim2_desc: data.aim2Desc || null,
+          land_img: data.landImg || null,
+          land_desc: data.landDesc || null,
+          source_link: data.sourceLink || null,
           user_id: userId,
           cloned_from: id,
           created_at: new Date().toISOString(),
         };
         const inserted = await saveNewLineup(payload);
 
-        // 后台异步转存：保存原链接立即完成，图片再替换
-        const imageCount = ['standImg', 'stand2Img', 'aimImg', 'aim2Img', 'landImg'].filter((k) => payloadData[k]).length;
+        const imageCount = imageFields.filter((key) => data[key]).length;
         if (imageCount && inserted?.id) {
           setAlertActionLabel('转移并替换');
           setAlertSecondaryLabel('保留原图');
@@ -467,24 +306,28 @@ export const useShareActions = ({
             setAlertAction(null);
             setAlertSecondaryLabel(null);
             setAlertSecondaryAction(null);
+            let finished = 0;
             if (!ensureImageBedConfigured()) {
               onTransferProgress(-imageCount);
               return;
             }
             try {
-              const { replaced, failed } = await transferImagesToOwnBed(data, () => onTransferProgress(-1));
+              const { replaced, failed } = await transferImagesToOwnBed(data, imageBedConfig, () => {
+                finished += 1;
+                onTransferProgress(-1);
+              });
               if (Object.keys(replaced).length) {
                 const dbReplaced = normalizeImageKeysForDb(replaced);
                 await updateLineup(inserted.id, { ...dbReplaced, updated_at: new Date().toISOString() });
                 await fetchLineups(userId);
-              } else {
-                onTransferProgress(-imageCount);
               }
               if (failed.length) {
                 setAlertMessage('部分图片转存失败，已保留原链接。');
               }
             } catch (err) {
               console.error('后台转存失败', err);
+              const remaining = imageCount - finished;
+              if (remaining > 0) onTransferProgress(-remaining);
               setAlertMessage('图片转存失败，已保留原链接。');
             }
           });
@@ -496,8 +339,8 @@ export const useShareActions = ({
           setAlertSecondaryLabel(null);
           setAlertSecondaryAction(null);
         }
-      handleTabSwitch('view');
-        fetchLineups(userId);
+        handleTabSwitch('view');
+        await fetchLineups(userId);
       } catch (err) {
         console.error(err);
         setAlertMessage('保存失败，请重试。');
@@ -508,22 +351,23 @@ export const useShareActions = ({
       } finally {
         setIsSavingShared(false);
       }
-  },
+    },
     [
       isGuest,
-      getMapEnglishName,
-      saveNewLineup,
       userId,
+      getMapEnglishName,
+      setAlertMessage,
       handleTabSwitch,
       fetchLineups,
-      setAlertMessage,
       setAlertActionLabel,
+      setAlertAction,
       setAlertSecondaryLabel,
       setAlertSecondaryAction,
       isSavingShared,
       setIsSavingShared,
       imageBedConfig,
       openImageBedConfig,
+      saveNewLineup,
       updateLineup,
       onTransferStart,
       onTransferProgress,

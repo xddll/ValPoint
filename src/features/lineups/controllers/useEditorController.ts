@@ -29,7 +29,7 @@ type EditorParams = {
   getMapDisplayName: (name: string) => string;
   setAlertMessage: (msg: string) => void;
   fetchLineups: (userId: string) => void;
-  saveNewLineup: (payload: LineupDbPayload) => Promise<void>;
+  saveNewLineup: (payload: LineupDbPayload) => Promise<BaseLineup>;
   updateLineup: (id: string, payload: Partial<LineupDbPayload>) => Promise<void>;
   editingLineupId: string | null;
   lineups: BaseLineup[];

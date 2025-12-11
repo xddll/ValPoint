@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Icon from './Icon';
+import { ImageBedConfig } from '../types/imageBed';
 
-export const defaultImageBedConfig = {
+export const defaultImageBedConfig: ImageBedConfig = {
   name: '',
   accessKeyId: '',
   accessKeySecret: '',
@@ -12,8 +13,6 @@ export const defaultImageBedConfig = {
   customDomain: '',
   processParams: '',
 };
-
-export type ImageBedConfig = typeof defaultImageBedConfig;
 
 type Props = {
   isOpen: boolean;
@@ -90,10 +89,10 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
           <Field label="accessKeySecret" required value={localConfig.accessKeySecret} onChange={(v) => updateField('accessKeySecret', v)} />
           <Field label="Bucket" required value={localConfig.bucket} onChange={(v) => updateField('bucket', v)} />
           <Field label="存储区域" placeholder="如：oss-cn-guangzhou" value={localConfig.region} onChange={(v) => updateField('region', v)} />
-          <Field label="存储路径" placeholder="/img_share" value={localConfig.basePath} onChange={(v) => updateField('basePath', v)} />
-          <Field label="网关路径" placeholder="用于拼接网址路径" value={localConfig.endpointPath} onChange={(v) => updateField('endpointPath', v)} />
-          <Field label="自定义域名" placeholder="https://test.com" value={localConfig.customDomain} onChange={(v) => updateField('customDomain', v)} />
-          <Field label="网址后缀" placeholder="?x-oss-process=xxx" value={localConfig.processParams} onChange={(v) => updateField('processParams', v)} />
+          <Field label="存储路径" placeholder="/img_share" value={localConfig.basePath || ''} onChange={(v) => updateField('basePath', v)} />
+          <Field label="网关路径" placeholder="用于拼接网址路径" value={localConfig.endpointPath || ''} onChange={(v) => updateField('endpointPath', v)} />
+          <Field label="自定义域名" placeholder="https://test.com" value={localConfig.customDomain || ''} onChange={(v) => updateField('customDomain', v)} />
+          <Field label="网址后缀" placeholder="?x-oss-process=xxx" value={localConfig.processParams || ''} onChange={(v) => updateField('processParams', v)} />
         </div>
 
         <div className="flex items-center justify-between pt-2">

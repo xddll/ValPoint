@@ -1,7 +1,7 @@
 import React from 'react';
 import AppModals from '../AppModals';
 import { MapOption, NewLineupForm, SharedLineup, BaseLineup, LibraryMode } from '../../../types/lineup';
-import { ImageBedConfig } from '../../../components/ImageBedConfigModal';
+import { ImageBedConfig } from '../../../types/imageBed';
 import { LightboxImage } from '../../../types/ui';
 
 type Params = {

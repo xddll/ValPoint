@@ -1,9 +1,9 @@
 import { saveLineupApi, updateLineupApi, deleteLineupApi, clearLineupsApi } from '../services/lineups';
-import { LineupDbPayload } from '../types/lineup';
+import { LineupDbPayload, BaseLineup } from '../types/lineup';
 
 export const useLineupActions = () => {
-  const saveNewLineup = async (payload: LineupDbPayload) => {
-    await saveLineupApi(payload);
+  const saveNewLineup = async (payload: LineupDbPayload): Promise<BaseLineup> => {
+    return saveLineupApi(payload);
   };
 
   const updateLineup = async (id: string, payload: Partial<LineupDbPayload>) => {
