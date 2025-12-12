@@ -31,6 +31,8 @@ type Props = {
   pinnedLineupIds: string[];
   onTogglePinLineup: (id: string) => void;
   pinnedLimit: number;
+  onOpenSharedFilter: () => void;
+  selectedSharedUserId: string | null;
 };
 
 const RightPanel: React.FC<Props> = ({
@@ -62,6 +64,8 @@ const RightPanel: React.FC<Props> = ({
   pinnedLineupIds,
   onTogglePinLineup,
   pinnedLimit,
+  onOpenSharedFilter,
+  selectedSharedUserId,
 }) => {
   const pageSize = 7;
   const [page, setPage] = useState(1);
@@ -233,38 +237,43 @@ const RightPanel: React.FC<Props> = ({
         ) : (
           <div className="h-full flex flex-col">
             <div className="flex items-center gap-2 mb-4">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  placeholder="搜索点位标题..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-12 bg-[#0f1923] border border-gray-700 rounded-lg pl-10 pr-4 text-sm text-white focus:border-[#ff4655] outline-none transition-colors"
-                />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                  <Icon name="Search" size={16} />
-                </div>
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="搜索点位标题..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-12 bg-[#0f1923] border border-gray-700 rounded-lg pl-10 pr-4 text-sm text-white focus:border-[#ff4655] outline-none transition-colors"
+              />
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                <Icon name="Search" size={16} />
               </div>
+            </div>
+            {isSharedMode ? (
+              <button
+                onClick={onOpenSharedFilter}
+                className="h-12 px-3 whitespace-nowrap font-bold rounded-lg flex items-center justify-center gap-2 uppercase tracking-wider transition-colors"
+                style={{ backgroundColor: 'rgb(16, 185, 129)' }}
+              >
+                <Icon name="Filter" size={16} />
+                筛选共享
+              </button>
+            ) : (
               <button
                 onClick={handleClearAll}
-                disabled={userMode === 'guest' || isSharedMode}
+                disabled={userMode === 'guest'}
                 className={`h-12 px-3 whitespace-nowrap font-bold rounded-lg flex items-center justify-center gap-2 uppercase tracking-wider group transition-colors ${
-                  userMode === 'guest' || isSharedMode
+                  userMode === 'guest'
                     ? 'bg-gray-700 text-gray-400 cursor-not-allowed border border-white/10 shadow-none'
                     : 'bg-[#ff4655] hover:bg-[#d93a49] text-white shadow-lg shadow-red-900/20'
                 }`}
-                title={
-                  userMode === 'guest'
-                    ? '游客模式仅可查看'
-                    : isSharedMode
-                    ? '共享库仅可查看/复制'
-                    : '清空当前 ID 的全部点位'
-                }
+                title={userMode === 'guest' ? '游客模式仅可查看' : '清空当前 ID 的全部点位'}
               >
                 <Icon name="Trash2" size={16} className="group-hover:scale-110 transition-transform" />
                 清空点位
               </button>
-            </div>
+            )}
+          </div>
 
       <div className="flex-1 overflow-y-auto space-y-2 pr-1">
               <div className="flex bg-[#0f1923] p-1 rounded-lg border border-white/10 mb-3">

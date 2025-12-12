@@ -4,6 +4,7 @@ import PreviewModal from '../../components/PreviewModal';
 import AlertModal from '../../components/AlertModal';
 import DeleteConfirmModal from '../../components/DeleteConfirmModal';
 import ClearLineupsModal from '../../components/ClearLineupsModal';
+import SharedFilterModal from '../../components/SharedFilterModal';
 import ImageBedConfigModal from '../../components/ImageBedConfigModal';
 import EditorModal from '../../components/EditorModal';
 import ViewerModal from '../../components/ViewerModal';
@@ -58,6 +59,11 @@ type Props = {
   onClearConfirm: () => void;
   onClearAgentConfirm: () => void;
   onClearModalClose: () => void;
+  isSharedFilterOpen: boolean;
+  sharedContributors: string[];
+  selectedSharedUserId: string | null;
+  onSelectSharedUser: (userId: string | null) => void;
+  onSharedFilterClose: () => void;
   // image bed
   isImageConfigOpen: boolean;
   imageBedConfig: ImageBedConfig;
@@ -127,6 +133,11 @@ const AppModals: React.FC<Props> = ({
   onClearConfirm,
   onClearAgentConfirm,
   onClearModalClose,
+  isSharedFilterOpen,
+  sharedContributors,
+  selectedSharedUserId,
+  onSelectSharedUser,
+  onSharedFilterClose,
   isImageConfigOpen,
   imageBedConfig,
   onImageConfigClose,
@@ -202,6 +213,14 @@ const AppModals: React.FC<Props> = ({
         onClose={onClearModalClose}
         onClearAll={onClearConfirm}
         onClearSelectedAgent={onClearAgentConfirm}
+      />
+
+      <SharedFilterModal
+        isOpen={isSharedFilterOpen}
+        contributors={sharedContributors}
+        selectedUserId={selectedSharedUserId}
+        onSelect={onSelectSharedUser}
+        onClose={onSharedFilterClose}
       />
 
       <ImageBedConfigModal isOpen={isImageConfigOpen} config={imageBedConfig} onClose={onImageConfigClose} onSave={onImageConfigSave} />

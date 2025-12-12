@@ -13,6 +13,7 @@ type UseLineupFilteringParams = {
   searchQuery: string;
   activeTab: string;
   sharedLineup: SharedLineup | null;
+  sharedFilterUserId: string | null;
 };
 
 export function useLineupFiltering({
@@ -26,6 +27,7 @@ export function useLineupFiltering({
   searchQuery,
   activeTab,
   sharedLineup,
+  sharedFilterUserId,
 }: UseLineupFilteringParams) {
   const mapZhToEn = useMemo<Record<string, string>>(() => {
     const reverse: Record<string, string> = {};
@@ -73,9 +75,10 @@ export function useLineupFiltering({
       const sideMatch = selectedSide === 'all' || l.side === selectedSide;
       const abilityMatch = selectedAbilityIndex === null || l.abilityIndex === selectedAbilityIndex;
       const searchMatch = !searchQuery || l.title.toLowerCase().includes(searchQuery.toLowerCase());
-      return mapMatch && agentMatch && sideMatch && abilityMatch && searchMatch;
+      const sharedUserMatch = !sharedFilterUserId || l.userId === sharedFilterUserId;
+      return mapMatch && agentMatch && sideMatch && abilityMatch && searchMatch && sharedUserMatch;
     });
-  }, [sharedLineups, selectedMap, selectedAgent, selectedSide, selectedAbilityIndex, searchQuery, mapZhToEn]);
+  }, [sharedLineups, selectedMap, selectedAgent, selectedSide, selectedAbilityIndex, searchQuery, sharedFilterUserId, mapZhToEn]);
 
   const isFlipped = activeTab === 'shared' ? sharedLineup?.side === 'defense' : selectedSide === 'defense';
 

@@ -16,6 +16,7 @@ export function useModalState() {
   const [alertSecondaryAction, setAlertSecondaryAction] = useState<(() => void) | null>(null);
   const [viewingImage, setViewingImage] = useState<LightboxImage | null>(null);
   const [isChangelogOpen, setIsChangelogOpen] = useState<boolean>(false);
+  const [isSharedFilterOpen, setIsSharedFilterOpen] = useState<boolean>(false);
 
   return {
     isMapModalOpen,
@@ -44,5 +45,7 @@ export function useModalState() {
     setViewingImage,
     isChangelogOpen,
     setIsChangelogOpen,
+    isSharedFilterOpen,
+    setIsSharedFilterOpen,
   };
 }

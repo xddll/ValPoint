@@ -15,6 +15,7 @@ export function useAppState() {
   const [libraryMode, setLibraryMode] = useState<LibraryMode>('personal');
   const [newLineupData, setNewLineupData] = useState<NewLineupForm>(createEmptyLineup());
   const [placingType, setPlacingType] = useState<'agent' | 'skill' | null>(null);
+  const [sharedFilterUserId, setSharedFilterUserId] = useState<string | null>(null);
 
   return {
     activeTab,
@@ -39,5 +40,7 @@ export function useAppState() {
     setNewLineupData,
     placingType,
     setPlacingType,
+    sharedFilterUserId,
+    setSharedFilterUserId,
   };
 }

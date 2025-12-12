@@ -52,6 +52,11 @@ type Params = {
   setIsClearConfirmOpen: (v: boolean) => void;
   selectedAgentName: string | null;
   selectedAgentIcon: string | null;
+  isSharedFilterOpen: boolean;
+  setIsSharedFilterOpen: (v: boolean) => void;
+  sharedContributors: string[];
+  selectedSharedUserId: string | null;
+  onSelectSharedUser: (userId: string | null) => void;
   // image bed
   isImageConfigOpen: boolean;
   imageBedConfig: ImageBedConfig;
@@ -137,6 +142,11 @@ export function buildModalProps(params: Params): React.ComponentProps<typeof App
     onClearModalClose: () => {
       params.setIsClearConfirmOpen(false);
     },
+    isSharedFilterOpen: params.isSharedFilterOpen,
+    sharedContributors: params.sharedContributors,
+    selectedSharedUserId: params.selectedSharedUserId,
+    onSelectSharedUser: params.onSelectSharedUser,
+    onSharedFilterClose: () => params.setIsSharedFilterOpen(false),
     isImageConfigOpen: params.isImageConfigOpen,
     imageBedConfig: params.imageBedConfig,
     onImageConfigClose: () => params.setIsImageConfigOpen(false),

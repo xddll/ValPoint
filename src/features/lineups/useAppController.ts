@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useLineups } from '../../hooks/useLineups';
 import { useSharedLineups } from '../../hooks/useSharedLineups';
@@ -46,6 +46,8 @@ export function useAppController() {
     setNewLineupData,
     placingType,
     setPlacingType,
+    sharedFilterUserId,
+    setSharedFilterUserId,
   } = useAppState();
 
   const { maps, agents, selectedMap, setSelectedMap, selectedAgent, setSelectedAgent } = useValorantData();
@@ -96,6 +98,7 @@ export function useAppController() {
     searchQuery,
     activeTab,
     sharedLineup,
+    sharedFilterUserId,
   });
 
   useAppLifecycle({
@@ -252,6 +255,9 @@ export function useAppController() {
       const next = typeof mode === 'function' ? mode(prev) : mode;
       setSelectedLineupId(null);
       setViewingLineup(null);
+      if (next !== 'shared') {
+        setSharedFilterUserId(null);
+      }
       return next;
     });
   };
@@ -313,7 +319,14 @@ export function useAppController() {
     pinnedLineupIds,
     onTogglePinLineup: togglePinnedLineup,
     pinnedLimit: DEFAULT_PINNED_COUNT,
+    onOpenSharedFilter: () => modal.setIsSharedFilterOpen(true),
+    selectedSharedUserId: sharedFilterUserId,
   });
+
+  const sharedContributors = useMemo(
+    () => Array.from(new Set(sharedLineups.map((l) => l.userId).filter((v): v is string => !!v))),
+    [sharedLineups],
+  );
 
   const modalProps = buildModalProps({
     isAuthModalOpen,
@@ -383,6 +396,11 @@ export function useAppController() {
     viewingImage: modal.viewingImage,
     isChangelogOpen: modal.isChangelogOpen,
     setIsChangelogOpen: modal.setIsChangelogOpen,
+    isSharedFilterOpen: modal.isSharedFilterOpen,
+    setIsSharedFilterOpen: modal.setIsSharedFilterOpen,
+    sharedContributors,
+    selectedSharedUserId: sharedFilterUserId,
+    onSelectSharedUser: setSharedFilterUserId,
   });
 
   const { alertProps, lightboxProps } = buildUiProps({

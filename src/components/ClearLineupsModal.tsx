@@ -46,11 +46,10 @@ const ClearLineupsModal: React.FC<Props> = ({
           </div>
           <button
             onClick={onClose}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/15 bg-white/5 text-sm text-white hover:bg-white/10 transition-colors"
+            className="p-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-white/40 transition-colors"
             aria-label="关闭"
           >
-            <Icon name="X" size={14} />
-            <span>关闭</span>
+            <Icon name="X" size={16} />
           </button>
         </div>
 

@@ -60,6 +60,8 @@ type Params = {
   pinnedLineupIds: string[];
   onTogglePinLineup: (id: string) => void;
   pinnedLimit: number;
+  onOpenSharedFilter: () => void;
+  selectedSharedUserId: string | null;
 };
 
 export function buildMainViewProps(params: Params): React.ComponentProps<typeof MainView> {
@@ -141,6 +143,8 @@ export function buildMainViewProps(params: Params): React.ComponentProps<typeof 
       pinnedLineupIds: params.pinnedLineupIds,
       onTogglePinLineup: params.onTogglePinLineup,
       pinnedLimit: params.pinnedLimit,
+      onOpenSharedFilter: params.onOpenSharedFilter,
+      selectedSharedUserId: params.selectedSharedUserId,
     },
   };
 }

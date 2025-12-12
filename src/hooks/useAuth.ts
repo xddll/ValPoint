@@ -32,7 +32,7 @@ export const useAuth = ({ onAuthSuccess, setAlertMessage }: Params) => {
   const [isAuthLoading, setIsAuthLoading] = useState(false);
 
   const isGuest = userMode === 'guest';
-  const targetUserId = pendingUserId || customUserIdInput || userId || '';
+  const targetUserId = pendingUserId || customUserIdInput || '';
 
   useEffect(() => {
     const savedId = localStorage.getItem(LOCAL_USER_KEY);

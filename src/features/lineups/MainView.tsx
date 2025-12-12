@@ -80,6 +80,8 @@ type RightProps = {
   pinnedLineupIds: string[];
   onTogglePinLineup: (id: string) => void;
   pinnedLimit: number;
+  onOpenSharedFilter: () => void;
+  selectedSharedUserId: string | null;
 };
 
 type Props = {
@@ -181,6 +183,8 @@ const MainView: React.FC<Props> = ({ activeTab, libraryMode, setLibraryMode, cle
         pinnedLineupIds={right.pinnedLineupIds}
         onTogglePinLineup={right.onTogglePinLineup}
         pinnedLimit={right.pinnedLimit}
+        onOpenSharedFilter={right.onOpenSharedFilter}
+        selectedSharedUserId={right.selectedSharedUserId}
       />
     </div>
   );
