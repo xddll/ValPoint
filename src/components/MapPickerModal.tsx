@@ -26,12 +26,10 @@ const MapPickerModal = ({ isOpen, maps, selectedMap, setSelectedMap, setIsMapMod
                   setSelectedMap(m);
                   setIsMapModalOpen(false);
                 }}
-                className={`relative aspect-video rounded-xl overflow-hidden border cursor-pointer transition-all ${
-                  isSelected ? 'border-[#ff4655] shadow-lg shadow-red-900/30' : 'border-white/10 hover:border-white/30'
-                }`}
+                className="group relative aspect-video rounded-xl overflow-hidden border-2 border-transparent hover:border-[#ff4655] cursor-pointer transition-all"
               >
                 {preview ? (
-                  <img src={preview} loading="lazy" className="w-full h-full object-cover" />
+                  <img src={preview} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 ) : (
                   <div className="w-full h-full bg-[#0f1923] flex items-center justify-center text-gray-500 text-sm">无预览</div>
                 )}
