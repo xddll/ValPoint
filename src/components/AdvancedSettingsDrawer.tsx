@@ -36,10 +36,12 @@ const AdvancedSettingsDrawer: React.FC<Props> = ({ isOpen, settings, onClose, on
       <div className="fixed right-0 top-0 bottom-0 w-96 bg-[#1f2326] border-l border-white/10 z-[1101] shadow-2xl flex flex-col animate-in slide-in-from-right">
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <Icon name="SlidersHorizontal" className="text-[#ff4655]" size={24} />
-            <div>
+            <div className="w-10 h-10 rounded-full bg-[#ff4655]/15 border border-[#ff4655]/35 flex items-center justify-center text-[#ff4655]">
+              <Icon name="SlidersHorizontal" size={18} />
+            </div>
+            <div className="leading-tight">
               <h3 className="text-lg font-bold text-white">高级设置</h3>
-              <p className="text-xs text-gray-400">一些高级设置</p>
+              <p className="text-xs text-gray-400">当前仅提供剪贴板图片压缩相关设置</p>
             </div>
           </div>
           <button
