@@ -16,25 +16,35 @@ const MapPickerModal = ({ isOpen, maps, selectedMap, setSelectedMap, setIsMapMod
           </button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pb-4">
-          {maps.map((m) => (
-            <div
-              key={m.uuid}
-              onClick={() => {
-                setSelectedMap(m);
-                setIsMapModalOpen(false);
-              }}
-              className={`map-card relative aspect-video rounded-xl overflow-hidden border-2 cursor-pointer ${
-                selectedMap?.uuid === m.uuid ? 'border-[#ff4655]' : 'border-transparent'
-              }`}
-            >
-              <img src={m.listViewIcon} loading="lazy" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/40 hover:bg-transparent transition-colors flex items-center justify-center">
-                <span className="font-bold text-[2.2rem] leading-tight uppercase tracking-widest drop-shadow-lg text-center">
-                  {getMapDisplayName(m.displayName)}
-                </span>
+          {maps.map((m) => {
+            const preview = m.listViewIcon || m.displayIcon;
+            const isSelected = selectedMap?.uuid === m.uuid;
+            return (
+              <div
+                key={m.uuid}
+                onClick={() => {
+                  setSelectedMap(m);
+                  setIsMapModalOpen(false);
+                }}
+                className={`relative aspect-video rounded-xl overflow-hidden border cursor-pointer transition-all ${
+                  isSelected ? 'border-[#ff4655] shadow-lg shadow-red-900/30' : 'border-white/10 hover:border-white/30'
+                }`}
+              >
+                {preview ? (
+                  <img src={preview} loading="lazy" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-[#0f1923] flex items-center justify-center text-gray-500 text-sm">无预览</div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/10 transition-opacity">
+                  <div className="absolute inset-0 flex items-center justify-center text-center px-3">
+                    <span className="font-extrabold text-4xl leading-tight uppercase tracking-widest drop-shadow-lg text-white">
+                      {getMapDisplayName(m.displayName)}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

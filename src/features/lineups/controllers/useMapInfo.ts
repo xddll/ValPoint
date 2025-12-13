@@ -26,10 +26,6 @@ export function useMapInfo({ selectedMap, selectedSide, activeTab, sharedLineup 
   const getMapEnglishName = (displayName: string) =>
     Object.keys(MAP_TRANSLATIONS).find((key) => MAP_TRANSLATIONS[key] === displayName) || displayName;
 
-  const mapCoverOverrides: Record<string, string> = {
-    Abyss: 'https://game.gtimg.cn/images/val/agamezlk/map/abyss/cover.PNG',
-  };
-
   const getMapUrl = (): string | null => {
     if (activeTab === 'shared' && sharedLineup) {
       const enName = getMapEnglishName(sharedLineup.mapName);
@@ -43,10 +39,7 @@ export function useMapInfo({ selectedMap, selectedSide, activeTab, sharedLineup 
   };
 
   const getMapCoverUrl = () => {
-    const enName = selectedMap ? getMapEnglishName(selectedMap.displayName) : '';
-    const key = enName ? enName.toLowerCase() : '';
-    const template = key ? `https://game.gtimg.cn/images/val/agamezlk/map/${key}/cover.PNG` : null;
-    return (enName && mapCoverOverrides[enName]) || template || selectedMap?.displayIcon || getMapUrl() || null;
+    return selectedMap?.displayIcon || getMapUrl() || null;
   };
 
   return {
