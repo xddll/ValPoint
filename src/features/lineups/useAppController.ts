@@ -279,7 +279,7 @@ export function useAppController() {
           updated_at: now,
         });
         if (upsertError) throw upsertError;
-        modal.setIsChangePasswordOpen(false);
+        setIsImageProcessingOpen(false);
         modal.setAlertMessage('密码已更新，请使用新密码登录');
       } catch (e) {
         console.error(e);
@@ -288,7 +288,7 @@ export function useAppController() {
         setIsChangingPassword(false);
       }
     },
-    [userId, modal],
+    [userId, modal, setIsImageProcessingOpen],
   );
 
   const togglePlacingType = (type: 'agent' | 'skill') => {

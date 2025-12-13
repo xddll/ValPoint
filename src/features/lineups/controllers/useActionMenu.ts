@@ -55,7 +55,7 @@ export function useActionMenu({
     setPendingUserId(userId);
     setCustomUserIdInput(userId);
     setPasswordInput('');
-    setIsChangePasswordOpen(true);
+    setIsImageProcessingOpen(true);
   };
 
   const handleQuickClear = () => {

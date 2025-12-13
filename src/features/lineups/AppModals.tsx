@@ -12,7 +12,6 @@ import ViewerModal from '../../components/ViewerModal';
 import Lightbox from '../../components/Lightbox';
 import AuthModal from '../../components/AuthModal';
 import ChangelogModal from '../../components/ChangelogModal';
-import ChangePasswordModal from '../../components/ChangePasswordModal';
 import { BaseLineup, SharedLineup, MapOption, LineupSide, NewLineupForm } from '../../types/lineup';
 import { ImageBedConfig } from '../../types/imageBed';
 import { ImageProcessingSettings } from '../../types/imageProcessing';
@@ -149,10 +148,10 @@ const AppModals: React.FC<Props> = ({
   selectedSharedUserId,
   onSelectSharedUser,
   onSharedFilterClose,
-  isChangePasswordOpen,
+  isChangePasswordOpen: _isChangePasswordOpen,
   isChangingPassword,
   onChangePasswordSubmit,
-  setIsChangePasswordOpen,
+  setIsChangePasswordOpen: _setIsChangePasswordOpen,
   isImageConfigOpen,
   imageBedConfig,
   onImageConfigClose,
@@ -242,16 +241,16 @@ const AppModals: React.FC<Props> = ({
         onClose={onSharedFilterClose}
       />
 
-      <ChangePasswordModal
-        isOpen={isChangePasswordOpen}
-        userId={userId}
-        isSubmitting={isChangingPassword}
-        onSubmit={onChangePasswordSubmit}
-        onClose={() => setIsChangePasswordOpen(false)}
-      />
-
       <ImageBedConfigModal isOpen={isImageConfigOpen} config={imageBedConfig} onClose={onImageConfigClose} onSave={onImageConfigSave} />
-      <AdvancedSettingsDrawer isOpen={isImageProcessingOpen} settings={imageProcessingSettings} onClose={onImageProcessingClose} onSave={onImageProcessingSave} />
+      <AdvancedSettingsDrawer
+        isOpen={isImageProcessingOpen}
+        settings={imageProcessingSettings}
+        onClose={onImageProcessingClose}
+        onSave={onImageProcessingSave}
+        userId={userId}
+        isChangingPassword={isChangingPassword}
+        onChangePasswordSubmit={onChangePasswordSubmit}
+      />
 
       <EditorModal
         isEditorOpen={isEditorOpen}

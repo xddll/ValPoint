@@ -60,20 +60,6 @@ const QuickActions: React.FC<Props> = ({
                 <span className="flex items-center gap-1.5"><Icon name="SlidersHorizontal" size={14} /> 高级设置</span>
                 <Icon name="ChevronRight" size={12} className="text-gray-400" />
               </button>
-              <button
-                onClick={onChangePassword}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-[13px] text-white border border-white/10 transition-colors"
-              >
-                <span className="flex items-center gap-1.5"><Icon name="Key" size={14} /> 修改密码</span>
-                <Icon name="ChevronRight" size={12} className="text-gray-400" />
-              </button>
-              <button
-                onClick={onClearLineups}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg bg-[#ff4655]/10 hover:bg-[#ff4655]/20 text-[13px] text-[#ffb3ba] border border-[#ff4655]/40 transition-colors"
-              >
-                <span className="flex items-center gap-1.5"><Icon name="Trash2" size={14} /> 清空点位</span>
-                <Icon name="ChevronRight" size={12} className="text-[#ffb3ba]" />
-              </button>
             </div>
           )}
           <button

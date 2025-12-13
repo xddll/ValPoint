@@ -72,14 +72,14 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
               <Icon name="Cloudy" size={18} />
             </div>
             <div className="leading-tight">
-              <div className="text-xl font-bold text-white">OSS 配置</div>
+              <div className="text-xl font-bold text-white">OSS 配置（目前仅支持阿里云）</div>
               <div className="text-xs text-gray-500">本地存储，仅当前设备生效，可复制/导入/导出</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-colors ${
+              className={`inline-flex items-center gap-2 px-3 py-[6px] rounded-lg border text-sm transition-colors ${
                 isCopied
                   ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
                   : 'bg-white/5 border-white/10 text-white hover:border-white/30'
@@ -120,12 +120,12 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
               >
                 重置
               </button>
-              <button
-                onClick={handleImport}
-                className="px-4 py-2 rounded-lg bg-orange-500/80 hover:bg-orange-500 text-white font-semibold text-sm transition-colors flex items-center gap-2"
-              >
-                <Icon name="Download" size={16} /> 导入
-              </button>
+            <button
+              onClick={handleImport}
+              className="px-4 py-2 rounded-lg bg-[#ff4655] hover:bg-[#d93a49] text-white font-semibold text-sm transition-colors flex items-center gap-2 shadow-md shadow-red-900/30"
+            >
+              <Icon name="Download" size={16} /> 导入
+            </button>
               <button
                 onClick={() => onSave(localConfig)}
                 className="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white font-semibold text-sm transition-colors flex items-center gap-2 shadow-md shadow-emerald-900/30"
