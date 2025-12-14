@@ -66,7 +66,11 @@ const pickExtension = (blob: Blob, originalUrl: string) => {
 };
 
 const createOssClient = (config: ImageBedConfig) => {
-  const { accessKeyId, accessKeySecret, bucket, region } = config;
+  if (config.provider && config.provider !== 'aliyun') {
+    throw new Error('UNSUPPORTED_PROVIDER');
+  }
+  const region = config.region || config.area;
+  const { accessKeyId, accessKeySecret, bucket } = config;
   if (!accessKeyId || !accessKeySecret || !bucket || !region) {
     throw new Error('MISSING_CONFIG');
   }
@@ -81,7 +85,9 @@ const createOssClient = (config: ImageBedConfig) => {
 };
 
 const buildPublicUrl = (config: ImageBedConfig, objectKey: string) => {
-  const baseUrl = (config.customDomain || `https://${config.bucket}.${config.region}.aliyuncs.com`).replace(/\/+$/g, '');
+  const region = config.region || config.area || '';
+  const domain = config.customDomain || config.customUrl || `https://${config.bucket}.${region}.aliyuncs.com`;
+  const baseUrl = domain.replace(/\/+$/g, '');
   const endpointPath = trimSlashes(config.endpointPath || '');
   const path = [endpointPath, objectKey].filter(Boolean).join('/');
   return `${ensureHttps(baseUrl)}/${path}${ensureProcessParams(config.processParams)}`;
@@ -121,7 +127,7 @@ export const uploadBlobToOss = async (
 ) => {
   const client = createOssClient(config);
   const extension = options.extensionHint || pickExtension(blob, '');
-  const objectKey = buildObjectKey(config.basePath, extension);
+  const objectKey = buildObjectKey(config.basePath || config.path, extension);
   const result = await uploadWithRetry(client, objectKey, blob, options.onProgress);
   const finalKey = (result as any).name || objectKey;
   const url = buildPublicUrl(config, finalKey);

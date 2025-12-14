@@ -3,6 +3,7 @@ import { defaultImageBedConfig } from '../../../components/ImageBedConfigModal';
 import { ImageBedConfig } from '../../../types/imageBed';
 import { useImageProcessingSettings } from '../../../hooks/useImageProcessingSettings';
 import { ImageProcessingSettings } from '../../../types/imageProcessing';
+import { imageBedProviderMap } from '../../../constants/imageBedProviders';
 
 type Params = {
   userId: string | null;
@@ -31,10 +32,32 @@ export function useActionMenu({
   const [imageBedConfig, setImageBedConfig] = useState<ImageBedConfig>(defaultImageBedConfig);
   const { settings: imageProcessingSettings, saveSettings: saveImageProcessingSettings } = useImageProcessingSettings();
 
+  const normalizeImageBedConfig = (raw: ImageBedConfig): ImageBedConfig => {
+    const providerCandidate = raw?.provider;
+    const provider =
+      providerCandidate && imageBedProviderMap[providerCandidate]
+        ? providerCandidate
+        : defaultImageBedConfig.provider;
+    const base = imageBedProviderMap[provider]?.defaultConfig || defaultImageBedConfig;
+    const merged: ImageBedConfig = {
+      ...base,
+      ...raw,
+      provider,
+      _configName: raw?._configName || (raw as { name?: string })?.name || base._configName,
+    };
+    if (provider === 'aliyun') {
+      if (!merged.area && merged.region) merged.area = merged.region;
+      if (merged.area && !merged.region) merged.region = merged.area;
+      if (merged.path && !merged.basePath) merged.basePath = merged.path;
+      if (merged.customUrl && !merged.customDomain) merged.customDomain = merged.customUrl;
+    }
+    return merged;
+  };
+
   useEffect(() => {
     try {
       const saved = localStorage.getItem('valpoint_imagebed_config');
-      if (saved) setImageBedConfig({ ...defaultImageBedConfig, ...JSON.parse(saved) });
+      if (saved) setImageBedConfig(normalizeImageBedConfig(JSON.parse(saved)));
     } catch (e) {
       console.error(e);
     }
@@ -64,9 +87,10 @@ export function useActionMenu({
   };
 
   const handleImageConfigSave = (cfg: ImageBedConfig) => {
-    setImageBedConfig(cfg);
+    const normalized = normalizeImageBedConfig(cfg);
+    setImageBedConfig(normalized);
     try {
-      localStorage.setItem('valpoint_imagebed_config', JSON.stringify(cfg));
+      localStorage.setItem('valpoint_imagebed_config', JSON.stringify(normalized));
     } catch (e) {
       console.error(e);
     }

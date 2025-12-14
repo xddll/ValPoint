@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Icon from './Icon';
 import { ImageBedConfig, ImageBedProvider } from '../types/imageBed';
 import {
@@ -16,7 +16,8 @@ type Props = {
 };
 
 const normalizeConfig = (incoming?: ImageBedConfig): ImageBedConfig => {
-  const provider = incoming?.provider || defaultImageBedConfig.provider;
+  const providerCandidate = incoming?.provider;
+  const provider = providerCandidate && imageBedProviderMap[providerCandidate] ? providerCandidate : defaultImageBedConfig.provider;
   const base = imageBedProviderMap[provider]?.defaultConfig || defaultImageBedConfig;
   const merged: ImageBedConfig = {
     ...base,
@@ -223,6 +224,21 @@ const Field: React.FC<FieldProps> = ({ field, value, onChange }) => {
   const isSwitch = type === 'switch';
   const isSelect = type === 'select';
   const displayValue = typeof value === 'boolean' ? value : value || '';
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!isSelect) return;
+    if (!isSelectOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!selectRef.current) return;
+      if (!selectRef.current.contains(e.target as Node)) {
+        setIsSelectOpen(false);
+      }
+    };
+    window.addEventListener('mousedown', handleClickOutside);
+    return () => window.removeEventListener('mousedown', handleClickOutside);
+  }, [isSelect, isSelectOpen]);
 
   return (
     <label className="flex flex-col gap-1 text-sm text-gray-300">
@@ -252,19 +268,43 @@ const Field: React.FC<FieldProps> = ({ field, value, onChange }) => {
           </span>
         </button>
       ) : isSelect ? (
-        <div className="relative">
-          <select
-            value={displayValue as string}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full appearance-none bg-[#0f131a] border border-white/10 rounded-lg px-3 py-2 pr-10 text-white focus:border-[#ff4655] outline-none transition-colors"
+        <div className="relative" ref={selectRef}>
+          <button
+            type="button"
+            onClick={() => setIsSelectOpen((prev) => !prev)}
+            className="w-full bg-[#0f131a] border border-white/10 rounded-lg px-3 py-2 text-left text-white focus:border-[#ff4655] outline-none transition-colors flex items-center justify-between gap-2"
           >
-            {(options || []).map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          <Icon name="ChevronDown" size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <span className="truncate">{displayValue as string}</span>
+            <Icon
+              name="ChevronDown"
+              size={16}
+              className={`text-gray-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {isSelectOpen && (
+            <div className="absolute z-[1600] mt-1 w-full rounded-lg border border-white/10 bg-[#0b0f16]/95 shadow-xl shadow-black/50 backdrop-blur-md overflow-hidden">
+              {(options || []).map((opt) => {
+                const active = opt.value === displayValue;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      onChange(opt.value);
+                      setIsSelectOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 text-sm transition-colors ${
+                      active
+                        ? 'bg-white/10 text-white'
+                        : 'text-gray-200 hover:bg-white/5'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       ) : (
         <input

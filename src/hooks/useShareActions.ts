@@ -126,6 +126,13 @@ export const useShareActions = ({
   onTransferProgress,
 }: Params) => {
   const ensureImageBedConfigured = () => {
+    if (imageBedConfig?.provider && imageBedConfig.provider !== 'aliyun') {
+      openImageBedConfig?.();
+      setAlertActionLabel(null);
+      setAlertAction(null);
+      setAlertMessage('当前仅支持阿里云上传，其他图床上传功能稍后提供。');
+      return false;
+    }
     const required: Array<keyof ImageBedConfig> = ['accessKeyId', 'accessKeySecret', 'bucket', 'region'];
     const missing = required.filter((key) => !imageBedConfig?.[key]);
     if (!missing.length) return true;
