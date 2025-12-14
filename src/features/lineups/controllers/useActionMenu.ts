@@ -56,8 +56,30 @@ export function useActionMenu({
 
   useEffect(() => {
     try {
+      // 尝试读取多平台配置
+      const multiConfigStr = localStorage.getItem('valpoint_imagebed_configs');
+      if (multiConfigStr) {
+        const multiConfigs = JSON.parse(multiConfigStr);
+        // 使用当前 provider 的配置，如果没有则使用默认
+        const currentProvider = imageBedConfig.provider || defaultImageBedConfig.provider;
+        const savedConfig = multiConfigs[currentProvider];
+        if (savedConfig) {
+          setImageBedConfig(normalizeImageBedConfig(savedConfig));
+          return;
+        }
+      }
+      
+      // 兼容旧版单一配置
       const saved = localStorage.getItem('valpoint_imagebed_config');
-      if (saved) setImageBedConfig(normalizeImageBedConfig(JSON.parse(saved)));
+      if (saved) {
+        const oldConfig = JSON.parse(saved);
+        setImageBedConfig(normalizeImageBedConfig(oldConfig));
+        
+        // 迁移到新格式
+        const multiConfigs = { [oldConfig.provider]: oldConfig };
+        localStorage.setItem('valpoint_imagebed_configs', JSON.stringify(multiConfigs));
+        localStorage.removeItem('valpoint_imagebed_config');
+      }
     } catch (e) {
       console.error(e);
     }
@@ -90,7 +112,17 @@ export function useActionMenu({
     const normalized = normalizeImageBedConfig(cfg);
     setImageBedConfig(normalized);
     try {
-      localStorage.setItem('valpoint_imagebed_config', JSON.stringify(normalized));
+      // 读取现有的多平台配置
+      const multiConfigStr = localStorage.getItem('valpoint_imagebed_configs');
+      const multiConfigs = multiConfigStr ? JSON.parse(multiConfigStr) : {};
+      
+      // 更新当前平台的配置
+      multiConfigs[normalized.provider] = normalized;
+      
+      // 保存回 localStorage
+      localStorage.setItem('valpoint_imagebed_configs', JSON.stringify(multiConfigs));
+      
+      console.log('[useActionMenu] saved config for provider:', normalized.provider);
     } catch (e) {
       console.error(e);
     }

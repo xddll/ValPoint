@@ -43,9 +43,13 @@ const buildPublicUrl = (config: ImageBedConfig, objectKey: string) => {
   
   // 添加图片处理参数
   const params: string[] = [];
+  
+  // 极智压缩：使用 imageslim 参数
   if (slim) {
-    params.push('imageMogr2/format/webp');
+    params.push('imageslim');
   }
+  
+  // 自定义图片处理参数
   if (options) {
     params.push(options);
   }
@@ -158,7 +162,7 @@ export const tencentDefinition: ImageBedProviderDefinition = {
       required: true,
     },
     { key: 'options', label: '图片处理参数', placeholder: '如：imageMogr2/thumbnail/500x500' },
-    { key: 'slim', label: '自动转 WebP', type: 'switch' },
+    { key: 'slim', label: '开启极智压缩', type: 'switch' },
   ],
   upload: async (file: File | Blob, config: ImageBedConfig, options: UploadOptions = {}) => {
     const extensionHint = options.extensionHint || inferExtensionFromFile(file);

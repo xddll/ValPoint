@@ -110,12 +110,31 @@ const ImageBedConfigModal: React.FC<Props> = ({ isOpen, config, onClose, onSave 
       setShowProviderMenu(false);
       return;
     }
+    
+    // 尝试从 localStorage 加载该平台的配置
+    try {
+      const multiConfigStr = localStorage.getItem('valpoint_imagebed_configs');
+      if (multiConfigStr) {
+        const multiConfigs = JSON.parse(multiConfigStr);
+        const savedConfig = multiConfigs[provider];
+        if (savedConfig) {
+          console.log('[ImageBedConfigModal] loaded saved config for provider:', provider);
+          setLocalConfig(normalizeConfig(savedConfig));
+          setShowProviderMenu(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.error('[ImageBedConfigModal] failed to load saved config:', e);
+    }
+    
+    // 如果没有保存的配置，使用默认配置
     const base = imageBedProviderMap[provider]?.defaultConfig || defaultImageBedConfig;
-    setLocalConfig((prev) => ({
+    setLocalConfig({
       ...base,
-      _configName: prev._configName || base._configName,
+      _configName: '',
       provider,
-    }));
+    });
     setShowProviderMenu(false);
   };
 
