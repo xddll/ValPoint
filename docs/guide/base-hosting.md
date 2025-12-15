@@ -1,12 +1,32 @@
-# SupaBase - Table
-**以下所有代码，都在`SQL Editor`处执行**
+# 数据库建表
+## SupaBase - Table Editor
+以下所有代码，都在 `SupaBase` 的 `SQL Editor` 处执行，下方点击 `details Click me to view the code` 查看代码。
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/SQL-Editor.png" alt="supabase编辑页" />
+  <figcaption>supabase编辑页</figcaption>
+</figure>
+
+### 一点建议
+
+建议新增两个项目，一个存放点位、用户、白名单，如： `Demo_val` ；另一个项目存放分享库的点位，如： `Demo_share` ；因为分享库的 `KEY` 是要分享出去，大家才能到你这里分享分享点位，所以就会存在泄漏 `KEY` 的风险，如果将它独立起来，就不用怕存在什么数据问题了，当然，如果你是自己使用，那就无所谓了。
+
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/数据库主页.png" alt="数据库主页" />
+  <figcaption>免费版只能新建两个项目</figcaption>
+</figure>
+
 ## 核心业务表
 
-> 代码说明：**valorant_lineups**数据表存放的是点位数据，**valorant_users**数据表存放的是用户ID数据
+> [!TIP]
+> 代码说明： **valorant_lineups** 数据表存放的是点位数据， **valorant_users** 数据表存放的是用户ID数据。
+>
+> 如果你希望你自己的数据持久化，那么一定要新增自己的数据表，<b>因为我不能保证我的演示网站能运行多久，而且我的共享库设置了定时清理任务，超过15天的分享点位，将会被清理</b>，所以如果在共享库遇到自己喜欢的点位，请尽快保存到自己的个人库中。
 
-> 如果你希望你自己的数据持久化，那么一定要新增自己的数据表，因为我不能保证我的演示网站能运行多久，而且我的共享库设置了定时清理任务，超过15天的分享点位，将会被清理，所以如果在共享库遇到自己喜欢的点位，请尽快保存到自己的个人库中
+::: details Click me to view the code
 
-```
+``` sql
 -- 0) 基础扩展 (必须，用于 gen_random_uuid)
 create extension if not exists pgcrypto;
 
@@ -93,14 +113,20 @@ create policy "anon upsert users"
 create policy "anon update users" 
   on public.valorant_users for update using (auth.role() = 'anon');
 ```
+:::
 
 ## 共享功能表
 
-> 代码说明：**valorant_shared**数据表存放的是共享库数据
+建议另起一个项目存放该表，详见[一点建议](#一点建议)
 
+> [!TIP]
+> 代码说明： **valorant_shared** 数据表存放的是共享库数据
+>
 > 如果自己不想搭建共享库，可以不用看这一步
 
-```
+::: details Click me to view the code
+
+``` sql
 -- 0) 基础扩展 (防止单独执行此文件时报错)
 create extension if not exists pgcrypto;
 
@@ -163,12 +189,18 @@ create policy "anon update shared"
 create policy "anon delete shared" 
   on public.valorant_shared for delete using (auth.role() = 'anon');
 ```
+:::
 
-## 定时清理任务
+### 定时清理任务
 
+这个表，是要在 ` valorant_shared` 所在的项目操作的。
+
+> [!TIP]
 > 同理，如果你没有搭建共享库，那么也无需设置定时任务
 
-```
+::: details Click me to view the code
+
+``` sql
 -- 0) 开启定时任务扩展 (必须安装 pg_cron)
 create extension if not exists pg_cron with schema extensions;
 
@@ -217,8 +249,18 @@ $$;
 -- 3) 注册定时任务 (每天凌晨 03:00 执行)
 --------------------------------------------------------------------------------
 
--- 先尝试移除同名任务
-select cron.unschedule('valorant-cleanup-daily');
+-- 先尝试移除同名任务（存在才删，避免报错）
+DO $$
+DECLARE jid int;
+BEGIN
+  SELECT jobid INTO jid
+  FROM cron.job
+  WHERE jobname = 'valorant-cleanup-daily';
+
+  IF jid IS NOT NULL THEN
+    PERFORM cron.unschedule(jid);
+  END IF;
+END $$;
 
 -- 创建新任务
 select cron.schedule(
@@ -227,33 +269,121 @@ select cron.schedule(
   'select public.cleanup_expired_shares()'
 );
 ```
+:::
 
 ### 查看定时任务
-```
+``` sql
 select * from cron.job;
 ```
 
-### 立即执行一次清理任务
+### 删除定时任务
+
+`SELECT cron.unschedule(1);` 中的 `1` 是 `jobid` ，运行查看定时任务，可以看得到。
+
+``` sql
+-- 1. 先确认这个任务是否存在
+SELECT jobid, jobname
+FROM cron.job
+WHERE jobname = 'valorant-cleanup-daily';
+-- 2. 删除定时任务
+SELECT cron.unschedule(1);
+
 ```
+
+### 立即执行一次清理任务
+``` sql
 select public.cleanup_expired_shares();
 ```
 
 ### 定时任务添加白名单
 
-```
+``` sql
 insert into public.valorant_whitelist (user_id, note)
 values ('user_12345_abcde', '特权用户，永久保留数据')
 on conflict (user_id) do nothing;
 ```
 
-其中`user_12345_abcde`换成你自己的ID
+其中 `user_12345_abcde` 换成你自己的ID
 
-# SupaBase - Edge Functions
-**点击`Deploy a new function`新增，并在下面填入`**get-video-author**`标题**
+## SupaBase - Edge Functions
+在你存放 **点位表** 的项目中新增，如： `Demo_val`  ，点击 `Deploy a new function` 新增，并在下面填入 `get-video-author` 标题
 
-> 代码说明：**get-video-author**是用来获取点位视频博主的头像+用户名信息
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-01.png" alt="Edge-Functions-01" />
+  <figcaption>步骤1</figcaption>
+</figure>
 
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-02.png" alt="Edge-Functions-02" />
+  <figcaption>步骤2</figcaption>
+</figure>
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-03.png" alt="Edge-Functions-03" />
+  <figcaption>步骤3</figcaption>
+</figure>
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-04.png" alt="Edge-Functions-04" />
+  <figcaption>步骤4</figcaption>
+</figure>
+
+---
+
+如果能得到以下的返回结果，就说明调试成功了
+### B站测试数据
+
+``` json
+{ "url": "【这几年，电视画质为什么变差了...】 【精准空降到 02:26】 https://www.bilibili.com/video/BV1acmCBtEst/?share_source=copy_web&vd_source=fd59995bf2f70580369462145819da94&t=146" }
 ```
+
+#### 返回结果
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "username": "影视飓风",
+    "avatar": "https://i0.hdslb.com/bfs/face/c1733474892caa45952b2c09a89323157df7129a.jpg",
+    "user_home_url": "https://space.bilibili.com/946974",
+    "is_cover": false,
+    "source": "bilibili",
+    "cover_image": "http://i2.hdslb.com/bfs/archive/2ca10436a2d9343d6b03739dd9914edfef021a07.jpg"
+  }
+}
+```
+
+### 抖音测试数据
+
+``` json
+{ "url": "0.20 c@N.Ji 03/08 seb:/ 这几年，电视画质为什么变差了...# 电视 # 画质 # 电视设置 # 技术 # 体验  https://v.douyin.com/3HrmbOLNjZw/ 复制此链接，打开Dou音搜索，直接观看视频！" }
+```
+
+#### 返回结果
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "username": "影视飓风",
+    "avatar": "https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_a8cf976fa76120a291a9aacb9c4439f8.jpeg?from=327834062",
+    "user_home_url": "https://www.douyin.com/user/MS4wLjABAAAAaCcBHb3Rhc4zxF8YkBOfHfLh6k-IWEK2l3Ne9xOXPnQ",
+    "is_cover": false,
+    "source": "douyin"
+  }
+}
+```
+
+
+
+
+> [!TIP]
+> 代码说明： **get-video-author** 是用来获取点位视频博主的头像+用户名信息
+
+::: details Click me to view the code
+
+``` sql
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
   
@@ -653,3 +783,17 @@ serve(async (req) => {
 })
 ```
 
+:::
+
+##  期望结果
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Demo_val.png" alt="Demo_val" />
+  <figcaption>Demo_val库存在的两张表</figcaption>
+</figure>
+
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Demo_share.png" alt="Demo_share" />
+  <figcaption>Demo_share库存在的两张表</figcaption>
+</figure>

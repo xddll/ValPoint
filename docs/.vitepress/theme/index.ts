@@ -5,6 +5,9 @@ import { BoxCube, Card, Links, Pill } from '@theojs/lumen'
 import mediumZoom from 'medium-zoom'
 import '@theojs/lumen/style'
 import './var.css'
+import './zoom.css'
+
+let zoom: ReturnType<typeof mediumZoom> | undefined
 
 const theme: Theme = {
   ...DefaultTheme,
@@ -15,7 +18,13 @@ const theme: Theme = {
     app.component('BoxCube', BoxCube)
 
     // 初始化图片放大（进入页面和路由切换后）
-    const initZoom = () => mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.6)' })
+    const initZoom = () => {
+      if (zoom) zoom.detach()
+      zoom = mediumZoom('.vp-doc img:not(.no-zoom)', {
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+    }
+
     router.onAfterRouteChanged = () => initZoom()
     initZoom()
   },

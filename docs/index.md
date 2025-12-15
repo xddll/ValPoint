@@ -2,11 +2,11 @@
 layout: home
 
 hero:
-  name: ValPoint
+  name: VALPOINT
   text: Valorant 点位管理平台
   tagline: 专为无畏契约PC端（Valorant）设计的智能点位规划工具，数据完全掌控，支持本地与云端灵活部署
   image:
-    src: /Frame5.png
+    src: /home.png
     alt: ValPoint
     width: 640
   actions:

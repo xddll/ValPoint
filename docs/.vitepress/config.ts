@@ -4,14 +4,14 @@ export default defineConfig({
   title: 'ValPoint',
   description: 'Valorant 点位管理与分享平台',
   lang: 'zh-CN',
-  
+
   head: [
-    // 默认头部配置
+    ['script', { src: 'https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js' }]
   ],
-  
+
   themeConfig: {
     logo: '/logo.svg',
-    
+
     nav: [
       { text: '首页', link: '/' },
       { text: '用户指南', link: '/guide/getting-started' },
@@ -24,6 +24,7 @@ export default defineConfig({
         {
           text: '开始使用',
           items: [
+            { text: '项目起源', link: '/guide/project-origin' },
             { text: '快速开始', link: '/guide/getting-started' }
           ]
         },
@@ -34,7 +35,8 @@ export default defineConfig({
             { text: '共享点位库', link: '/guide/shared-library' },
             { text: '作者信息获取', link: '/guide/author-info' },
             { text: '地图标注', link: '/guide/map-annotation' },
-            { text: '图床配置', link: '/guide/image-hosting' }
+            { text: '图床配置', link: '/guide/image-hosting' },
+            { text: '数据库建表', link: '/guide/base-hosting' }            
           ]
         },
         {
@@ -68,7 +70,7 @@ export default defineConfig({
     ],
 
     footer: {
-      message: 'Made with ❤️ for Valorant Players',
+      message: 'Made with ❤ for Valorant Players',
       copyright: 'MIT License'
     },
 

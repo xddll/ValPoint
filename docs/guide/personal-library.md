@@ -1,6 +1,11 @@
 # 个人点位库
 
-个人点位库是你私人的点位管理空间，支持完整的增删改查操作。
+个人点位库是你私人的点位管理空间，支持完整的增删改查操作，支持分享点位，置顶点位。
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/主页展示.png" alt="主页展示" />
+  <figcaption>主页展示</figcaption>
+</figure>
 
 ## 新增点位
 

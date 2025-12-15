@@ -49,6 +49,19 @@
   margin-top: 0.1em;
 }
 
+/* medium-zoom 层级与光标提示 */
+.medium-zoom-overlay {
+  z-index: 2000 !important;
+}
+
+.medium-zoom-image--opened {
+  z-index: 2001 !important;
+}
+
+.vp-doc img:not(.no-zoom) {
+  cursor: zoom-in;
+}
+
 /* 首页 Hero 标题和副标题字重 */
 .VPHero .name {
   font-weight: 600;
