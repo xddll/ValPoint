@@ -35,7 +35,7 @@ const MapPickerModal = ({ isOpen, maps, selectedMap, setSelectedMap, setIsMapMod
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/10 transition-opacity">
                   <div className="absolute inset-0 flex items-center justify-center text-center px-3">
-                    <span className="font-extrabold text-4xl leading-tight uppercase tracking-widest drop-shadow-lg text-white">
+                    <span className="font-bold text-4xl leading-tight uppercase tracking-widest drop-shadow-lg text-white/90">
                       {getMapDisplayName(m.displayName)}
                     </span>
                   </div>

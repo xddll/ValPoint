@@ -22,6 +22,9 @@ export default defineConfig({
     sidebar: {
       '/guide/': [
         {
+          text: '网站概述',link: '/guide/project-overview'
+        },
+        {
           text: '开始使用',
           items: [
             { text: '项目起源', link: '/guide/project-origin' },

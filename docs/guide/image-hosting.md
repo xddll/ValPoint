@@ -2,6 +2,12 @@
 
 ValPoint 支持三大主流云存储服务作为图床，用于存储点位图片。
 
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/图床配置.png" alt="图床配置" />
+  <figcaption>图床配置</figcaption>
+</figure>
+
+
 ## 支持的图床
 
 ### 阿里云 OSS
@@ -35,28 +41,105 @@ ValPoint 支持三大主流云存储服务作为图床，用于存储点位图�
 
 ## 阿里云 OSS 配置
 
-### 所需信息
+官方网站：[https://www.aliyun.com/product/oss](https://www.aliyun.com/product/oss
 
-| 字段 | 说明 | 获取方式 |
-|------|------|----------|
-| Access Key ID | 访问密钥 ID | 阿里云控制台 → AccessKey 管理 |
-| Access Key Secret | 访问密钥 | 同上 |
-| Bucket | 存储桶名称 | OSS 控制台 → Bucket 列表 |
-| Region | 区域 | 如：`oss-cn-hangzhou` |
-| 自定义域名 | CDN 域名（可选） | OSS 控制台 → 域名管理 |
+官方文档：[https://help.aliyun.com/product/31815.html](https://help.aliyun.com/product/31815.html)
 
-### 配置示例
-
+### 配置项
 ```json
 {
-  "provider": "aliyun",
-  "accessKeyId": "LTAI5t...",
-  "accessKeySecret": "xxx...",
-  "bucket": "my-valpoint",
-  "area": "oss-cn-hangzhou",
-  "customUrl": "https://cdn.example.com"
+  "_configName": "", // 图床配置名
+  "accessKeyId": "",
+  "accessKeySecret": "",
+  "bucket": "", // 存储空间名
+  "area": "", // 存储区域代号
+  "path": "", // 自定义存储路径
+  "customUrl": "" // 自定义域名，注意要加http://或者https://
 }
 ```
+
+### 说明
+
+#### accessKeyId & accessKeySecret
+
+你需要在阿里云AccessKey管理页面中创建或者查看你的accessKeyId和accessKeySecret，可以通过以下两种方式进入：
+
+1. 直接访问[管理页面网址](https://ram.console.aliyun.com/manage/ak)
+
+2. 登录阿里云后，点击右上角头像，选择 `AccessKey管理`。
+
+#### bucket & area
+
+从 `阿里云工作台->对象存储OSS->bucket列表`进入存储桶管理页面，或者直接访问[https://oss.console.aliyun.com/bucket](https://oss.console.aliyun.com/bucket)，即可查看到你的bucket列表和对应的存储区域。
+
+::: info 提示
+
+APP内填写的存储区域是区域代码，不是实际中文名称。
+
+:::
+
+请访问[阿里云官方文档](https://help.aliyun.com/document_detail/31837.html)或者参考下表查询代码。
+
+|存储区域|区域代码|
+|---|---|
+|华东 1（杭州）|oss-cn-hangzhou|
+|华东 2（上海）|oss-cn-shanghai|
+|华东5（南京本地地域）|oss-cn-nanjing|
+|华东6（福州本地地域）|oss-cn-fuzhou|
+|华中1（武汉-本地地域）|oss-cn-wuhan|
+|华北 1（青岛）|oss-cn-qingdao|
+|华北 2（北京）|oss-cn-beijing|
+|华北 3（张家口）|oss-cn-zhangjiakou|
+|华北 5（呼和浩特）|oss-cn-huhehaote|
+|华北 6（乌兰察布）|oss-cn-wulanchabu|
+|华南 1（深圳）|oss-cn-shenzhen|
+|华南 2（河源）|oss-cn-heyuan|
+|华南 3（广州）|oss-cn-guangzhou|
+|西南 1（成都）|oss-cn-chengdu|
+|中国（香港）|oss-cn-hongkong|
+|美国（硅谷）|oss-us-west-1|
+|美国（弗吉尼亚）|oss-us-east-1|
+|日本（东京）|oss-ap-northeast-1|
+|韩国（首尔）|oss-ap-northeast-2|
+|新加坡|oss-ap-southeast-1|
+|澳大利亚（悉尼）|oss-ap-southeast-2|
+|马来西亚（吉隆坡）|oss-ap-southeast-3|
+|印度尼西亚（雅加达）|oss-ap-southeast-5|
+|菲律宾（马尼拉）|oss-ap-southeast-6|
+|泰国（曼谷）|oss-ap-southeast-7|
+|印度（孟买）|oss-ap-south-1|
+|德国（法兰克福）|oss-eu-central-1|
+|英国（伦敦）|oss-eu-west-1|
+|阿联酋（迪拜）|oss-me-east-1|
+|无地域属性（中国内地）|oss-rg-china-mainland|
+
+#### path/存储路径
+
+存储路径为可选项，如果不填写，则默认存储在bucket的根目录下。
+
+例如填写 `images/test/`，则文件将存储于对应的test目录下。
+
+#### customUrl/自定义域名
+
+自定义域名为可选项，如果不填写，则在复制链接、预览图片等操作时，将使用阿里云的默认外网域名。
+
+例如文件 `test.jpg`存储于目录 `images/test/`下，bucket名称为 `test-bucket`，存储区域为 `华东 1（杭州）`，则文件的外网访问地址为 `https://test-bucket.oss-cn-hangzhou.aliyuncs.com/images/test/test.jpg`。
+
+而如果填写了自定义域名，则文件的外网访问地址为 `http://自定义域名/images/test/test.jpg`。
+
+请注意包含 `http://`或 `https://`。
+
+#### options/网站后缀
+
+阿里云OSS提供了图片处理功能，一般用于图片的裁剪、缩放、旋转、水印等操作。
+
+使用方法：在文件的外网访问地址后面加上网站后缀，例如 `https://test-bucket.oss-cn-hangzhou.aliyuncs.com/images/test/test.jpg?x-oss-process=image/resize,m_fill,h_100,w_100`。
+
+详细的网站后缀使用请参考[OSS新版图片处理指南](https://help.aliyun.com/document_detail/101260.html)。
+
+该功能的使用如果超出免费额度，会产生额外处理费用，具体费用请参考[OSS图片处理费用](https://help.aliyun.com/document_detail/173537.htm)。
+
+网站后缀为可选项，如果不填写的话，会拷贝原始地址。
 
 ### 权限配置
 
@@ -69,37 +152,133 @@ ValPoint 支持三大主流云存储服务作为图床，用于存储点位图�
      "allowedOrigins": ["*"],
      "allowedMethods": ["GET", "POST", "PUT"],
      "allowedHeaders": ["*"],
-     "exposeHeaders": [],
-     "maxAgeSeconds": 3600
+     "exposeHeaders": [
+		ETag
+		Content-Length
+		x-oss-request-id
+		],
+     "maxAgeSeconds": 1800
    }
    ```
 
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/阿里云设置公共读.png" alt="阿里云设置公共读" />
+  <figcaption>读写权限 - Bucket ACL</figcaption>
+</figure>
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/阿里云CORS.png" alt="阿里云CORS" />
+  <figcaption>可以参考我的写</figcaption>
+</figure>
+
 ## 腾讯云 COS 配置
 
-### 所需信息
+官方网站：[https://cloud.tencent.com/product/cos](https://cloud.tencent.com/product/cos)
 
-| 字段 | 说明 | 获取方式 |
-|------|------|----------|
-| Secret ID | 密钥 ID | 腾讯云控制台 → 访问管理 → API 密钥 |
-| Secret Key | 密钥 | 同上 |
-| Bucket | 存储桶名称 | COS 控制台 → 存储桶列表 |
-| App ID | 应用 ID | 存储桶名称中的数字部分 |
-| Region | 区域 | 如：`ap-guangzhou` |
-| 自定义域名 | CDN 域名（可选） | COS 控制台 → 域名管理 |
+官方文档：[https://cloud.tencent.com/document/product/436](https://cloud.tencent.com/document/product/436)
 
-### 配置示例
+### 配置项
 
-```json
+   ```json
 {
-  "provider": "tencent",
-  "secretId": "AKIDxxx...",
-  "secretKey": "xxx...",
-  "bucket": "my-valpoint",
-  "appId": "1234567890",
-  "area": "ap-guangzhou",
-  "customUrl": "https://cdn.example.com"
+  "_configName": "", // 图床配置名
+  "secretId": "",
+  "secretKey": "",
+  "bucket": "", // 存储桶名，v4和v5版本不一样
+  "appId": "", // 例如1250000000
+  "area": "", // 存储区域，例如ap-beijing-1
+  "path": "", // 自定义存储路径，比如img/
+  "customUrl": "", // 自定义域名，注意要加http://或者https://
+  "version": "v5" | "v4", // COS版本，v4或者v5
+  "options": "", // 网站后缀，比如?imageMogr2/thumbnail/500x500
+  "slim": boolean // 是否开启极智压缩
 }
-```
+   ```
+
+### V4版本说明
+
+请参考[PicGo官方手册](https://picgo.github.io/PicGo-Doc/zh/guide/config.html#v4%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)。
+
+### V5版本说明
+
+#### secretId & secretKey & appId
+
+你需要在腾讯云[API密钥管理页面](https://console.cloud.tencent.com/cam/capi)中创建或者查看你的secretId,secretKey和appId。
+
+#### bucket & area
+
+访问[https://console.cloud.tencent.com/cos/bucket](https://console.cloud.tencent.com/cos/bucket)，可创建bucket和查看到你的bucket列表和对应的存储区域。
+
+::: info 提示
+
+APP内填写的存储区域是区域代码，不是实际中文名称。
+
+:::
+
+请访问[腾讯云官方文档-地域和访问域名](https://cloud.tencent.com/document/product/436/6224)或者参考下表查询代码。
+
+|存储区域|区域代码|
+|---|---|
+|北京一区|ap-beijing-1|
+|北京|ap-beijing|
+|南京|ap-nanjing|
+|上海|ap-shanghai|
+|广州|ap-guangzhou|
+|成都|ap-chengdu|
+|重庆|ap-chongqing|
+|深圳金融|ap-shenzhen-fsi|
+|上海金融|ap-shanghai-fsi|
+|北京金融|ap-beijing-fsi|
+|中国香港|ap-hongkong|
+|新加坡|ap-singapore|
+|孟买|ap-mumbai|
+|雅加达|ap-jakarta|
+|首尔|ap-seoul|
+|曼谷|ap-bangkok|
+|东京|ap-tokyo|
+|硅谷（美西）|na-siliconvalley|
+|弗吉尼亚（美东）|na-ashburn|
+|多伦多|na-toronto|
+|圣保罗|sa-saopaulo|
+|法兰克福|eu-frankfurt|
+|莫斯科|eu-moscow|
+
+#### path/存储路径
+
+存储路径为可选项，如果不填写，则默认存储在bucket的根目录下。
+
+例如填写 `images/test/`，则文件将存储于对应的test目录下。
+
+#### customUrl/自定义域名
+
+::: info 提示
+
+注意要加 `http://`或者 `https://`
+
+:::
+
+定义域名为可选项，如果不填写，则在复制链接、预览图片等操作时，将使用腾讯云的默认外网域名。
+
+例如文件 `test.jpg`存储于目录 `images/test/`下，bucket名称为 `test-1250000000`，存储区域为 `ap-beijing`，则默认外网域名为 `test-1250000000.cos.ap-beijing.myqcloud.com`，文件访问地址为 `https://test-1250000000.cos.ap-beijing.myqcloud.com/images/test/test.jpg`。
+
+而如果填写了自定义域名，则文件的外网访问地址为 `http://自定义域名/images/test/test.jpg`。
+
+#### options/网站后缀
+
+腾讯云提供了图片处理功能，一般用于图片的裁剪、缩放、旋转、水印等操作。
+
+使用方法：在文件的外网访问地址后面加上网站后缀，例如 `https://test-1250000000.cos.ap-beijing.myqcloud.com/images/test/test.jpg?imageMogr2/thumbnail/500x500`。
+
+详细的网站后缀使用请参考[图片处理指南](https://cloud.tencent.com/document/product/436/54049)。
+
+该功能的使用如果超出免费额度，会产生额外处理费用，具体费用请参考[图片处理费用](https://cloud.tencent.com/document/product/460/58117)。
+
+网站后缀为可选项，如果不填写的话，会拷贝原始地址。
+
+#### slim/极智压缩
+
+参考[极智压缩](https://cloud.tencent.com/document/product/460/86438)，开启后，图片会自动进行压缩。
 
 ### 权限配置
 
@@ -109,38 +288,114 @@ ValPoint 支持三大主流云存储服务作为图床，用于存储点位图�
 3. 配置跨域访问 CORS：
    ```json
    {
-     "AllowedOrigins": ["*"],
-     "AllowedMethods": ["GET", "POST", "PUT"],
-     "AllowedHeaders": ["*"],
-     "ExposeHeaders": [],
-     "MaxAgeSeconds": 3600
+     "allowedOrigins": ["*"],
+     "allowedMethods": ["GET", "POST", "PUT", "DELETE", "HEAD"],
+     "allowedHeaders": ["*"],
+     "exposeHeaders": [
+		ETag
+		Content-Length
+		x-oss-request-id
+		],
+     "maxAgeSeconds": 1800
    }
    ```
 
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/腾讯云设置公共读.png" alt="腾讯云设置公共读" />
+  <figcaption>权限管理 - 存储桶访问权限</figcaption>
+</figure>
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/腾讯云CORS.png" alt="腾讯云CORS" />
+  <figcaption>可以参考我的写</figcaption>
+</figure>
+
+
 ## 七牛云 Kodo 配置
 
-### 所需信息
 
-| 字段 | 说明 | 获取方式 |
-|------|------|----------|
-| Access Key | 访问密钥 | 七牛云控制台 → 密钥管理 |
-| Secret Key | 密钥 | 同上 |
-| Bucket | 存储空间名称 | Kodo 控制台 → 空间管理 |
-| Region | 区域 | 如：`z0`（华东）、`z1`（华北） |
-| Domain | 访问域名 | 空间设置 → 域名管理 |
+官方网站：[https://www.qiniu.com/](https://www.qiniu.com/)
 
-### 配置示例
+官方文档：[https://developer.qiniu.com/kodo](https://developer.qiniu.com/kodo)
 
-```json
+### 配置项
+
+``` json
 {
-  "provider": "qiniu",
-  "accessKey": "xxx...",
-  "secretKey": "xxx...",
-  "bucket": "my-valpoint",
-  "area": "z0",
-  "url": "https://cdn.example.com"
+  "_configName": "", // 图床配置名
+  "accessKey": "",
+  "secretKey": "",
+  "bucket": "", // 存储空间名
+  "url": "", // 访问网址
+  "area": "", // 存储区域编号
+  "options": "", // 网址后缀，比如?imgslim
+  "path": "" // 自定义存储路径，比如img/
 }
 ```
+
+### 说明
+
+#### accessKey & secretKey
+
+你需要在七牛云[个人中心-密钥管理](https://portal.qiniu.com/user/key)中创建或者查看你的accessKey和secretKey。
+
+#### bucket & area
+
+访问[https://portal.qiniu.com/kodo/bucket](https://portal.qiniu.com/kodo/bucket)，可创建bucket和查看到你的bucket列表和对应的存储区域。
+
+::: info 提示
+
+APP内填写的存储区域是区域代码，不是实际中文名称。
+
+:::
+
+请访问[七牛云官方文档-存储区域](https://developer.qiniu.com/kodo/1671/region-endpoint-fq)或者参考下表查询代码。
+
+|存储区域|区域代码|
+|---|---|
+|华东-浙江|z0|
+|华东-浙江2|cn-east-2|
+|华北-河北|z1|
+|华南-广东|z2|
+|北美-洛杉矶|na0|
+|亚太-新加坡|as0|
+|亚太-首尔|ap-northeast-1|
+|亚太-河内|ap-northeast-2|
+
+#### url
+
+访问网址是七牛云分配给你的测试域名或者你自己绑定的域名，如果你没有绑定域名，可以在[七牛云官方文档-绑定域名](https://developer.qiniu.com/kodo/8622/dev-the-binding-source-domain-name)中查看如何绑定域名。
+
+**绑定的域名必须是已备案的域名，否则无法正常访问。**
+
+填写时，**注意要加 `http://`或者 `https://`**。
+
+**而且七牛云的测试域名是会回收的**
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/七牛云测试域名使用规范.png" alt="七牛云测试域名使用规范" />
+  <figcaption>这就是我不想用七牛云做图床的原因</figcaption>
+</figure>
+
+#### path/存储路径
+
+存储路径为可选项，如果不填写，则默认存储在bucket的根目录下。
+
+例如填写 `images/test/`，则文件将存储于对应的test目录下。
+
+不要忘记最后的 `/`。
+
+#### options/网站后缀
+
+七牛云提供了图片处理功能，一般用于图片的裁剪、缩放、旋转、水印等操作。
+
+使用方法：在文件的外网访问地址后面加上网站后缀，例如：`http://xxx.com/xxx.jpg?imageView2/2/w/500/h/500`，则会将图片裁剪为500x500的缩略图。
+
+详细的网站后缀使用请参考[图片样式](https://developer.qiniu.com/kodo/8615/dev-the-data-processing)。
+
+该功能的使用如果超出免费额度，会产生额外处理费用，具体费用请参考[图片处理费用](https://www.qiniu.com/prices/dora?source=dora)。
+
+网站后缀为可选项，如果不填写的话，会拷贝原始地址。
 
 ### 权限配置
 
@@ -149,11 +404,17 @@ ValPoint 支持三大主流云存储服务作为图床，用于存储点位图�
 2. 设置访问控制为"公开"
 3. 绑定自定义域名（必需）
 
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/七牛云设置公开读.png" alt="七牛云设置公开读" />
+  <figcaption>新建空间 - 访问控制</figcaption>
+</figure>
+
+
 ## 图片上传
 
 ### 剪贴板上传（推荐）
 
-1. 在游戏中截图（通常是 F12）
+1. 使用截图工具，推荐：[Snipaste](https://zh.snipaste.com/)、[PixPin](https://pixpin.cn/)、utools里面的兔灵截图工具
 2. 切换到浏览器
 3. 在编辑器中点击 **"剪贴板上传"** 按钮
 4. 图片自动上传并显示预览
@@ -186,7 +447,7 @@ ValPoint 支持三大主流云存储服务作为图床，用于存储点位图�
 - JPEG
 - WebP
 
-输出格式：JPEG
+输出格式：JPG
 
 ### 文件命名
 
@@ -209,8 +470,8 @@ img/{timestamp}.jpg
 ### 导出配置
 
 ::: warning 注意
-目前不支持导出配置。建议：
-- 记录配置信息
+目前支持复制配置。建议：
+-  本地保存配置信息
 - 或截图保存
 :::
 
@@ -249,7 +510,7 @@ img/{timestamp}.jpg
 - 免费额度：10GB 存储 + 10GB 流量/月
 - 超出后：约 ¥0.15/GB/月（存储）+ ¥0.29/GB（流量）
 
-**估算**：个人使用基本在免费额度内
+**估算**：个人使用基本在免费额度内，**但域名回被回收，如果你没有域名，不建议使用。**
 
 ## 安全建议
 
@@ -326,7 +587,6 @@ img/{timestamp}.jpg
 ### Q: 图床费用太高怎么办？
 
 建议：
-1. 使用七牛云免费额度
-2. 启用图片压缩
-3. 配置 CDN 缓存
-4. 定期清理无用图片
+1. 启用图片压缩
+2. 配置 CDN 缓存
+3. 定期清理无用图片

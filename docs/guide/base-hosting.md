@@ -308,76 +308,6 @@ on conflict (user_id) do nothing;
 ## SupaBase - Edge Functions
 在你存放 **点位表** 的项目中新增，如： `Demo_val`  ，点击 `Deploy a new function` 新增，并在下面填入 `get-video-author` 标题
 
-<figure class="full-bleed">
-  <img class="full-bleed" src="../public/Edge-Functions-01.png" alt="Edge-Functions-01" />
-  <figcaption>步骤1</figcaption>
-</figure>
-
-
-<figure class="full-bleed">
-  <img class="full-bleed" src="../public/Edge-Functions-02.png" alt="Edge-Functions-02" />
-  <figcaption>步骤2</figcaption>
-</figure>
-
-<figure class="full-bleed">
-  <img class="full-bleed" src="../public/Edge-Functions-03.png" alt="Edge-Functions-03" />
-  <figcaption>步骤3</figcaption>
-</figure>
-
-<figure class="full-bleed">
-  <img class="full-bleed" src="../public/Edge-Functions-04.png" alt="Edge-Functions-04" />
-  <figcaption>步骤4</figcaption>
-</figure>
-
----
-
-如果能得到以下的返回结果，就说明调试成功了
-### B站测试数据
-
-``` json
-{ "url": "【这几年，电视画质为什么变差了...】 【精准空降到 02:26】 https://www.bilibili.com/video/BV1acmCBtEst/?share_source=copy_web&vd_source=fd59995bf2f70580369462145819da94&t=146" }
-```
-
-#### 返回结果
-
-``` json
-{
-  "status": "success",
-  "data": {
-    "username": "影视飓风",
-    "avatar": "https://i0.hdslb.com/bfs/face/c1733474892caa45952b2c09a89323157df7129a.jpg",
-    "user_home_url": "https://space.bilibili.com/946974",
-    "is_cover": false,
-    "source": "bilibili",
-    "cover_image": "http://i2.hdslb.com/bfs/archive/2ca10436a2d9343d6b03739dd9914edfef021a07.jpg"
-  }
-}
-```
-
-### 抖音测试数据
-
-``` json
-{ "url": "0.20 c@N.Ji 03/08 seb:/ 这几年，电视画质为什么变差了...# 电视 # 画质 # 电视设置 # 技术 # 体验  https://v.douyin.com/3HrmbOLNjZw/ 复制此链接，打开Dou音搜索，直接观看视频！" }
-```
-
-#### 返回结果
-
-``` json
-{
-  "status": "success",
-  "data": {
-    "username": "影视飓风",
-    "avatar": "https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_a8cf976fa76120a291a9aacb9c4439f8.jpeg?from=327834062",
-    "user_home_url": "https://www.douyin.com/user/MS4wLjABAAAAaCcBHb3Rhc4zxF8YkBOfHfLh6k-IWEK2l3Ne9xOXPnQ",
-    "is_cover": false,
-    "source": "douyin"
-  }
-}
-```
-
-
-
-
 > [!TIP]
 > 代码说明： **get-video-author** 是用来获取点位视频博主的头像+用户名信息
 
@@ -784,6 +714,78 @@ serve(async (req) => {
 ```
 
 :::
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-01.png" alt="Edge-Functions-01" />
+  <figcaption>步骤1</figcaption>
+</figure>
+
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-02.png" alt="Edge-Functions-02" />
+  <figcaption>步骤2</figcaption>
+</figure>
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-03.png" alt="Edge-Functions-03" />
+  <figcaption>步骤3</figcaption>
+</figure>
+
+<figure class="full-bleed">
+  <img class="full-bleed" src="../public/Edge-Functions-04.png" alt="Edge-Functions-04" />
+  <figcaption>步骤4</figcaption>
+</figure>
+
+---
+
+如果能得到以下的返回结果，就说明调试成功了
+### B站测试数据
+
+``` json
+{ "url": "【这几年，电视画质为什么变差了...】 【精准空降到 02:26】 https://www.bilibili.com/video/BV1acmCBtEst/?share_source=copy_web&vd_source=fd59995bf2f70580369462145819da94&t=146" }
+```
+
+#### 返回结果
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "username": "影视飓风",
+    "avatar": "https://i0.hdslb.com/bfs/face/c1733474892caa45952b2c09a89323157df7129a.jpg",
+    "user_home_url": "https://space.bilibili.com/946974",
+    "is_cover": false,
+    "source": "bilibili",
+    "cover_image": "http://i2.hdslb.com/bfs/archive/2ca10436a2d9343d6b03739dd9914edfef021a07.jpg"
+  }
+}
+```
+
+### 抖音测试数据
+
+``` json
+{ "url": "0.20 c@N.Ji 03/08 seb:/ 这几年，电视画质为什么变差了...# 电视 # 画质 # 电视设置 # 技术 # 体验  https://v.douyin.com/3HrmbOLNjZw/ 复制此链接，打开Dou音搜索，直接观看视频！" }
+```
+
+#### 返回结果
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "username": "影视飓风",
+    "avatar": "https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_a8cf976fa76120a291a9aacb9c4439f8.jpeg?from=327834062",
+    "user_home_url": "https://www.douyin.com/user/MS4wLjABAAAAaCcBHb3Rhc4zxF8YkBOfHfLh6k-IWEK2l3Ne9xOXPnQ",
+    "is_cover": false,
+    "source": "douyin"
+  }
+}
+```
+
+
+
+
+
 
 ##  期望结果
 

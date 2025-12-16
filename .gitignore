@@ -5,7 +5,6 @@ node_modules
 .env.production
 .env.development
 *.bak
-notes
 dist
 coverage
 docs/.obsidian/workspace.json
@@ -15,3 +14,15 @@ docs/.obsidian/workspace.json
 docs/.vitepress/cache
 docs/.vitepress/dist
 .temp
+
+# macOS
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.DocumentRevisions-V100
+.TemporaryItems
+.VolumeIcon.icns

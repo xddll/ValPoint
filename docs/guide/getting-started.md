@@ -7,9 +7,8 @@
   :items="[
     {
       image: {
-        light: 'https://i.theojs.cn/logo/github.svg',
-        dark: 'https://i.theojs.cn/logo/github-dark.svg',
-        crop: true
+        light: '../public/aliyun_dark.svg',
+        dark: '../public/aliyun.svg',
       },
       name: '阿里云',
       desc: '推荐【阿里云】作为点位图片存储方案。',
@@ -17,9 +16,8 @@
     },
     {
       image: {
-        light: 'https://i.theojs.cn/logo/github.svg',
-        dark: 'https://i.theojs.cn/logo/github-dark.svg',
-        crop: true
+        light: '../public/supabase_dark.svg',
+        dark: '../public/supabase.svg',
       },
       name: 'Supabase',
       desc: '作为后端数据存储使用，如：点位数据、平台用户。',
@@ -27,9 +25,8 @@
     },
     {
       image: {
-        light: 'https://i.theojs.cn/logo/github.svg',
-        dark: 'https://i.theojs.cn/logo/github-dark.svg',
-        crop: true
+        light: '../public/piclist_dark.svg',
+        dark: '../public/piclist.svg',
       },
       name: 'Piclist',
       desc: '当你有自己的图床时，可以使用这个软件配合本项目使用。',
@@ -37,8 +34,8 @@
     },
     {
       image: {
-        light: 'https://i.theojs.cn/logo/github.svg',
-        dark: 'https://i.theojs.cn/logo/github-dark.svg',
+        light: '../public/nodejs_dark.svg',
+        dark: '../public/nodejs.svg',
         crop: true
       },
       name: 'NodeJS',
@@ -47,9 +44,8 @@
     },
     {
       image: {
-        light: 'https://i.theojs.cn/logo/github.svg',
-        dark: 'https://i.theojs.cn/logo/github-dark.svg',
-        crop: true
+        light: '../public/npm_dark.svg',
+        dark: '../public/npm.svg',
       },
       name: 'npm',
       desc: '无版本要求',
@@ -87,7 +83,7 @@ pnpm install
 
 复制 `.env.example` 为 `.env`，填入你的配置，主要是替换 `# Supabase 主库配置` 中的数据。
 
-其中 `# Supabase 共享库配置` 为我做的一个分享库，只要你们填写了这个分享库的配置，就能从分享库中获取其他人分享的点位数据，当然，你也可以自建分享库，详见[supabase建表](#supabase建表)
+其中 `# Supabase 共享库配置` 是我做的一个分享库，只要你们填写了这个分享库的配置，就能从分享库中获取其他人分享的点位数据（项目初期，应该也没什么点位，还是要靠大家发力才行），当然，你也可以自建分享库，详见[supabase建表](#supabase建表)
 
 ```env
 # Supabase 主库配置
