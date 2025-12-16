@@ -1,80 +1,75 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   title: 'ValPoint',
   description: 'Valorant 点位管理与分享平台',
   lang: 'zh-CN',
 
-  head: [
-    ['script', { src: 'https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js' }]
-  ],
+  head: [['script', { src: 'https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js' }]],
 
   themeConfig: {
     logo: '/logo.svg',
 
     nav: [
       { text: '首页', link: '/' },
-      { text: '用户指南', link: '/guide/getting-started' },
-      { text: '开发文档', link: '/dev/overview' },
-      { text: '返回应用', link: 'https://valpoint.cn' }
+      { text: '用户指南', link: '/guide/快速开始' },
+      { text: '开发文档', link: '/dev/项目概览' },
+      { text: '返回应用', link: 'https://valpoint.cn' },
     ],
 
     sidebar: {
       '/guide/': [
         {
-          text: '网站概述',link: '/guide/project-overview'
+          text: '网站概述',
+          link: '/guide/项目概述',
         },
         {
           text: '开始使用',
           items: [
-            { text: '项目起源', link: '/guide/project-origin' },
-            { text: '快速开始', link: '/guide/getting-started' }
-          ]
+            { text: '快速开始', link: '/guide/快速开始' },
+            { text: '项目起源', link: '/guide/项目起源' },
+          ],
         },
         {
           text: '核心功能',
           items: [
-            { text: '个人点位库', link: '/guide/personal-library' },
-            { text: '共享点位库', link: '/guide/shared-library' },
-            { text: '作者信息获取', link: '/guide/author-info' },
-            { text: '地图标注', link: '/guide/map-annotation' },
-            { text: '图床配置', link: '/guide/image-hosting' },
-            { text: '数据库建表', link: '/guide/base-hosting' }            
-          ]
+            { text: '个人点位库', link: '/guide/个人点位库' },
+            { text: '共享点位库', link: '/guide/共享点位库' },
+            { text: '作者信息自动获取', link: '/guide/作者信息自动获取' },
+            { text: '地图标注', link: '/guide/地图标注' },
+            { text: '图床配置', link: '/guide/图床配置' },
+            { text: '数据库建表', link: '/guide/数据库建表' },
+          ],
         },
         {
           text: '帮助',
-          items: [
-            { text: '常见问题', link: '/guide/faq' }
-          ]
-        }
+          items: [{ text: '常见问题', link: '/guide/常见问题' }],
+        },
       ],
       '/dev/': [
         {
           text: '开始',
           items: [
-            { text: '项目概览', link: '/dev/overview' },
-            { text: '技术架构', link: '/dev/architecture' }
-          ]
+            { text: '项目概览', link: '/dev/项目概览' },
+            { text: '技术架构', link: '/dev/技术架构' },
+          ],
         },
         {
           text: '开发指南',
           items: [
-            { text: '开发规范', link: '/dev/coding-standards' },
-            { text: '作者信息解析', link: '/dev/author-fetcher' },
-            { text: '部署指南', link: '/dev/deployment' }
-          ]
-        }
-      ]
+            { text: '开发规范', link: '/dev/开发规范' },
+            { text: '作者信息解析', link: '/dev/作者信息解析' },
+            { text: '部署指南', link: '/dev/部署指南' },
+          ],
+        },
+      ],
     },
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/xiongaox/valpoint' }
-    ],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/xiongaox/valpoint' }],
 
     footer: {
-      message: 'Made with ❤ for Valorant Players',
-      copyright: 'MIT License'
+      message: 'Made with ♥ for Valorant Players',
+      copyright: 'MIT License',
     },
 
     search: {
@@ -85,38 +80,38 @@ export default defineConfig({
             translations: {
               button: {
                 buttonText: '搜索文档',
-                buttonAriaLabel: '搜索文档'
+                buttonAriaLabel: '搜索文档',
               },
               modal: {
                 noResultsText: '无法找到相关结果',
                 resetButtonTitle: '清除查询条件',
                 footer: {
                   selectText: '选择',
-                  navigateText: '切换'
-                }
-              }
-            }
-          }
-        }
-      }
+                  navigateText: '切换',
+                },
+              },
+            },
+          },
+        },
+      },
     },
 
     outline: {
       label: '页面导航',
-      level: [2, 3]
+      level: [2, 3],
     },
 
     docFooter: {
       prev: '上一页',
-      next: '下一页'
+      next: '下一页',
     },
 
     lastUpdated: {
       text: '最后更新于',
       formatOptions: {
         dateStyle: 'short',
-        timeStyle: 'short'
-      }
-    }
-  }
-})
+        timeStyle: 'short',
+      },
+    },
+  },
+});

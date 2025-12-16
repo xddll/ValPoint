@@ -123,6 +123,11 @@
       "icon": "link-glyph"
     },
     {
+      "id": "editing-toolbar:editor:toggle-code",
+      "name": "Inline code",
+      "icon": "code-glyph"
+    },
+    {
       "id": "editing-toolbar:editor:insert-table",
       "name": "Insert Table",
       "icon": "lucide-table"
@@ -141,6 +146,11 @@
           "id": "editing-toolbar:editor:toggle-blockquote",
           "name": "Blockquote",
           "icon": "lucide-text-quote"
+        },
+        {
+          "id": "editing-toolbar:subscript",
+          "name": "Subscript",
+          "icon": "subscript-glyph"
         },
         {
           "id": "editing-toolbar:insert-callout",
@@ -163,16 +173,6 @@
           "id": "editing-toolbar:editor:attach-file",
           "name": "Attach file",
           "icon": "lucide-paperclip"
-        },
-        {
-          "id": "editing-toolbar:subscript",
-          "name": "Subscript",
-          "icon": "subscript-glyph"
-        },
-        {
-          "id": "editing-toolbar:editor:toggle-code",
-          "name": "Inline code",
-          "icon": "code-glyph"
         },
         {
           "id": "editing-toolbar:codeblock",

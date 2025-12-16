@@ -12,10 +12,10 @@ hero:
   actions:
     - theme: brand
       text: 快速开始
-      link: /guide/getting-started
+      link: /guide/项目概述
     - theme: alt
       text: 项目起源
-      link: /guide/project-origin
+      link: /guide/项目起源
     - theme: alt
       text: 查看 GitHub
       link: https://github.com/xiongaox/valpoint
