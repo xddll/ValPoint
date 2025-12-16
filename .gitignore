@@ -5,7 +5,7 @@ node_modules
 .env.production
 .env.development
 *.bak
-notes
+
 dist
 coverage
 docs/.obsidian/workspace.json
