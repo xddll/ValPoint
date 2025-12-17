@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Icon from './Icon';
 import { fetchAuthorInfo } from '../utils/authorFetcher';
+import { useOssSignedUrls, toSignedImageList } from '../hooks/useOssSignedUrls';
 
 const ViewerModal = ({
   viewingLineup,
@@ -42,16 +43,20 @@ const ViewerModal = ({
       .finally(() => setIsLoadingAuthor(false));
   }, [viewingLineup]);
 
-  if (!viewingLineup) return null;
-
-  const imageItems = [
-    { src: viewingLineup.standImg, desc: viewingLineup.standDesc, label: '站位 (Stand)' },
-    { src: viewingLineup.stand2Img, desc: viewingLineup.stand2Desc, label: '站位 2 (Stand)' },
-    { src: viewingLineup.aimImg, desc: viewingLineup.aimDesc, label: '瞄点 (Aim)' },
-    { src: viewingLineup.aim2Img, desc: viewingLineup.aim2Desc, label: '瞄点 2 (Aim)' },
-    { src: viewingLineup.landImg, desc: viewingLineup.landDesc, label: '落点 (Land)' },
-  ];
+  const imageItems = viewingLineup
+    ? [
+        { src: viewingLineup.standImg, desc: viewingLineup.standDesc, label: '站位 (Stand)' },
+        { src: viewingLineup.stand2Img, desc: viewingLineup.stand2Desc, label: '站位 2 (Stand)' },
+        { src: viewingLineup.aimImg, desc: viewingLineup.aimDesc, label: '瞄点 (Aim)' },
+        { src: viewingLineup.aim2Img, desc: viewingLineup.aim2Desc, label: '瞄点 2 (Aim)' },
+        { src: viewingLineup.landImg, desc: viewingLineup.landDesc, label: '落点 (Land)' },
+      ]
+    : [];
   const imageList = imageItems.filter((item) => item.src).map((item) => item.src);
+  const { getUrl } = useOssSignedUrls(imageList);
+  const signedImageList = toSignedImageList(imageList, getUrl);
+
+  if (!viewingLineup) return null;
 
   return (
     <div className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
@@ -157,13 +162,13 @@ const ViewerModal = ({
                     className="relative group cursor-zoom-in aspect-video bg-[#0f1923] rounded-lg overflow-hidden border border-white/10 hover:border-[#ff4655]/70 transition-colors"
                     onClick={() =>
                       setViewingImage({
-                        src: item.src,
-                        list: imageList,
-                        index: imageList.indexOf(item.src),
+                        src: getUrl(item.src),
+                        list: signedImageList,
+                        index: signedImageList.indexOf(getUrl(item.src)),
                       })
                     }
                   >
-                    <img src={item.src} className="w-full h-full object-cover" />
+                    <img src={getUrl(item.src)} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-transparent pointer-events-none" />
                     <div className="absolute inset-x-0 top-0 p-3 flex items-center gap-2 text-white font-bold text-base drop-shadow pointer-events-none">
                       <Icon name="Image" size={16} className="text-[#ff4655]" /> {item.label}

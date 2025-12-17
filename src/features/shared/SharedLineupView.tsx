@@ -3,6 +3,7 @@ import LeafletMap from '../../components/LeafletMap';
 import QuickActions from '../../components/QuickActions';
 import Icon from '../../components/Icon';
 import { SharedLineup, AgentOption } from '../../types/lineup';
+import { useOssSignedUrls, toSignedImageList } from '../../hooks/useOssSignedUrls';
 
 type QuickActionsProps = {
   isActionMenuOpen: boolean;
@@ -61,6 +62,8 @@ const SharedLineupView: React.FC<Props> = ({
     { src: sharedLineup.landImg, desc: sharedLineup.landDesc, label: '落点 (Land)' },
   ].filter((item) => item.src);
   const sharedImageList = sharedImages.map((item) => item.src as string);
+  const { getUrl } = useOssSignedUrls(sharedImageList);
+  const signedSharedImageList = toSignedImageList(sharedImageList, getUrl);
 
   return (
     <div className="flex h-screen w-screen bg-[#0f1923] text-white overflow-hidden">
@@ -113,13 +116,13 @@ const SharedLineupView: React.FC<Props> = ({
                     className="relative group cursor-zoom-in aspect-video bg-[#0f1923] rounded-lg overflow-hidden border border-white/10 hover:border-[#ff4655] transition-colors"
                     onClick={() =>
                       setViewingImage({
-                        src: item.src,
-                        list: sharedImageList,
+                        src: getUrl(item.src as string),
+                        list: signedSharedImageList,
                         index: idx,
                       })
                     }
                   >
-                    <img src={item.src} className="w-full h-full object-cover" />
+                    <img src={getUrl(item.src as string)} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Icon name="Maximize2" className="text-white" />
                     </div>

@@ -4,6 +4,7 @@ import Icon from './Icon';
 import { uploadToOss } from '../utils/ossUpload';
 import { prepareClipboardImage } from '../lib/imageCompression';
 import { fetchAuthorInfo } from '../utils/authorFetcher';
+import { useOssSignedUrls } from '../hooks/useOssSignedUrls';
 
 const fields = [
   { k: 'stand', l: '站位图' },
@@ -32,6 +33,16 @@ const EditorModal = ({
   const [isPastingSourceLink, setIsPastingSourceLink] = useState(false);
   const [isFetchingAuthor, setIsFetchingAuthor] = useState(false);
   const fetchTimeoutRef = useRef(null);
+
+  const previewSources = [
+    newLineupData?.standImg,
+    newLineupData?.stand2Img,
+    newLineupData?.aimImg,
+    newLineupData?.aim2Img,
+    newLineupData?.landImg,
+  ].filter((v) => typeof v === 'string' && v.trim().length > 0);
+  const { getUrl } = useOssSignedUrls(previewSources);
+  const getPreviewUrl = (src) => (typeof src === 'string' && src.trim() ? getUrl(src) : '');
 
   // 自动获取作者信息（防抖）
   useEffect(() => {
@@ -463,7 +474,7 @@ const EditorModal = ({
                     {newLineupData[`${field.k}Img`] ? (
                       <div className="relative overflow-hidden rounded-lg border border-white/10 bg-[#0f1923] h-40">
                         <img
-                          src={newLineupData[`${field.k}Img`]}
+                          src={getPreviewUrl(newLineupData[`${field.k}Img`])}
                           alt={`${field.l} 预览`}
                           className="w-full h-full object-cover"
                           onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
